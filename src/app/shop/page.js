@@ -1,0 +1,58 @@
+'use client'
+import { StoreItem } from "@/components/store/StoreItem";
+import { useEffect, useState } from "react";
+import { client } from "@/lib/sanity/client";
+import { PageLayout } from "@/components/PageLayout";
+
+export default function Home() {
+
+	const [data, setData] = useState({ products: null, filter: 'all' });
+	const [columns, setColumns] = useState(localStorage.getItem('gridcols') || 3);
+
+	useEffect(() => {
+
+		async function getProducts() {
+
+			const CONTENT_QUERY = '*[_type == "product"] { title, images, _type, _id, category ->  { _ref, _type, title }, price, slug }';
+			const content = await client.fetch(CONTENT_QUERY);
+			setData(previous => ({ ...previous, products: content }));
+
+		};
+
+		getProducts();
+
+		function handleGrid() {
+
+			console.log(columns)
+			setColumns(prevColumns => prevColumns === 3 ? 2 : 3);
+
+		}
+
+		window.addEventListener('grid_change', handleGrid);
+		return () => removeEventListener('grid_change', handleGrid);
+
+	}, []);
+
+	// const productsFilter = data.filter == 'all' ? data.products : data.products.filter(product => product.category.title == data.filter);
+
+	return (
+
+		<PageLayout category={true}>
+
+			<div className="h-auto w-full">
+
+				<section style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`}} className="h-auto w-full grid">
+
+					{data.products && data.products.map((item, index) => (
+						<StoreItem key={index} data={item} size={columns == 3 ? 'small' : 'big'} />
+					))}
+
+				</section>
+
+			</div>
+
+		</PageLayout>
+
+	);
+
+}

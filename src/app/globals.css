@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 255, 255, 255;
+    --background-end-rgb: 255, 255, 255;
+  }
+}
+
+* {
+  color: black;
+  box-sizing: border-box;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@font-face {
+  font-family: "HelveticaNeueCE-Black";
+  src: url("../assets/fonts/helvetica/HelveticaNeueCE-Black.otf");
+}
+
+@font-face {
+  font-family: "HelveticaNeueCe70-Bold";
+  src: url("../assets/fonts/helvetica/HelveticaNeueCe75Bold.ttf");
+}
+
+@font-face {
+  font-family: "Helvetica";
+  src: url("../assets/fonts/helvetica/HelveticaLight.ttf");
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: "Helvetica";
+  src: url("../assets/fonts/helvetica/HelveticaRegular.ttf");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Helvetica";
+  src: url("../assets/fonts/helvetica/HelveticaBold.ttf");
+  font-weight: 700;
+}
+
+.text-stroke {
+  -webkit-text-stroke: 3px black;
+}
+
+input:autofill {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+}
