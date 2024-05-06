@@ -26,7 +26,7 @@ export const PageLayout = ({ children, category }) => {
             isVisible: pathname.startsWith('/my-account'),
             pages: ['overview']
         },
-        gridColumns: global?.window !== undefined && localStorage.getItem('gridcols') || 3
+        gridColumns: null
     });
     const [cartLength, setCartLength] = useState(getCartLength());
     const [authenticated, setAuthenticated] = useState(false);
@@ -71,6 +71,8 @@ export const PageLayout = ({ children, category }) => {
 
         getCategories();
 
+        setLayout(previous => ({ ...previous, gridColumns: localStorage.getItem('gridcols') || 3 }));
+
         window.addEventListener('storage_new_item', updateCart);
         return () => removeEventListener('storage_new_item', updateCart);
 
@@ -87,7 +89,7 @@ export const PageLayout = ({ children, category }) => {
         let newNumber = layout.gridColumns == 3 ? 2 : 3;
 
         setLayout(previous => ({ ...previous, gridColumns: newNumber }));
-        global?.window !== undefined && localStorage.setItem('gridcols', newNumber);
+        localStorage.setItem('gridcols', newNumber);
         window.dispatchEvent(new Event('grid_change'));
 
     };

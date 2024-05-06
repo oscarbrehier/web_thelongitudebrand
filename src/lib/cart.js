@@ -1,24 +1,15 @@
-'use client'
 import { v4 as uuidv4 } from 'uuid';
 
 const getCartItem = (id) => {
 
-	if (global?.window !== undefined) {
-	
-		const cart = getCartItems();
-		return cart.filter((item) => item.item_id == id)[0];
-
-	};
+	const cart = getCartItems();
+	return cart.filter((item) => item.item_id == id)[0];
 
 };
 
 export const getCartItems = () => {
-
-	if (global?.window !== undefined) {
-		const cartItemsFromStorage = localStorage.getItem('longitudeCart');
-		return cartItemsFromStorage ? JSON.parse(cartItemsFromStorage) : [];
-	}
-	
+	const cartItemsFromStorage = localStorage.getItem('longitudeCart');
+	return cartItemsFromStorage ? JSON.parse(cartItemsFromStorage) : [];
 };
 
 export const getCartLength = () => {
@@ -46,16 +37,12 @@ export const addToCart = (item) => {
 
 		exists.quantity += 1;
 		exists.price = exists.unit_price * exists.quantity;
-		if (global?.window !== undefined) {
-			localStorage.setItem('longitudeCart', JSON.stringify(cartItems));
-		}
+		localStorage.setItem('longitudeCart', JSON.stringify(cartItems));
 
 	} else {
 
 		const updatedCartItems = [...cartItems, item];
-		if (global?.window !== undefined) {
-			localStorage.setItem('longitudeCart', JSON.stringify(updatedCartItems));
-		}
+		localStorage.setItem('longitudeCart', JSON.stringify(updatedCartItems));
 
 	}
 
@@ -69,12 +56,7 @@ export const removeFromCart = (id) => {
 	const cartItems = getCartItems();
 
 	const updatedCartItems = cartItems.filter((item) => item.item_id != id);
-	
-	if (global?.window !== undefined) {
-
-		localStorage.setItem('longitudeCart', JSON.stringify(updatedCartItems));
-
-	}
+	localStorage.setItem('longitudeCart', JSON.stringify(updatedCartItems));
 
 	return updatedCartItems;
 	
@@ -98,10 +80,8 @@ export const editCartItem = (id, property, value) => {
 
 	});
 
-	if (global?.window !== undefined) {
-		localStorage.setItem('longitudeCart', JSON.stringify(cart));
-		window.dispatchEvent(new Event('storage_new_item'));
-	}
+	localStorage.setItem('longitudeCart', JSON.stringify(cart));
+	window.dispatchEvent(new Event('storage_new_item'));
 
 	return cart;
 
@@ -187,10 +167,6 @@ export const sanityCartFormat = () => {
 
 export const deleteCart = () => {
 
-	if (global?.window !== undefined) {
-
-		return localStorage.removeItem('longitudeCart');
-
-	};
+	return localStorage.removeItem('longitudeCart');
 
 };

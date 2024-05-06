@@ -7,7 +7,7 @@ import { PageLayout } from "@/components/PageLayout";
 export default function Home() {
 
 	const [data, setData] = useState({ products: null, filter: 'all' });
-	const [columns, setColumns] = useState(global?.window !== undefined && localStorage.getItem('gridcols') || 3);
+	const [columns, setColumns] = useState(null);
 
 	useEffect(() => {
 
@@ -23,10 +23,11 @@ export default function Home() {
 
 		function handleGrid() {
 
-			console.log(columns)
 			setColumns(prevColumns => prevColumns === 3 ? 2 : 3);
 
-		}
+		};
+
+		setColumns(localStorage.getItem('gridcols') || 3);
 
 		window.addEventListener('grid_change', handleGrid);
 		return () => removeEventListener('grid_change', handleGrid);
