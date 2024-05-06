@@ -1,27 +1,33 @@
 'use client'
 import { v4 as uuidv4 } from 'uuid';
 
-const getCartItem = (id) => {
+const checkWindow = (fn) => {
 
-	if (global?.window !== undefined) {
-	
-		const cart = getCartItems();
-		return cart.filter((item) => item.item_id == id)[0];
+	return (...args) => {
+
+		if (typeof window !== undefined) {
+			return fn(...args);
+		};
 
 	};
 
 };
 
-export const getCartItems = () => {
+const getCartItem = checkWindow((id) => {
 
-	if (global?.window !== undefined) {
-		const cartItemsFromStorage = localStorage.getItem('longitudeCart');
-		return cartItemsFromStorage ? JSON.parse(cartItemsFromStorage) : [];
-	}
-	
-};
+	const cart = getCartItems();
+	return cart.filter((item) => item.item_id == id)[0];
 
-export const getCartLength = () => {
+});
+
+export const getCartItems = checkWindow(() => {
+
+	const cartItemsFromStorage = localStorage.getItem('longitudeCart');
+	return cartItemsFromStorage ? JSON.parse(cartItemsFromStorage) : [];
+
+});
+
+export const getCartLength = checkWindow(() => {
 
 	const cart = getCartItems();
 	let numItems = 0;
@@ -32,9 +38,9 @@ export const getCartLength = () => {
 
 	return numItems;
 
-};
+});
 
-export const addToCart = (item) => {
+export const addToCart = checkWindow((item) => {
 
 	const cartItems = getCartItems();
 
@@ -46,41 +52,33 @@ export const addToCart = (item) => {
 
 		exists.quantity += 1;
 		exists.price = exists.unit_price * exists.quantity;
-		if (global?.window !== undefined) {
-			localStorage.setItem('longitudeCart', JSON.stringify(cartItems));
-		}
+		localStorage.setItem('longitudeCart', JSON.stringify(cartItems));
 
 	} else {
 
 		const updatedCartItems = [...cartItems, item];
-		if (global?.window !== undefined) {
-			localStorage.setItem('longitudeCart', JSON.stringify(updatedCartItems));
-		}
+		localStorage.setItem('longitudeCart', JSON.stringify(updatedCartItems));
 
 	}
 
 	window.dispatchEvent(new Event('storage_new_item'));
 
 
-};
+});
 
-export const removeFromCart = (id) => {
+export const removeFromCart = checkWindow((id) => {
 
 	const cartItems = getCartItems();
 
 	const updatedCartItems = cartItems.filter((item) => item.item_id != id);
-	
-	if (global?.window !== undefined) {
 
-		localStorage.setItem('longitudeCart', JSON.stringify(updatedCartItems));
-
-	}
+	localStorage.setItem('longitudeCart', JSON.stringify(updatedCartItems));
 
 	return updatedCartItems;
-	
-};
 
-export const editCartItem = (id, property, value) => {
+});
+
+export const editCartItem = checkWindow((id, property, value) => {
 
 
 	const cart = getCartItems();
@@ -90,7 +88,7 @@ export const editCartItem = (id, property, value) => {
 		if (item.item_id == id && property == 'quantity') {
 
 			item['quantity'] = parseInt(value);
-			item['price'] = item.quantity * item.unit_price; 
+			item['price'] = item.quantity * item.unit_price;
 
 		} else if (item.item_id == id) {
 			item[property] = value;
@@ -98,22 +96,20 @@ export const editCartItem = (id, property, value) => {
 
 	});
 
-	if (global?.window !== undefined) {
-		localStorage.setItem('longitudeCart', JSON.stringify(cart));
-		window.dispatchEvent(new Event('storage_new_item'));
-	}
+	localStorage.setItem('longitudeCart', JSON.stringify(cart));
+	window.dispatchEvent(new Event('storage_new_item'));
 
 	return cart;
 
-};
+});
 
-export const editItemQuantity = (id, direction) => {
+export const editItemQuantity = checkWindow((id, direction) => {
 
 	return getCartItem(id);
 
-}
+});
 
-export const getCartPrice = () => {
+export const getCartPrice = checkWindow(() => {
 
 	const cart = getCartItems();
 	let result = 0;
@@ -124,9 +120,9 @@ export const getCartPrice = () => {
 
 	return result;
 
-};
+});
 
-export const stripeCartFormat = () => {
+export const stripeCartFormat = checkWindow(() => {
 
 	const cart = getCartItems();
 	let result = [];
@@ -149,9 +145,9 @@ export const stripeCartFormat = () => {
 
 	return result;
 
-};
+});
 
-export const sanityCartFormat = () => {
+export const sanityCartFormat = checkWindow(() => {
 
 	const cart = getCartItems();
 
@@ -183,14 +179,10 @@ export const sanityCartFormat = () => {
 
 	return doc;
 
-};
+});
 
-export const deleteCart = () => {
+export const deleteCart = checkWindow(() => {
 
-	if (global?.window !== undefined) {
+	return localStorage.removeItem('longitudeCart');
 
-		return localStorage.removeItem('longitudeCart');
-
-	};
-
-};
+});
