@@ -1,3 +1,4 @@
+'use client'
 import { v4 as uuidv4 } from 'uuid';
 
 const getCartItem = (id) => {
@@ -8,6 +9,7 @@ const getCartItem = (id) => {
 };
 
 export const getCartItems = () => {
+
 	const cartItemsFromStorage = localStorage.getItem('longitudeCart');
 	return cartItemsFromStorage ? JSON.parse(cartItemsFromStorage) : [];
 };
