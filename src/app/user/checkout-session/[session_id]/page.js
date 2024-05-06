@@ -50,7 +50,7 @@ export default function Page({ params }) {
 
         <main className="h-screen w-full flex flex-col justify-between">
 
-            <Navigation />
+            {/* <Navigation /> */}
 
             <section className="flex-1 w-full px-4 mt-10">
 
@@ -108,7 +108,7 @@ export default function Page({ params }) {
 
             </section>
 
-            <Footer />
+            {/* <Footer /> */}
 
         </main>
 

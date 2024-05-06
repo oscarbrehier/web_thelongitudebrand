@@ -28,7 +28,7 @@ export const PageLayout = ({ children, category }) => {
         },
         gridColumns: null
     });
-    const [cartLength, setCartLength] = useState(getCartLength());
+    const [cartLength, setCartLength] = useState(null);
     const [authenticated, setAuthenticated] = useState(false);
     const [sidePanel, setSidePanel] = useState(false);
     const [mobileMenu, setMobileMenu] = useState(false);
@@ -72,6 +72,7 @@ export const PageLayout = ({ children, category }) => {
         getCategories();
 
         setLayout(previous => ({ ...previous, gridColumns: localStorage.getItem('gridcols') || 3 }));
+        setCartLength(getCartLength());
 
         window.addEventListener('storage_new_item', updateCart);
         return () => removeEventListener('storage_new_item', updateCart);
@@ -136,9 +137,9 @@ export const PageLayout = ({ children, category }) => {
 
                             </div>
 
-                            <button onClick={() => setMobileMenu(!mobileMenu)} className="h-full 2md:hidden flex items-center pl-7">
+                            {/* <button onClick={() => setMobileMenu(!mobileMenu)} className="h-full 2md:hidden flex items-center pl-7">
                                 <HamburgerIcon size='4xl' /> 
-                            </button>
+                            </button> */}
 
                             <div className="flex items-center justify-center">
                                 {/* <img className="h-14" src="/images/logo-shape.svg" alt="" /> */}
@@ -153,7 +154,7 @@ export const PageLayout = ({ children, category }) => {
 
                         </div>
 
-                        <HamburgerMenu active={mobileMenu} />
+                        {/* <HamburgerMenu active={mobileMenu} /> */}
                        
                         <div className={`w-full h-auto bg-white px-8 py-4 border-x-[1px] border-b-[1px] border-neutral-200 flex justify-between ${mobileMenu ? 'hidden' : layout.categorySection.isVisible ? 'flex' : 'hidden'}`}>
 
