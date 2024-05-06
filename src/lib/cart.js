@@ -5,7 +5,7 @@ const checkWindow = (fn) => {
 
 	return (...args) => {
 
-		if (typeof window !== undefined) {
+		if (global?.window !== undefined) {
 			return fn(...args);
 		};
 
