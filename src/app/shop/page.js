@@ -7,7 +7,7 @@ import { PageLayout } from "@/components/PageLayout";
 export default function Home() {
 
 	const [data, setData] = useState({ products: null, filter: 'all' });
-	const [columns, setColumns] = useState(localStorage.getItem('gridcols') || 3);
+	const [columns, setColumns] = useState(global?.window !== undefined && localStorage.getItem('gridcols') || 3);
 
 	useEffect(() => {
 

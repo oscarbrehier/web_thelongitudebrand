@@ -26,7 +26,7 @@ export const PageLayout = ({ children, category }) => {
             isVisible: pathname.startsWith('/my-account'),
             pages: ['overview']
         },
-        gridColumns: localStorage.getItem('gridcols') || 3
+        gridColumns: global?.window !== undefined && localStorage.getItem('gridcols') || 3
     });
     const [cartLength, setCartLength] = useState(getCartLength());
     const [authenticated, setAuthenticated] = useState(false);
@@ -87,7 +87,7 @@ export const PageLayout = ({ children, category }) => {
         let newNumber = layout.gridColumns == 3 ? 2 : 3;
 
         setLayout(previous => ({ ...previous, gridColumns: newNumber }));
-        localStorage.setItem('gridcols', newNumber);
+        global?.window !== undefined && localStorage.setItem('gridcols', newNumber);
         window.dispatchEvent(new Event('grid_change'));
 
     };
