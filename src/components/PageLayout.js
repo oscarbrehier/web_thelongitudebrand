@@ -137,16 +137,16 @@ export const PageLayout = ({ children, category }) => {
 
                             </div>
 
-                            {/* <button onClick={() => setMobileMenu(!mobileMenu)} className="h-full 2md:hidden flex items-center pl-7">
-                                <HamburgerIcon size='4xl' /> 
-                            </button> */}
+                            <div className="h-full 2md:hidden flex items-center pl-2">
+                                <HamburgerIcon action={() => setMobileMenu(!mobileMenu)} size='4xl' /> 
+                            </div>
 
                             <div className="flex items-center justify-center">
                                 {/* <img className="h-14" src="/images/logo-shape.svg" alt="" /> */}
-                                <p className="uppercase font-helveticablack 2md:text-6xl text-5xl">longitude</p>
+                                <p className="uppercase font-helveticablack 2md:text-6xl sm:text-5xl text-3xl">longitude</p>
                             </div>
 
-                            <div className="flex items-center justify-end space-x-4 uppercase font-helvetica text-xs pr-8">
+                            <div className="flex items-center justify-end space-x-4 uppercase font-helvetica text-xs sm:pr-8 pr-2">
                                 <a className="2md:block hidden">search</a>
                                 {authenticated ? <a href="/my-account/overview" className="2md:block hidden">my account</a> : <a href="/account/login" className="2md:block hidden">login</a>}
                                 <a href="/cart">cart: {cartLength}</a>
@@ -154,7 +154,7 @@ export const PageLayout = ({ children, category }) => {
 
                         </div>
 
-                        {/* <HamburgerMenu active={mobileMenu} /> */}
+                        <HamburgerMenu active={mobileMenu} />
                        
                         <div className={`w-full h-auto bg-white px-8 py-4 border-x-[1px] border-b-[1px] border-neutral-200 flex justify-between ${mobileMenu ? 'hidden' : layout.categorySection.isVisible ? 'flex' : 'hidden'}`}>
 
