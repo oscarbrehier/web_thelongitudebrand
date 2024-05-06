@@ -101,6 +101,7 @@ export const PageLayout = ({ children, category }) => {
             
 
             <div style={{ paddingTop: `${layout.navbar.height}px` }} className={`h-auto w-full absolute ${mobileMenu && 'blur-lg'}`}>
+                
                 {children}
 
                 <footer className="h-auto w-full border-t-[1px] border-neutral-200 grid grid-cols-3">
@@ -156,7 +157,7 @@ export const PageLayout = ({ children, category }) => {
 
                         <HamburgerMenu active={mobileMenu} />
                        
-                        <div className={`w-full h-auto bg-white px-8 py-4 border-x-[1px] border-b-[1px] border-neutral-200 flex justify-between ${mobileMenu ? 'hidden' : layout.categorySection.isVisible ? 'flex' : 'hidden'}`}>
+                        <div className={`w-full h-auto bg-white px-8 py-4 border-x-[1px] border-b-[1px] rounded-b border-neutral-200 flex justify-between ${mobileMenu ? 'hidden' : layout.categorySection.isVisible ? 'flex' : 'hidden'}`}>
 
                             <div className='space-x-4'>
                                 {layout.categorySection.categories?.map((category) => (

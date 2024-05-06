@@ -42,7 +42,7 @@ export default function Home() {
 
 			<div className="h-auto w-full">
 
-				<section style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`}} className="h-auto w-full grid">
+				<section className={`h-auto w-full grid ${columns == 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-2'} grid-cols-1`}>
 
 					{data.products && data.products.map((item, index) => (
 						<StoreItem key={index} data={item} size={columns == 3 ? 'small' : 'big'} />
