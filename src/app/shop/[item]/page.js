@@ -3,7 +3,7 @@ import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
 import { addToCart } from "@/lib/cart";
 import { getProducts } from "@/lib/store/getProducts";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { client } from "@/lib/sanity/client";
 import { useRouter, usePathname } from "next/navigation";
 import { checkout } from "@/lib/checkout";
@@ -126,75 +126,8 @@ export default function Page({ params }) {
 
     return (
 
-        // <>
-        //     {product.content && <div className="h-auto w-full flex flex-col">
-        //         {/* {item}
-        //     <button onClick={addItemToCart}>add to cart</button>
-        //     <button onClick={getCart}>get cart</button> */}
-
-        //         <div className="h-screen w-full flex flex-col">
-
-        //             <div className="w-full flex-1 grid grid-cols-3">
-
-        //                 <div className="h-full w-full flex items-center justify-center p-8">
-        //                     <img className="" src={product.content.image_url} alt="" />
-        //                 </div>
-
-        //                 <div className="col-span-2 h-full">
-
-        //                     <div className="h-full flex flex-col justify-between px-8">
-
-        //                         <div className="mt-20">
-        //                             <p className="uppercase font-helvetica75 text-4xl">{product.content.title}</p>
-        //                             {/* <p className="uppercase font-helvetica75 text-4xl">{product.attributes.name}</p> */}
-        //                             <p className="uppercase font-helvetica text-2xl">{product.content.price} EUR</p>
-
-        //                             <div className="flex space-x-2 mt-4">
-        //                                 {['XS', 'S', 'M', 'L'].map((size, index) => (
-        //                                     <button onClick={(e) => setProduct(previous => ({ ...previous, size: index }))} className={`${product.size == index ? 'bg-neutral-200' : 'bg-neutral-50'} hover:bg-neutral-400 hover:transition-all hover:ease-in-out size-8 flex items-center justify-center text-neutral-900`}>{size}</button>
-        //                                 ))}
-        //                                 {/* <button className="bg-neutral-50 hover:bg-neutral-400 hover:transition-all hover:ease-in-out size-8 flex items-center justify-center text-neutral-900">XS</button>
-        //                                 <button className="bg-neutral-200 hover:bg-neutral-400 hover:transition-all hover:ease-in-out size-8 flex items-center justify-center text-neutral-900">S</button>
-        //                                 <button className="bg-neutral-50 hover:bg-neutral-400 hover:transition-all hover:ease-in-out size-8 flex items-center justify-center text-neutral-900">M</button>
-        //                                 <button className="bg-neutral-50 hover:bg-neutral-400 hover:transition-all hover:ease-in-out size-8 flex items-center justify-center text-neutral-900">L</button> */}
-        //                             </div>
-
-        //                             <div className="mt-8 space-x-8">
-        //                                 <button onClick={addItemToCart} className="text-2xl font-helvetica uppercase">{buttons.cart.text}</button>
-        //                                 <button className="text-2xl font-helvetica uppercase">checkout</button>
-        //                             </div>
-
-        //                             {/* <div className="w-96 h-10 mt-4 flex space-x-2">
-        //                                 <div className="size-10 bg-neutral-900 ring-1 ring-black ring-offset-1"></div>
-        //                                 <div className="size-10 bg-neutral-100 ring-1 ring-transparent ring-offset-1"></div>
-        //                             </div> */}
-
-        //                         </div>
-
-        //                         {/* <div className="w-full grid grid-cols-2 gap-4">
-
-        //                             <button onClick={addItemToCart} className="bg-black text-white uppercase font-helvetica75 text-2xl px-8 py-4 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2">
-        //                                 {buttons.cart.text}
-        //                             </button>
-
-        //                             <button onClick={createCheckout} disabled={product.size == 4} className={`bg-white ${product.size == 4 ? 'text-neutral-700 border-neutral-700 cursor-not-allowed' : ' text-black border-black'} border-4 uppercase font-helvetica75 text-2xl px-8 py-4 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2`}>
-        //                                 checkout
-        //                             </button>
-
-        //                         </div> */}
-
-        //                     </div>
-
-
-        //                 </div>
-
-        //             </div>
-
-        //         </div>
-
-        //     </div>}
-        // </>
         <>
+
             {product.content && (
                 <PageLayout category={false}>
 
@@ -202,7 +135,7 @@ export default function Page({ params }) {
 
                         <div
                             style={{ height: `${windowSize.height !== 0 && windowSize.height - height}px` }}
-                            className="sm:grid flex flex-col grid-cols-3">
+                            className="sm:grid max-[640px]:h-auto flex flex-col grid-cols-3">
 
                             <div className="h-full w-full bg-neutral-200 flex items-center justify-center p-4">
                                 <img src={product.content.image_url} alt="" />
