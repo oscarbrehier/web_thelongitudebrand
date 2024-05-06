@@ -157,7 +157,7 @@ export const PageLayout = ({ children, category }) => {
 
                         <HamburgerMenu active={mobileMenu} />
                        
-                        <div className={`w-full h-auto bg-white px-8 py-4 border-x-[1px] border-b-[1px] rounded-b border-neutral-200 flex justify-between ${mobileMenu ? 'hidden' : layout.categorySection.isVisible ? 'flex' : 'hidden'}`}>
+                        <div className={`w-full h-auto bg-white xs:px-8 px-4 py-4 border-x-[1px] border-b-[1px] rounded-b border-neutral-200 flex justify-between ${mobileMenu ? 'hidden' : layout.categorySection.isVisible ? 'flex' : 'hidden'}`}>
 
                             <div className='space-x-4'>
                                 {layout.categorySection.categories?.map((category) => (
@@ -165,11 +165,11 @@ export const PageLayout = ({ children, category }) => {
                                 ))}
                             </div>
 
-                            <button onClick={handleGridChange} className="font-helvetica uppercase text-xs">view 1/{layout.gridColumns}</button>
+                            <button onClick={handleGridChange} className="font-helvetica uppercase text-xs xs:block hidden">view 1/{layout.gridColumns}</button>
 
                         </div>
 
-                        <div className={`w-full h-auto bg-white px-8 py-4 border-x-[1px] border-b-[1px] border-neutral-200 justify-between ${mobileMenu ? 'hidden' : layout.profileNavigation.isVisible ? 'flex' : 'hidden'}`}>
+                        <div className={`w-full h-auto bg-white xs:px-8 px-4 border-x-[1px] border-b-[1px] border-neutral-200 justify-between ${mobileMenu ? 'hidden' : layout.profileNavigation.isVisible ? 'flex' : 'hidden'}`}>
 
                             <div className="space-x-4">
                                 {layout.profileNavigation.pages.map((page) => (

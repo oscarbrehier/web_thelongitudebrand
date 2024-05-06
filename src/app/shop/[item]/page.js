@@ -202,7 +202,7 @@ export default function Page({ params }) {
 
                         <div
                             style={{ height: `${windowSize.height !== 0 && windowSize.height - height}px` }}
-                            className="grid grid-cols-3">
+                            className="sm:grid flex flex-col grid-cols-3">
 
                             <div className="h-full w-full bg-neutral-200 flex items-center justify-center p-4">
                                 <img src={product.content.image_url} alt="" />
