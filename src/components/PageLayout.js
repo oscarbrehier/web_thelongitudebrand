@@ -98,10 +98,13 @@ export const PageLayout = ({ children, category }) => {
     return (
 
         <main className="h-auto w-full relative">
-            
+
+            {/* <div className="h-screen w-full absolute flex items-center justify-center">
+                <img className="h-36 z-30 fixed opacity-50" src="/images/logo.svg" alt="" />
+            </div> */}
 
             <div style={{ paddingTop: `${layout.navbar.height}px` }} className={`h-auto w-full absolute ${mobileMenu && 'blur-lg'}`}>
-                
+
                 {children}
 
                 <footer className="h-auto w-full border-t-[1px] border-neutral-200 grid grid-cols-3">
@@ -124,6 +127,7 @@ export const PageLayout = ({ children, category }) => {
 
             </div>
 
+
             <div className="h-auto w-full fixed p-2" ref={navbarRef}>
 
                 <div className="h-full w-full flex flex-col justify-between">
@@ -139,12 +143,13 @@ export const PageLayout = ({ children, category }) => {
                             </div>
 
                             <div className="h-full 2md:hidden flex items-center pl-2">
-                                <HamburgerIcon action={() => setMobileMenu(!mobileMenu)} size='4xl' /> 
+                                <HamburgerIcon action={() => setMobileMenu(!mobileMenu)} size='4xl' />
                             </div>
 
                             <div className="flex items-center justify-center">
                                 {/* <img className="h-14" src="/images/logo-shape.svg" alt="" /> */}
-                                <p className="uppercase font-helveticablack 2md:text-6xl sm:text-5xl text-3xl">longitude</p>
+                                {/* <img className="h-10" src="/images/longitude__ppsans.svg" alt="" /> */}
+                                <p className="uppercase font-helvetica75 2md:text-6xl sm:text-5xl text-3xl">longitude</p>
                             </div>
 
                             <div className="flex items-center justify-end space-x-4 uppercase font-helvetica text-xs sm:pr-8 pr-2">
@@ -156,7 +161,7 @@ export const PageLayout = ({ children, category }) => {
                         </div>
 
                         <HamburgerMenu active={mobileMenu} />
-                       
+
                         <div className={`w-full h-auto bg-white xs:px-8 px-4 py-4 border-x-[1px] border-b-[1px] rounded-b border-neutral-200 flex justify-between ${mobileMenu ? 'hidden' : layout.categorySection.isVisible ? 'flex' : 'hidden'}`}>
 
                             <div className='space-x-4'>
@@ -165,21 +170,11 @@ export const PageLayout = ({ children, category }) => {
                                 ))}
                             </div>
 
-                            <button onClick={handleGridChange} className="font-helvetica uppercase text-xs xs:block hidden">view 1/{layout.gridColumns}</button>
+                            <button onClick={handleGridChange} className="font-helvetica uppercase text-xs lg:block hidden">view 1/{layout.gridColumns}</button>
 
                         </div>
 
-                        <div className={`w-full h-auto bg-white xs:px-8 px-4 border-x-[1px] border-b-[1px] border-neutral-200 justify-between ${mobileMenu ? 'hidden' : layout.profileNavigation.isVisible ? 'flex' : 'hidden'}`}>
-
-                            <div className="space-x-4">
-                                {layout.profileNavigation.pages.map((page) => (
-                                    <a href={`/my-account/${page}`} className={`font-helvetica uppercase text-xs ${pathname !== `/my-account/${page}` ? 'text-neutral-400' : ''}`}>{page}</a>
-                                ))}
-                            </div>
-
-                            <button className="font-helvetica uppercase text-xs">log out</button>
-
-                        </div>
+                        <ProfileNavigation pages={layout.profileNavigation.pages} visible={mobileMenu ? false : layout.profileNavigation.isVisible ? true : false} pathname={pathname} />
 
                     </div>
 
@@ -192,6 +187,26 @@ export const PageLayout = ({ children, category }) => {
             </div>
 
         </main>
+
+    );
+
+};
+
+function ProfileNavigation({ pages, visible, pathname }) {
+
+    return (
+
+        <div className={`w-full h-auto bg-white xs:px-8 px-4 border-x-[1px] border-b-[1px] border-neutral-200 justify-between ${visible ? 'flex' : 'hidden'}`}>
+
+            <div className="space-x-4">
+                {pages.map((page) => (
+                    <a href={`/my-account/${page}`} className={`font-helvetica uppercase text-xs ${pathname !== `/my-account/${page}` ? 'text-neutral-400' : ''}`}>{page}</a>
+                ))}
+            </div>
+
+            <button className="font-helvetica uppercase text-xs">log out</button>
+
+        </div>
 
     );
 

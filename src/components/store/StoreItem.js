@@ -31,10 +31,11 @@ export function StoreItem({ data, size }) {
         // </a>
 
         <>
-            <a href={`/shop/${data.slug.current}`} style={{ height: `${windowSize.height - height}px` }} className="w-full lg:flex hidden flex-col bg-green-400">
+            <a href={`/shop/${data.slug.current}`} style={{ height: `${windowSize.height - height}px` }} className="w-full md:flex hidden flex-col bg-green-400">
 
                 <div className="h-[90%] w-full bg-neutral-200 flex items-center justify-center p-8">
-                    <img className={`lg:${size !== 'small' && 'h-4/5'} h-2/3`} src={image_url} alt="" />
+                    {/* <img className={`${size !== 'small' && 'lg:h-4/5'} h-2/3`} src={image_url} alt="" /> */}
+                    <img className={size !== 'small' && 'w-4/5' || 'w-full'} src={image_url} alt="" />
                 </div>
 
                 <div className="h-[10%] bg-white w-full p-4">
@@ -46,20 +47,20 @@ export function StoreItem({ data, size }) {
 
             </a>
 
-            <a href={`/shop/${data.slug.current}`} className="w-full h-auto lg:hidden flex flex-col bg-green-400">
+            <a href={`/shop/${data.slug.current}`} className="w-full h-auto md:hidden flex flex-col bg-green-400">
 
-            <div className="h-96 w-full bg-neutral-200 flex items-center justify-center xs:p-8 p-4">
-                <img className={`xs:h-full`} src={image_url} alt="" />
-            </div>
+                <div className="h-96 w-full bg-neutral-200 flex items-center justify-center p-8">
+                        <img className={`max-h-full`} src={image_url} alt="" />
+                </div>
 
-            <div className="h-20 bg-white w-full p-4 flex justify-center flex-col">
+                <div className="h-20 bg-white w-full p-4 flex justify-center flex-col">
 
-                <p className="uppercase font-helvetica text-sm">{data.title}</p>
-                <p className="font-helvetica text-xs">{data.price} EUR</p>
+                    <p className="uppercase font-helvetica text-sm">{data.title}</p>
+                    <p className="font-helvetica text-xs">{data.price} EUR</p>
 
-            </div>
+                </div>
 
-        </a>
+            </a>
 
         </>
 
