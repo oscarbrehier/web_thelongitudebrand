@@ -4,40 +4,63 @@ export default function Page() {
 
     return (
 
-        <PageLayout>
-            <div className="h-auto w-full">
+        <div className="h-screen w-full bg-[#4834d4] flex flex-col">
 
-                <section className="h-auto w-full grid grid-cols-3">
+            <div className="h-32 flex items-center justify-between uppercase">
+                <div className="flex items-center justify-center w-full">
+                    <p className="text-white font-helvetica75 font-bold text-4xl ">shop</p>
+                </div>
+                <p className="text-white font-helveticablack text-8xl">longitude</p>
+                <div className="flex items-center justify-center w-full">
+                    <p className="text-white font-helvetica75 font-bold text-4xl ">cart: 0</p>
+                </div>
+            </div>
 
-                    <a href='/shop' className="auto w-full flex flex-col">
-                        <div className="h-[75vh] w-full bg-neutral-200 flex items-center justify-center p-8">
-                            {/* <img src="/images/mockups/tshirt_001.png" alt="" /> */}
-                        </div>
-                        <div className="bg-white h-20 w-full p-4">
+            <div className="grid grid-cols-3 flex-1 w-full">
 
-                            <p className="uppercase font-helvetica text-sm">item title</p>
-                            <p className="font-helvetica text-xs">000 EUR</p>
+                <div className="h-full flex flex-col px-8">
 
-                        </div>
-                    </a>
-
-                    <div className="h-[30rem] w-full"></div>
-                    <div className="h-[30rem] w-full"></div>
-
-                    <div className="auto w-full flex flex-col">
-                        <div className="h-[30rem] w-full bg-neutral-200">
-
-                        </div>
-                        <div className="bg-white h-20 w-full">
-
-                        </div>
+                    <div className="flex-1 w-full flex items-center">
+                        <img src="/images/mockups/tshirt_001.png" alt="" />
                     </div>
 
-                </section>
+                    <div className="h-32 w-full">
+                        <p className="uppercase text-white font-helvetica text-2xl">BAD MASK 001</p>
+                        <p className="uppercase text-white font-helvetica">180 EUR</p>
+                    </div>
+
+                </div>
+
+                <div className="h-full flex flex-col px-8">
+
+                    <div className="flex-1 w-full flex items-center">
+                        <img src="/images/mockups/tshirt_001.png" alt="" />
+                    </div>
+
+                    <div className="h-32 w-full">
+                        <p className="uppercase text-white font-helvetica text-2xl">BAD MASK 001</p>
+                        <p className="uppercase text-white font-helvetica">180 EUR</p>
+                    </div>
+
+                </div>
+
+                <div className="h-full flex flex-col px-8">
+
+                    <div className="flex-1 w-full flex items-center">
+                        <img src="/images/mockups/tshirt_001.png" alt="" />
+                    </div>
+
+                    <div className="h-32 w-full">
+                        <p className="uppercase text-white font-helvetica text-2xl">BAD MASK 001</p>
+                        <p className="uppercase text-white font-helvetica">180 EUR</p>
+                    </div>
+
+                </div>
 
             </div>
-        </PageLayout>
 
-    );
+        </div>
+
+    ); 
 
 };
