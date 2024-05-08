@@ -31,7 +31,7 @@ export function StoreItem({ data, size }) {
         // </a>
 
         <>
-            <a href={`/shop/${data.slug.current}`} style={{ height: `${windowSize.height - height}px` }} className="w-full md:flex hidden flex-col bg-green-400">
+            <a href={`/shop/${data.slug.current}`} style={{ height: `${windowSize.height - height}px` }} className="w-full flex flex-col bg-green-400">
 
                 <div className="h-[90%] w-full bg-neutral-200 flex items-center justify-center p-8">
                     {/* <img className={`${size !== 'small' && 'lg:h-4/5'} h-2/3`} src={image_url} alt="" /> */}
@@ -47,7 +47,7 @@ export function StoreItem({ data, size }) {
 
             </a>
 
-            <a href={`/shop/${data.slug.current}`} className="w-full h-auto md:hidden flex flex-col bg-green-400">
+            <a href={`/shop/${data.slug.current}`} className="w-full h-auto md:hidden hidden flex-col bg-green-400">
 
                 <div className="h-96 w-full bg-neutral-200 flex items-center justify-center p-8">
                         <img className={`max-h-full`} src={image_url} alt="" />
