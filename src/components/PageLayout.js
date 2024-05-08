@@ -47,6 +47,8 @@ export const PageLayout = ({ children, category }) => {
                 }
             }));
 
+            console.log(navbarRef.current.offsetHeight + 24)
+
             setHeight(navbarRef.current.offsetHeight - 8);
 
         };

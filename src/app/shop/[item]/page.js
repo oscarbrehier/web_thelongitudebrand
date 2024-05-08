@@ -135,9 +135,43 @@ export default function Page({ params }) {
 
                         <div
                             style={{ height: `${windowSize.height !== 0 && windowSize.height - height}px` }}
-                            className="sm:grid max-[640px]:h-auto flex flex-col grid-cols-3">
+                            className="md:grid hidden grid-cols-3">
 
-                            <div className="h-full w-full bg-neutral-200 flex items-center justify-center p-4">
+                            <div className="h-full w-full bg-neutral-200 flex items-center justify-center p-4 col-span-2">
+                                <img className="2lg:w-[60%] w-[90%]" src={product.content.image_url} alt="" />
+                            </div>
+
+                            <div className="h-full w-full p-4 col-span-1">
+
+                                <div>
+                                    <p className="uppercase font-helvetica font-bold text-4xl">{product.content.title}</p>
+                                    <p className="uppercase font-helvetica font text-2xl">{product.content.price} EUR</p>
+                                    <p className="mt-2 font-helvetica text-sm w-2/5">Fugiat commodo exercitation magna consequat adipisicing eu voluptate id do enim. Do ullamco et nostrud labore minim pariatur eu ullamco irure ex eiusmod irure.</p>
+                                </div>
+
+                                <div className="flex space-x-2 mt-4">
+                                    {['XS', 'S', 'M', 'L'].map((size, index) => (
+                                        <button onClick={(e) => setProduct(previous => ({ ...previous, size: index }))} className={`${product.size == index ? 'bg-neutral-200' : 'bg-neutral-50'} hover:bg-neutral-400 hover:transition-all hover:ease-in-out size-10 flex items-center justify-center text-neutral-900`}>{size}</button>
+                                    ))}
+                                </div>
+
+                                <div className="mt-4 space-x-2">
+                                    <button onClick={addItemToCart} className="h-10 px-4 bg-black text-white font-helvetica font-bold uppercase">
+                                        {buttons.cart.text}
+                                    </button>
+                                    <button className="h-10 px-4 bg-neutral-400 text-white font-helvetica font-bold uppercase">
+                                        checkout
+                                    </button>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div
+                            className="md:hidden flex flex-col grid-cols-3 h-auto">
+
+                            <div className="sm:h-auto h-[60vh] w-full bg-neutral-200 flex items-center justify-center sm:py-10 sm:px-4 p-4">
                                 <img src={product.content.image_url} alt="" />
                             </div>
 
