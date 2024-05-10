@@ -1,8 +1,8 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { UserProvider } from "@auth0/nextjs-auth0/client";
 import { AppWrapper } from "@/lib/context";
 import { AuthContextProvider } from "@/lib/context/AuthContext";
+import { ColorContextProvider } from "@/lib/context/ColorContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,16 +15,20 @@ export default function RootLayout({ children }) {
 	return (
 		<html lang="en">
 			{/* <CartProvider> */}
+
 			<AppWrapper>
 
 				<AuthContextProvider>
-					<UserProvider>
-						<body className={inter.className}>{children}</body>
-					</UserProvider>
+					<ColorContextProvider>
+
+							<body className={inter.className}>{children}</body>
+
+					</ColorContextProvider>
 				</AuthContextProvider>
 
 			</AppWrapper>
 			{/* </CartProvider> */}
+
 		</html>
 	);
 };

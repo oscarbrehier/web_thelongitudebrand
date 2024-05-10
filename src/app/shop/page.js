@@ -1,8 +1,9 @@
 'use client'
 import { StoreItem } from "@/components/store/StoreItem";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { client } from "@/lib/sanity/client";
 import { PageLayout } from "@/components/PageLayout";
+import { PageContainer } from "@/components/container/page";
 
 export default function Home() {
 
@@ -38,9 +39,9 @@ export default function Home() {
 
 	return (
 
-		<PageLayout category={true}>
+		<PageContainer>
 
-			<div className="h-auto w-full">
+			{/* <div className="h-auto w-full">
 
 				<section className={`h-auto w-full grid ${columns == 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-2'}  md:grid-cols-2 grid-cols-1`}>
 
@@ -50,9 +51,17 @@ export default function Home() {
 
 				</section>
 
-			</div>
+			</div> */}
 
-		</PageLayout>
+			<section className="h-auto w-full grid grid-cols-3">
+
+				{data.products && data.products.map((item, index) => (
+					<StoreItem key={index} data={item} />
+				))}
+
+			</section>
+
+		</PageContainer>
 
 	);
 
