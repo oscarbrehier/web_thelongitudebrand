@@ -53,7 +53,7 @@ export default function Home() {
 
 			</div> */}
 
-			<section className="h-auto w-full grid grid-cols-3">
+			<section className={`${data.products ? 'h-auto': 'h-screen'} w-full grid 2lg:grid-cols-3 md:grid-cols-2 grid-cols-1`}>
 
 				{data.products && data.products.map((item, index) => (
 					<StoreItem key={index} data={item} />

@@ -7,6 +7,7 @@ import { useAppContext } from "@/lib/context";
 import { Logo } from "@/assets/svg/logo";
 import { LogoFull } from "@/assets/svg/logoFull";
 import { LogoFullRotate } from "@/assets/svg/logoFullRotate";
+import { Nav } from "./nav";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -118,18 +119,18 @@ export const NavigationBar = forwardRef(({ position }, barRef) => {
             backgroundColor: '#fff',
         });
 
-        const tlLogoHorizontal = gsap.timeline({
-            scrollTrigger: {
-                trigger: container,
-                start: 'top top',
-                end: 'bottom top',
-                scrub: true
-            },
-        });
+        // const tlLogoHorizontal = gsap.timeline({
+        //     scrollTrigger: {
+        //         trigger: container,
+        //         start: 'top top',
+        //         end: 'bottom top',
+        //         scrub: true
+        //     },
+        // });
 
-        tlLogoHorizontal.to(logoHorizontal, {
-            fill: '#4834d4'
-        });
+        // tlLogoHorizontal.to(logoHorizontal, {
+        //     fill: '#4834d4'
+        // });
 
         const tlLogoVerical = gsap.timeline({
             scrollTrigger: {
@@ -147,7 +148,7 @@ export const NavigationBar = forwardRef(({ position }, barRef) => {
         return () => {
             // tlContainer.kill(); 
             tlContainer.kill();
-            tlLogoHorizontal.kill();
+            // tlLogoHorizontal.kill();
             tlLogoVerical.kill();
 
         };
@@ -163,28 +164,20 @@ export const NavigationBar = forwardRef(({ position }, barRef) => {
                 {/* <Logo style={{ position: position, pointerEvents: "none" }} color='#4834d4' /> */}
 
                 <div className="w-full p-0 fixed z-10 xs:block hidden">
-                    <Logo ref={logoRefVertical} className={`${position} pointer-events-none`} color='#4834d4' />
+                    <Logo ref={logoRefVertical} className={`${position} pointer-events-none`} />
                     {/* <Logo style={{ position: position, pointerEvents: "none" }} color='#000' /> */}
                     {/* <img ref={imageRef} className="pointer-events-none w-full z-10" src="/images/longitude_handwriting_full.svg" alt="" /> */}
                     {/* <img className="pointer-events-none w-full text-white" src="/images/longitude_handwriting.svg" alt="" /> */}
                 </div>
 
                 <div className="w-full h-full p-0 fixed z-10 xs:hidden flex justify-center items-center">
-                    <LogoFullRotate ref={logoRefHorizontal} className={`${position} pointer-events-none h-[80vh]`} color='#4834d4' />
+                    <LogoFullRotate ref={logoRefHorizontal} className={`${position} pointer-events-none h-[80vh]`} />
                     {/* <Logo style={{ position: position, pointerEvents: "none" }} color='#000' /> */}
                     {/* <img ref={imageRef} className="pointer-events-none w-full z-10" src="/images/longitude_handwriting_full.svg" alt="" /> */}
                     {/* <img className="pointer-events-none w-full text-white" src="/images/longitude_handwriting.svg" alt="" /> */}
                 </div>
 
-                <div className="h-auto w-full fixed bottom-0 flex justify-between px-6 py-4 z-30">
-                    <a href="/shop" className="flex items-center justify-center pointer-events-auto relative">
-                        <p className="text-primary-blue hover:bg-primary-blue hover:text-white p-2 font-helvetica75 font-bold text-5xl">shop</p>
-                    </a>
-
-                    <a href="/cart" className="flex items-center justify-center pointer-events-auto relative">
-                        <p className="text-primary-blue hover:bg-primary-blue hover:text-white p-2 font-helvetica75 font-bold text-5xl">cart: {cartLength}</p>
-                    </a>
-                </div>
+                <Nav />
 
             </div>
         </div>

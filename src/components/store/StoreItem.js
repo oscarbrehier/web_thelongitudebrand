@@ -64,13 +64,13 @@ export function StoreItem({ data, size }) {
 
             <a href={`/shop/${data.slug.current}`} className="h-screen flex flex-col px-8 group">
 
-                <div className="flex-1 w-full flex items-center">
+                <div className="flex-1 w-full flex items-center xs:bg-transparent bg-primary-blue xs:p-0 p-4">
                     <img src={image_url} alt="" />
                 </div>
 
-                <div className="h-32 w-full flex flex-col justify-start">
-                    <p className="self-start uppercase text-primary-blue font-helvetica text-2xl group-hover:bg-primary-blue group-hover:text-white">{data.title}</p>
-                    <p className="self-start uppercase text-primary-blue font-helvetica group-hover:bg-primary-blue group-hover:text-white">{data.price} EUR</p>
+                <div className="h-32 w-full flex flex-col justify-start xs:items-start items-center xs:bg-transparent bg-primary-blue xs:p-0 py-2">
+                    <p className="xs:self-start uppercase xs:text-primary-blue text-white font-helvetica text-2xl group-hover:bg-primary-blue group-hover:text-white">{data.title}</p>
+                    <p className="xs:self-start uppercase xs:text-primary-blue text-white font-helvetica group-hover:bg-primary-blue group-hover:text-white">{data.price} EUR</p>
                 </div>
 
             </a>

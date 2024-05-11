@@ -14,6 +14,7 @@ import { PageContainer } from "@/components/container/page";
 import { NavigationBar } from "@/components/navigation/bar";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
+import { ShopItemContainer } from "@/components/container/ShopItemContainer";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -214,26 +215,51 @@ export default function Page({ params }) {
         //     )}
         // </>
 
-        <>
-            {product.content && (
+        <ShopItemContainer>
+            <div className="h-screen w-full">
+                {product.content && (
 
-                <div className="h-auto w-full">
-
-                    <NavigationBar position={'static'} />
-
-                    <section className="h-screen w-full grid grid-cols-2">
+                    <section className="h-full w-full grid grid-cols-2">
 
                         <div className="h-full w-full flex items-center justify-center">
                             <img className="w-2/3" src={product.content.image_url} alt="" />
                         </div>
 
+                        <div className="h-full w-full flex items-end">
+
+                            <div className="h-1/2 w-full">
+
+                                <p className="uppercase font-helvetica text-primary-blue text-4xl">{product.content.title}</p>
+                                <p className="uppercase font-helvetica text-primary-blue text-2xl">{product.content.price} EUR</p>
+
+                                <p className="mt-2 font-helvetica text-primary-blue w-2/3">Fugiat commodo exercitation magna consequat adipisicing eu voluptate id do enim. Do ullamco et nostrud labore minim pariatur eu ullamco irure ex eiusmod irure.</p>
+
+                                <div className="flex space-x-2 mt-4">
+                                    {['XS', 'S', 'M', 'L'].map((size, index) => (
+                                        <button onClick={(e) => setProduct(previous => ({ ...previous, size: index }))} className={`${product.size == index ? 'bg-primary-blue text-white' : 'bg-neutral-50'} hover:bg-neutral-400 hover:transition-all hover:ease-in-out size-10 flex items-center justify-center text-neutral-900`}>{size}</button>
+                                    ))}
+                                </div>
+
+                                <div className="mt-2 space-x-2">
+                                    <button onClick={addItemToCart} className="h-10 px-4 bg-primary-blue text-white font-helvetica font-bold uppercase">
+                                        {buttons.cart.text}
+                                    </button>
+                                    <button className="h-10 px-4 bg-neutral-400 text-white font-helvetica font-bold uppercase">
+                                        checkout
+                                    </button>
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
 
                     </section>
 
-                </div>
-
-            )}
-        </>
+                )}
+            </div>
+        </ShopItemContainer>
 
     );
 

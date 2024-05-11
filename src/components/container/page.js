@@ -59,7 +59,7 @@ export const PageContainer = ({ children }) => {
                 {children}
             </div>
             
-            {/* <Footer /> */}
+            <Footer />
 
         </div>
 
