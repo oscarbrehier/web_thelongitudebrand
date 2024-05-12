@@ -5,7 +5,6 @@ export default function Home() {
 		// 	<img className="h-40" src="/images/logo.svg" alt="" />
 		// </main>
 		<main className="h-screen w-full bg-no-repeat bg-center bg-cover flex items-center justify-center">
-			{/* <img className="h-96" src="/images/logo.svg" alt="" /> */}
 			<img className="h-96" src="/images/monogram/black.svg" alt="" />
 		</main>
 	);
