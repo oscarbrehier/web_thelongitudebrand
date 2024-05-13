@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "commit": "git add . && git commit -m 'commit' && git push"
+    "commit": "git add . && git commit -m 'commit tool-test' && git push"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.3",
