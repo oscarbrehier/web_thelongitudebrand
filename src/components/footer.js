@@ -53,9 +53,9 @@ export default function Footer() {
 
     return (
 
-        <footer className="h-auto w-full bg-white z-40 relative flex justify-between p-8 ">
+        <footer className="h-auto w-full bg-white z-40 relative  xs:flex grid grid-cols-1 justify-between p-8">
 
-            <div className="uppercase font-helvetica children:text-primary-blue">
+            <div className="uppercase font-helvetica children:text-primary-blue row-end-3 xs:mt-0 mt-4">
                 {/* <p>ATH: 22:42</p>
                     <p>CDG: 22:42</p>
                     <p>SYD: 22:42</p>
@@ -66,7 +66,7 @@ export default function Footer() {
                 ))}
             </div>
 
-            <div className="space-x-12 flex">
+            <div className="xxs:space-x-12 xxs:space-y-0 space-y-4 flex xxs:flex-row flex-col">
 
                 <div className="h-full uppercase font-helvetica children:text-primary-blue">
                     <p>services client</p>

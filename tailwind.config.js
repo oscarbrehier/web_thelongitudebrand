@@ -23,6 +23,7 @@ module.exports = {
 			"helvetica": "Helvetica"
 		},
 		screens: {
+			'xxs': '380px',
 			'xs': '540px',
 			'sm': '640px',
 			'md': '768px',

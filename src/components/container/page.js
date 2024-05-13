@@ -20,27 +20,33 @@ export const PageContainer = ({ children }) => {
 
         const container = containerRef.current;
         const child = childRef.current;
+        
+        let matchMedia = gsap.matchMedia();
 
-        const tlChild = gsap.timeline({
-            scrollTrigger: {
-                trigger: container,
-                start: 'top top',
-                end: 'bottom top',
-                scrub: true
-            },
+        matchMedia.add("(min-width: 540px)", () => {
+
+            const tlChild = gsap.timeline({
+                scrollTrigger: {
+                    trigger: container,
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: true
+                },
+            });
+    
+            tlChild.to(child, {
+                backgroundColor: "#fff"
+            });
+    
+            return () => tlChild.kill();
+
         });
-
-        tlChild.to(child, {
-            backgroundColor: "#fff"
-        });
-
-        return () => tlChild.kill();
 
     }, []);
 
     return (
 
-        <div ref={childRef} className="h-auto w-full bg-primary-blue">
+        <div ref={childRef} className="h-auto w-full xs:bg-primary-blue">
 
             {/* <div style={{ paddingTop: `${height}px` }}> */}
             <NavigationBar position={'fixed'} ref={containerRef} />

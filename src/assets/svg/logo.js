@@ -12,7 +12,7 @@ export const Logo = forwardRef(({ style, color, className }, ref) => (
         className={className}
         style={{
             enableBackground: "new 0 0 199.5 48.3",
-            fill: color || 'white',
+            fill: color == 'primary-blue' ? '#4834d4': color || 'white',
         }}
         viewBox="0 0 199.5 48.3"
     >
