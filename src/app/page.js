@@ -1,14 +1,10 @@
 export default function Home() {
+
 	return (
-		// <main className="h-screen w-full flex items-center justify-center space-x-8 p-8">
-		// 	<img className="h-2/3" src="/images/shape.svg" alt="" />
-		// 	<img className="h-2/3" src="/images/shape.svg" alt="" />
 
+		<main className="h-screen w-full relative overflow-hidden bg-neutral-200">
 
-
-		<main className="h-screen w-full relative overflow-hidden">
-
-			<div className="h-screen w-full absolute flex flex-col items-center justify-center ">
+			<div className="h-screen w-full absolute flex flex-col items-center justify-center">
 				<img className="sm:h-1/3 h-2/3 w-full" src="/images/landing/soon.svg" alt="" />
 				<img className="sm:h-2/3 h-1/3 w-full" src="/images/landing/coming.svg" alt="" />
 			</div>
@@ -19,8 +15,15 @@ export default function Home() {
 				</div>
 			</div>
 
-			{/* <img className="h-96" src="/images/landing/soon.png" alt="" />
-			<img className="h-96" src="/images/landing/coming.png" alt="" /> */}
+			<div className="h-screen w-full absolute">
+				<img className="h-full w-full mix-blend-hard-light opacity-50" src="/images/landing/noise.png" alt="" />
+			</div>
+
+			<div className="h-screen w-full absolute">
+				<img className="h-full w-full mix-blend-screen opacity-70" src="/images/landing/overlay.png" alt="" />
+			</div>
+
 		</main>
+
 	);
 }
