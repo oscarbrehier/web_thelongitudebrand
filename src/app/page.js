@@ -1,33 +1,42 @@
+'use client'
+import { useState, useEffect } from "react";
+import Logo from "@/components/Icons/Logo";
+
 export default function Home() {
+
+	// const [cycleNum, setCycleNum] = useState(0);
+
+	// useEffect(() => {
+
+	// 	const cycle = setInterval(() => {
+
+	// 		setCycleNum((prev) => (prev === 2 ? 0 : prev + 1));
+
+	// 	}, 1000);
+
+	// 	return () => clearInterval(cycle);
+
+	// }, []);
 
 	return (
 
-		<main className="h-screen w-full bg-black flex flex-col items-center justify-center space-y-5">
+		<main className="h-screen w-full bg-black relative">
 
-			{/* <div className="h-screen w-full absolute flex flex-col items-center justify-center">
-				<img className="sm:h-1/3 h-2/3 w-full" src="/images/landing/soon.svg" alt="" />
-				<img className="sm:h-2/3 h-1/3 w-full" src="/images/landing/coming.svg" alt="" />
+			<div className="h-screen w-full absolute flex flex-col items-center justify-center space-y-4 md:px-0 px-10">
+
+				{/* <Logo className={`w-[40rem] svg-blur ${cycleNum == 0 ? 'block' : 'hidden'}`} />
+				<img className={`svg-blur ${cycleNum == 1 ? 'block' : 'hidden'}`} src="/images/landing/oval.png" alt="" />
+				<img className={`svg-blur ${cycleNum == 2 ? 'block' : 'hidden'}`} src="/images/landing/paris.png" alt="" /> */}
+
+				<img className={`svg-blur md:w-[40rem]`} src="/images/landing/oval.png" alt="" />
+
+
+				<p className="font-chiquita text-white text-center text-8xl svg-blur green leading-[3.4rem]">soon coming</p>
+
 			</div>
 
-			<div className="h-screen w-full absolute">
-				<img className="h-full w-full mix-blend-screen opacity-70" src="/images/landing/overlay.png" alt="" />
-			</div>
+			<div className='h-screen w-full bg-[url("/images/scan_lines.png")] absolute'></div>
 
-			<div className="h-screen w-full absolute grid grid-cols-4 grid-rows-2">
-				<div className="sm:col-start-3 col-start-2 col-span-2 flex items-end">
-					<img className="sm:h-1/3 h-2/3 rotate-12" src="/images/landing/sticker.svg" alt="" />
-				</div>
-			</div>
-
-			<div className="h-screen w-full absolute">
-				<img className="h-full w-full mix-blend-hard-light opacity-50" src="/images/landing/noise.png" alt="" />
-			</div> */}
-
-			<div className="">
-				<img className="h-96" src="/images/landing/logo.png" alt="" />
-			</div>
-
-			<p className="font-chiquita text-white text-8xl">soon coming</p>
 
 		</main>
 
