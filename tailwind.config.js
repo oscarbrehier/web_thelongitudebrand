@@ -20,7 +20,8 @@ module.exports = {
 		fontFamily: {
 			"helveticablack": "HelveticaNeueCE-Black",
 			"helvetica75": "HelveticaNeueCe70-Bold",
-			"helvetica": "Helvetica"
+			"helvetica": "Helvetica",
+			"chiquita": "Chiquita"
 		},
 		screens: {
 			'xxs': '380px',

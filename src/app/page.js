@@ -2,9 +2,9 @@ export default function Home() {
 
 	return (
 
-		<main className="h-screen w-full relative overflow-hidden bg-neutral-200">
+		<main className="h-screen w-full bg-black flex flex-col items-center justify-center space-y-5">
 
-			<div className="h-screen w-full absolute flex flex-col items-center justify-center">
+			{/* <div className="h-screen w-full absolute flex flex-col items-center justify-center">
 				<img className="sm:h-1/3 h-2/3 w-full" src="/images/landing/soon.svg" alt="" />
 				<img className="sm:h-2/3 h-1/3 w-full" src="/images/landing/coming.svg" alt="" />
 			</div>
@@ -18,10 +18,16 @@ export default function Home() {
 					<img className="sm:h-1/3 h-2/3 rotate-12" src="/images/landing/sticker.svg" alt="" />
 				</div>
 			</div>
-			
+
 			<div className="h-screen w-full absolute">
 				<img className="h-full w-full mix-blend-hard-light opacity-50" src="/images/landing/noise.png" alt="" />
+			</div> */}
+
+			<div className="">
+				<img className="h-96" src="/images/landing/logo.png" alt="" />
 			</div>
+
+			<p className="font-chiquita text-white text-8xl">soon coming</p>
 
 		</main>
 
