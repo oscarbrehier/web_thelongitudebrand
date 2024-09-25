@@ -18,65 +18,40 @@ export function StoreItem({ data, size }) {
 
     return (
 
-        // <a href={`/shop/${data.slug.current}`} classN    ame="w-full h-full flex items-center flex-col bg-neutral p-8">
+        // <FullHeight>
 
-        //     <div className="flex-1 flex items-center">
-        //         <img src={image_url} alt="" />
-        //     </div>
+        //     <a href={`/shop/${data.slug.current}`} className="h-screen flex flex-col px-8 group">
 
-        //     <div className="flex justify-between w-full">
-        //         {/* <p className="text-neutral-700 uppercase font-helvetica text-sm">bad t-shirt</p> */}
-        //         <p className="text-neutral-700 uppercase font-helvetica text-sm">{data.title} - {data.price} EUR</p>
-        //     </div>
+        //         <div className="flex-1 w-full flex items-center xs:p-0 p-4">
+        //             <img src={image_url} alt="" />
+        //         </div>
 
-        // </a>
+        //         <div className="h-32 w-full flex flex-col justify-start xs:items-start items-center xs:p-0 py-2">
+        //             <p className="xs:self-start uppercase text-primary-blue font-helvetica text-2xl group-hover:bg-primary-blue group-hover:text-white">item title</p>
+        //             {/* <p className="xs:self-start uppercase text-primary-blue font-helvetica text-2xl group-hover:bg-primary-blue group-hover:text-white">{data.title}</p> */}
+        //             <p className="xs:self-start uppercase text-primary-blue font-helvetica group-hover:bg-primary-blue group-hover:text-white">{data.price} EUR</p>
+        //         </div>
 
-        <FullHeight>
-            {/* <a href={`/shop/${data.slug.current}`} style={{ height: `${windowSize.height - height}px` }} className="w-full flex flex-col bg-green-400">
+        //     </a>
 
-                <div className="h-[90%] w-full bg-neutral-200 flex items-center justify-center p-8">
-                    <img className={size !== 'small' && 'w-4/5' || 'w-full'} src={image_url} alt="" />
-                </div>
+        // </FullHeight>
 
-                <div className="h-[10%] bg-white w-full p-4">
+        <a href={`/shop/${data.slug.current}`}>
 
-                    <p className="uppercase font-helvetica text-sm">{data.title}</p>
-                    <p className="font-helvetica text-xs">{data.price} EUR</p>
+            <div className="w-full h-[30rem] bg-cream-200 p-4 flex flex-col">
 
-                </div>
-
-            </a> */}
-
-            {/* <a href={`/shop/${data.slug.current}`} className="w-full h-auto md:hidden hidden flex-col bg-green-400">
-
-                <div className="h-96 w-full bg-neutral-200 flex items-center justify-center p-8">
-                        <img className={`max-h-full`} src={image_url} alt="" />
-                </div>
-
-                <div className="h-20 bg-white w-full p-4 flex justify-center flex-col">
-
-                    <p className="uppercase font-helvetica text-sm">{data.title}</p>
-                    <p className="font-helvetica text-xs">{data.price} EUR</p>
-
-                </div>
-
-            </a> */}
-
-            <a href={`/shop/${data.slug.current}`} className="h-screen flex flex-col px-8 group">
-
-                <div className="flex-1 w-full flex items-center xs:p-0 p-4">
+                <div className="flex-1 w-full flex items-center">
                     <img src={image_url} alt="" />
                 </div>
 
-                <div className="h-32 w-full flex flex-col justify-start xs:items-start items-center xs:p-0 py-2">
-                    <p className="xs:self-start uppercase text-primary-blue font-helvetica text-2xl group-hover:bg-primary-blue group-hover:text-white">item title</p>
-                    {/* <p className="xs:self-start uppercase text-primary-blue font-helvetica text-2xl group-hover:bg-primary-blue group-hover:text-white">{data.title}</p> */}
-                    <p className="xs:self-start uppercase text-primary-blue font-helvetica group-hover:bg-primary-blue group-hover:text-white">{data.price} EUR</p>
+                <div>
+                    <p className="text-xs uppercase">{data.title}</p>
+                    <p className="text-xs font-medium">{data.price}€</p>
                 </div>
 
-            </a>
-
-        </FullHeight>
+            </div>
+            
+        </a>
 
     );
 

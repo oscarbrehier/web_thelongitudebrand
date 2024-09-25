@@ -1,121 +1,48 @@
 'use client'
-import { useState, useEffect, useRef, useLayoutEffect, forwardRef } from "react";
+import { useState, useEffect } from "react";
 import { getCartLength } from "@/lib/cart";
-import gsap from "gsap";
-import ScrollTrigger from "gsap/ScrollTrigger";
-import { useAppContext } from "@/lib/context";
-import { Logo } from "@/assets/svg/logo";
-import { LogoFull } from "@/assets/svg/logoFull";
-import { LogoFullRotate } from "@/assets/svg/logoFullRotate";
-import { Nav } from "./nav";
+import Link from "next/link";
 
-gsap.registerPlugin(ScrollTrigger);
-
-export const NavigationBar = forwardRef(({ position }, barRef) => {
-
-    const containerRef = useRef();
-    const navigationRef = useRef();
-
-    const logoRefHorizontal = useRef();
-    const logoRefVertical = useRef();
+export const NavigationBar = () => {
 
     const [cartLength, setCartLength] = useState(null);
-    const [imageHeight, setImageHeight] = useState(null);
 
     useEffect(() => {
 
         const updateCartLength = () => setCartLength(getCartLength());
         updateCartLength();
 
-        const container = containerRef.current;
+        window.addEventListener('cart_update', updateCartLength);
 
-        const logoHorizontal = logoRefHorizontal.current;
-        const logoVerical = logoRefVertical.current;
-
-        const matchMedia = gsap.matchMedia();
-
-        matchMedia.add("(min-width: 540px)", () => {
-
-            const tlContainer = gsap.timeline({
-                scrollTrigger: {
-                    trigger: container,
-                    start: 'top top',
-                    bottom: 'bottom top',
-                    scrub: true
-                },
-            });
-    
-            tlContainer.to(container, {
-                backgroundColor: '#fff',
-            });
-
-            return () => tlContainer.kill();
-
-        });
-
-        const tlLogoHorizontal = gsap.timeline({
-            scrollTrigger: {
-                trigger: container,
-                start: 'top top',
-                end: 'bottom top',
-                scrub: true
-            },
-        });
-
-        tlLogoHorizontal.to(logoHorizontal, {
-            fill: '#4834d4'
-        });
-
-        // const tlLogoVerical = gsap.timeline({
-        //     scrollTrigger: {
-        //         trigger: container,
-        //         start: 'top top',
-        //         end: 'bottom top',
-        //         scrub: true
-        //     },
-        // });
-
-        // tlLogoVerical.to(logoVerical, {
-        //     fill: '#4834d4'
-        // });
-
-        return () => {
-            // tlContainer.kill(); 
-            tlLogoHorizontal.kill();
-            // tlLogoVerical.kill();  
-
-        };
+        return () => window.removeEventListener('cart_update', updateCartLength);
 
     }, []);
 
+
     return (
 
-        // <div ref={containerRef} className="h-auto w-full flex items-center justify-between uppercase fixed bg-red-500">
-        <div ref={barRef} className="h-auto w-full">
-            <div ref={containerRef} className={`h-screen w-full flex flex-col items-center justify-between uppercase relative xs:bg-primary-blue`}>
 
-                {/* <Logo style={{ position: position, pointerEvents: "none" }} color='#4834d4' /> */}
+        <div className="md:h-10 h-auto w-full flex md:flex-row flex-col items-center justify-between px-0 py-2 bg-neon-green text-xs z-20 top-4">
 
-                <div className="w-full p-0 fixed z-10 xs:block hidden">
-                    <Logo ref={logoRefHorizontal} className={`${position} pointer-events-none`} />
-                    {/* <Logo style={{ position: position, pointerEvents: "none" }} color='#000' /> */}
-                    {/* <img ref={imageRef} className="pointer-events-none w-full z-10" src="/images/longitude_handwriting_full.svg" alt="" /> */}
-                    {/* <img className="pointer-events-none w-full text-white" src="/images/longitude_handwriting.svg" alt="" /> */}
+            <div className="md:w-1/4 w-full md:block flex justify-center">
+                <Link className="/" href="">the<span className="font-semibold">longitude</span>brand</Link>
+            </div>
+
+            <div className="md:w-3/4 w-full flex md:items-center items-end h-10">
+
+                <div className="md:w-2/3 w-1/2 flex justify-start space-x-2">
+                    <Link className="/shop" href="">shop</Link>
                 </div>
 
-                <div className="w-full h-full p-0 fixed z-10 xs:hidden flex justify-center fill-primary-blue">
-                    <Logo className={`${position} pointer-events-none`} color='primary-blue' />
-                    {/* <LogoFullRotate ref={logoRefHorizontal} className={`${position} pointer-events-none h-[80vh]`} /> */}
-                    {/* <Logo style={{ position: position, pointerEvents: "none" }} color='#000' /> */}
-                    {/* <img ref={imageRef} className="pointer-events-none w-full z-10" src="/images/longitude_handwriting_full.svg" alt="" /> */}
-                    {/* <img className="pointer-events-none w-full text-white" src="/images/longitude_handwriting.svg" alt="" /> */}
+                <div className="md:w-1/3 w-1/2 flex justify-end space-x-4 ">
+                    <Link href="/account">account</Link>
+                    <Link href="/cart">cart ({cartLength})</Link>
                 </div>
-
-                <Nav />
 
             </div>
+
         </div>
 
     );
 
-});
+};

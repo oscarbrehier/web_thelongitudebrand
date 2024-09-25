@@ -31,7 +31,7 @@ export default function Home() {
 				<img className={`svg-blur md:w-[40rem]`} src="/images/landing/oval.png" alt="" />
 
 
-				<p className="font-chiquita text-white text-center text-8xl svg-blur green leading-[3.4rem]">soon coming</p>
+				<p className="font-chiquita text-white text-center text-8xl svg-blur neon leading-[3.4rem]">soon coming</p>
 
 			</div>
 

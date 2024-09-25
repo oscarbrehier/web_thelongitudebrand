@@ -3,6 +3,8 @@
 @tailwind utilities;
 
 @import url('https://fonts.cdnfonts.com/css/chiquita');
+@import url('../assets/fonts/anderson_grotesk/index.css');
+@import url('../assets/fonts/space_grotesk.css');
 
 :root {
   --foreground-rgb: 0, 0, 0;
@@ -24,13 +26,15 @@
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
+  /* color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
       transparent,
       rgb(var(--background-end-rgb))
     )
-    rgb(var(--background-start-rgb));
+    rgb(var(--background-start-rgb)); */
+  background-color: #f4f3ef;
+  
 }
 
 @layer utilities {
@@ -75,11 +79,11 @@ input:autofill {
   -webkit-box-shadow: 0 0 0 30px white inset !important;
 }
 
-.green {
+.neon {
   color: #37ff47;
 };
 
-.bg-green {
+.bg-neon {
   color: #37ff47;
 }
 

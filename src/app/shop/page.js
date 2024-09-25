@@ -1,14 +1,13 @@
 'use client'
-import { StoreItem } from "@/components/store/StoreItem";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { client } from "@/lib/sanity/client";
-import { PageLayout } from "@/components/PageLayout";
 import { PageContainer } from "@/components/container/page";
+import { StoreItem } from "@/components/store/StoreItem";
 
 export default function Home() {
 
 	const [data, setData] = useState({ products: null, filter: 'all' });
-	const [columns, setColumns] = useState(null);
+	const categories = ['all', 't-shirts', 'tank tops', 'jeans'];
 
 	useEffect(() => {
 
@@ -22,44 +21,61 @@ export default function Home() {
 
 		getProducts();
 
-		function handleGrid() {
-
-			setColumns(prevColumns => prevColumns === 3 ? 2 : 3);
-
-		};
-
-		setColumns(localStorage.getItem('gridcols') || 3);
-
-		window.addEventListener('grid_change', handleGrid);
-		return () => removeEventListener('grid_change', handleGrid);
-
 	}, []);
 
 	// const productsFilter = data.filter == 'all' ? data.products : data.products.filter(product => product.category.title == data.filter);
 
 	return (
 
-		<PageContainer>
+		<PageContainer className="pt-12 space-y-2">
 
-			{/* <div className="h-auto w-full">
+			{/* <div className="h-40 w-full grid grid-cols-6">
 
-				<section className={`h-auto w-full grid ${columns == 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-2'}  md:grid-cols-2 grid-cols-1`}>
+				<div className="col-start-2 flex items-center">
+					<p className="font-playfair italic font-medium capitalize text-6xl">Shop</p>
+				</div>
 
-					{data.products && data.products.map((item, index) => (
-						<StoreItem key={index} data={item} size={columns == 3 ? 'small' : 'big'} />
-					))}
-
-				</section>
 
 			</div> */}
 
-			<section className={`${data.products ? 'h-auto': 'h-screen'} w-full grid 2lg:grid-cols-3 md:grid-cols-2 grid-cols-1`}>
+
+			<div className="h-40 w-full flex flex-col justify-center md:items-start items-center space-y-3 my-10">
+
+				<div className="bg-neon-green md:mx-32">
+					<p className="capitalize font-playfair italic font-medium text-6xl">shop</p>
+				</div>
+
+				{/* <div className="bg-black w-full h-[1px]"></div> */}
+
+			</div>
+
+			<div className="w-full flex items-center text-sm space-x-4 cursor-pointer">
+				{/* <a className="bg-neon-green text-lg font-playfair italic capitalize font-bold" href="/">all</a> */}
+				{/* <a href="/">t-shirts</a>
+				<a href="/">tank tops</a>
+				<a href="/">jeans</a> */}
+
+				{
+					categories.map((category) => (
+						<a
+							className={`${data.filter == category && "bg-neon-green"}`}
+							onClick={() => setData(prev => ({ ...prev, filter: category }))}
+						>
+							{category}
+						</a>
+					))
+				}
+
+			</div>
+
+			<div className="h-auto w-full grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2  gap-2">
 
 				{data.products && data.products.map((item, index) => (
 					<StoreItem key={index} data={item} />
 				))}
 
-			</section>
+
+			</div>
 
 		</PageContainer>
 

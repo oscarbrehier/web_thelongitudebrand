@@ -1,44 +1,14 @@
 'use client'
-import Navigation from "@/components/navigation";
-import Footer from "@/components/footer";
 import { addToCart } from "@/lib/cart";
-import { getProducts } from "@/lib/store/getProducts";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { client } from "@/lib/sanity/client";
-import { useRouter, usePathname } from "next/navigation";
-import { checkout } from "@/lib/checkout";
-import { v4 as uuidv4 } from 'uuid';
-import { PageLayout } from "@/components/PageLayout";
-import { useAppContext } from "@/lib/context";
 import { PageContainer } from "@/components/container/page";
-import { NavigationBar } from "@/components/navigation/bar";
-import gsap from "gsap";
-import ScrollTrigger from "gsap/ScrollTrigger";
-import { ShopItemContainer } from "@/components/container/ShopItemContainer";
-
-gsap.registerPlugin(ScrollTrigger);
 
 export default function Page({ params }) {
 
     const { item } = params;
 
-    const router = useRouter();
-    const pathname = usePathname();
-
     const [product, setProduct] = useState({ content: null, size: 4 });
-    const [buttons, setButtons] = useState({
-        cart: {
-            text: 'add to cart',
-            clickable: true,
-        },
-        checkout: {
-            clickable: false,
-        },
-    });
-
-    const { height, setHeight } = useAppContext();
-
-    const [windowSize, setWindowSize] = useState({ height: 0, width: 0 });
 
     const addItemToCart = () => {
 
@@ -49,7 +19,7 @@ export default function Page({ params }) {
 
         };
 
-        setButtons(previous => ({ ...previous, cart: { clickable: true, text: 'add to cart' } }))
+        // setButtons(previous => ({ ...previous, cart: { clickable: true, text: 'add to cart' } }))
 
         addToCart({
             item_id: `${product.content._id}&size=${product.size}`,
@@ -64,48 +34,8 @@ export default function Page({ params }) {
             },
         });
 
-    };
-
-    const createCheckout = async () => {
-
-        const size = ['XS', 'S', 'M', 'L'][product.size];
-
-        let stripe_cart = [{
-            price_data: {
-                currency: 'eur',
-                unit_amount: product.content.price * 100,
-                product_data: {
-                    name: `${product.content.title.toUpperCase()} - ${size}`,
-                    images: [product.content.image_url]
-                },
-            },
-            quantity: 1,
-        }];
-
-        let sanity_cart = {
-            _type: 'order',
-            total: 0,
-            products: [{
-                _key: uuidv4(),
-                _type: 'product',
-                product: {
-                    _type: 'reference',
-                    _ref: product.content._id,
-                },
-                size: size,
-                quantity: 1,
-                unit_price: product.content.price,
-            }]
-        };
-
-        let carts = {
-            stripe_cart,
-            sanity_cart
-        };
-
-        let { url } = await checkout(carts, pathname);
-
-        if (url) router.push(url);
+        const updateCartEvent = new Event('cart_update');
+        window.dispatchEvent(updateCartEvent);
 
     };
 
@@ -113,8 +43,6 @@ export default function Page({ params }) {
 
         async function getProduct() {
 
-            // let res = await fetch(`/api/store/getProduct/${item}`);
-            // res = await res.json();
 
             const PRODUCT_QUERY = `*[_type == "product" && slug.current == "${item}"]`;
             const product = await client.fetch(PRODUCT_QUERY);
@@ -124,142 +52,102 @@ export default function Page({ params }) {
 
             setProduct(previous => ({ ...previous, content: product[0] }));
 
+            console.log(product[0])
+
         };
 
         getProduct();
-        setWindowSize({ height: window.innerHeight, width: window.innerWidth });
 
     }, []);
 
     return (
 
-        // <>
+        <PageContainer>
 
-        //     {product.content && (
-        //         <PageLayout category={false}>
+            {product.content && (
 
-        //             <div className="h-auto w-full">
+                <section className="md:h-screen h-auto w-full pt-14 md:grid grid-cols-3 flex flex-col-reverse">
 
-        //                 <div
-        //                     style={{ height: `${windowSize.height !== 0 && windowSize.height - height}px` }}
-        //                     className="md:grid hidden grid-cols-3">
 
-        //                     <div className="h-full w-full bg-neutral-200 flex items-center justify-center p-4 col-span-2">
-        //                         <img className="2lg:w-[60%] w-[90%]" src={product.content.image_url} alt="" />
-        //                     </div>
+                    <div className="h-full w-full flex flex-col items-center">
 
-        //                     <div className="h-full w-full p-4 col-span-1">
+                        <div className="w-full flex justify-between mt-20 px-8">
 
-        //                         <div>
-        //                             <p className="uppercase font-helvetica font-bold text-4xl">{product.content.title}</p>
-        //                             <p className="uppercase font-helvetica font text-2xl">{product.content.price} EUR</p>
-        //                             <p className="mt-2 font-helvetica text-sm w-2/5">Fugiat commodo exercitation magna consequat adipisicing eu voluptate id do enim. Do ullamco et nostrud labore minim pariatur eu ullamco irure ex eiusmod irure.</p>
-        //                         </div>
+                            <p className="capitalize italic font-playfair text-4xl bg-neon-green">{product.content.title}</p>
+                            <p className="capitalize italic font-playfair text-4xl bg-neon-green">{product.content.price}€</p>
 
-        //                         <div className="flex space-x-2 mt-4">
-        //                             {['XS', 'S', 'M', 'L'].map((size, index) => (
-        //                                 <button onClick={(e) => setProduct(previous => ({ ...previous, size: index }))} className={`${product.size == index ? 'bg-neutral-200' : 'bg-neutral-50'} hover:bg-neutral-400 hover:transition-all hover:ease-in-out size-10 flex items-center justify-center text-neutral-900`}>{size}</button>
-        //                             ))}
-        //                         </div>
-
-        //                         <div className="mt-4 space-x-2">
-        //                             <button onClick={addItemToCart} className="h-10 px-4 bg-black text-white font-helvetica font-bold uppercase">
-        //                                 {buttons.cart.text}
-        //                             </button>
-        //                             <button className="h-10 px-4 bg-neutral-400 text-white font-helvetica font-bold uppercase">
-        //                                 checkout
-        //                             </button>
-        //                         </div>
-
-        //                     </div>
-
-        //                 </div>
-
-        //                 <div
-        //                     className="md:hidden flex flex-col grid-cols-3 h-auto">
-
-        //                     <div className="sm:h-auto h-[60vh] w-full bg-neutral-200 flex items-center justify-center sm:py-10 sm:px-4 p-4">
-        //                         <img src={product.content.image_url} alt="" />
-        //                     </div>
-
-        //                     <div className="h-full w-full p-4">
-
-        //                         <div>
-        //                             <p className="uppercase font-helvetica font-bold text-4xl">{product.content.title}</p>
-        //                             <p className="uppercase font-helvetica font text-2xl">{product.content.price} EUR</p>
-        //                             <p className="mt-2 font-helvetica text-sm w-2/3">Fugiat commodo exercitation magna consequat adipisicing eu voluptate id do enim. Do ullamco et nostrud labore minim pariatur eu ullamco irure ex eiusmod irure.</p>
-        //                         </div>
-
-        //                         <div className="flex space-x-2 mt-4">
-        //                             {['XS', 'S', 'M', 'L'].map((size, index) => (
-        //                                 <button onClick={(e) => setProduct(previous => ({ ...previous, size: index }))} className={`${product.size == index ? 'bg-neutral-200' : 'bg-neutral-50'} hover:bg-neutral-400 hover:transition-all hover:ease-in-out size-10 flex items-center justify-center text-neutral-900`}>{size}</button>
-        //                             ))}
-        //                         </div>
-
-        //                         <div className="mt-4 space-x-2">
-        //                             <button onClick={addItemToCart} className="h-10 px-4 bg-black text-white font-helvetica font-bold uppercase">
-        //                                 {buttons.cart.text}
-        //                             </button>
-        //                             <button className="h-10 px-4 bg-neutral-400 text-white font-helvetica font-bold uppercase">
-        //                                 checkout
-        //                             </button>
-        //                         </div>
-
-        //                     </div>
-
-        //                 </div>
-
-        //             </div>
-
-        //         </PageLayout>
-        //     )}
-        // </>
-
-        <ShopItemContainer>
-            <div className="h-screen w-full">
-                {product.content && (
-
-                    <section className="h-full w-full grid grid-cols-2">
-
-                        <div className="h-full w-full flex items-center justify-center">
-                            <img className="w-2/3" src={product.content.image_url} alt="" />
                         </div>
 
-                        <div className="h-full w-full flex items-end">
+                        <div className="w-[28rem] h-auto mt-10 space-y-8">
 
-                            <div className="h-1/2 w-full">
+                            <div className="space-y-2">
 
-                                <p className="uppercase font-helvetica text-primary-blue text-4xl">{product.content.title}</p>
-                                <p className="uppercase font-helvetica text-primary-blue text-2xl">{product.content.price} EUR</p>
+                                <p className="text-xs capitalize">
+                                    color
+                                    <span className="uppercase mx-10">black</span>
+                                </p>
 
-                                <p className="mt-2 font-helvetica text-primary-blue w-2/3">Fugiat commodo exercitation magna consequat adipisicing eu voluptate id do enim. Do ullamco et nostrud labore minim pariatur eu ullamco irure ex eiusmod irure.</p>
+                                <div className="grid grid-cols-5 gap-2">
 
-                                <div className="flex space-x-2 mt-4">
+                                    <div className="flex items-center justify-center uppercase text-sm border-[1px] border-neutral-900 px-2 py-4">
+                                        <img className="w-full" src={product.content.image_url} alt="" />
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+
+                            <div className="space-y-2">
+
+                                <p className="text-xs capitalize">size clothing</p>
+
+                                <div className="grid grid-cols-4 gap-2">
+
                                     {['XS', 'S', 'M', 'L'].map((size, index) => (
-                                        <button onClick={(e) => setProduct(previous => ({ ...previous, size: index }))} className={`${product.size == index ? 'bg-primary-blue text-white' : 'bg-neutral-50'} hover:bg-neutral-400 hover:transition-all hover:ease-in-out size-10 flex items-center justify-center text-neutral-900`}>{size}</button>
+                                        <button 
+                                            onClick={(e) => setProduct(previous => ({ ...previous, size: index }))} 
+                                            className={`${product.size == index && 'bg-neon-green text-black'} flex items-center justify-center uppercase text-sm border-[1px] border-neutral-900`}>
+                                                {size}
+                                        </button>
                                     ))}
+
+
                                 </div>
 
-                                <div className="mt-2 space-x-2">
-                                    <button onClick={addItemToCart} className="h-10 px-4 bg-primary-blue text-white font-helvetica font-bold uppercase">
-                                        {buttons.cart.text}
-                                    </button>
-                                    <button className="h-10 px-4 bg-neutral-400 text-white font-helvetica font-bold uppercase">
-                                        checkout
-                                    </button>
-                                </div>
+                            </div>
 
+                            <div className="flex flex-col space-y-2">
 
+                                <button onClick={addItemToCart} className={`w-full py-1 bg-black uppercase text-sm ${product.size == 4 ? "text-neutral-300" : "text-white "}`}>
+                                    {product.size == 4 ? 'select size' : 'add to cart'}
+                                </button>
+
+                                <button className="w-full py-1 border-[1px] border-black uppercase text-sm">
+                                    add to wishlist
+                                </button>
+
+                            </div>
+
+                            <div className="flex flex-col space-y-2">
+                                <p className="text-xs">Sit sunt commodo eiusmod et deserunt sit labore elit aliqua ad. In do laboris esse do velit in irure. Consequat nulla sit laboris in. Laboris deserunt laborum aliqua proident occaecat minim dolor consequat minim velit incididunt.</p>
                             </div>
 
                         </div>
 
+                    </div>
 
-                    </section>
+                    <div className="h-full w-full flex items-center justify-center col-span-2">
+                        <img className="w-[80%]" src={product.content.image_url} alt="" />
+                    </div>
 
-                )}
-            </div>
-        </ShopItemContainer>
+                    <div className="md:hidden block h-40 w-full"></div>
+
+                </section>
+
+            )}
+
+        </PageContainer>
 
     );
 

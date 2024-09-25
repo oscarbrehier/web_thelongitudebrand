@@ -14,14 +14,22 @@ module.exports = {
 			},
 			colors: {
 				'neon-green': '#37ff47',
-				'primary-blue': '#4834d4'
+				'primary-blue': '#4834d4',
+				'cream-50': '#f9f9f7',
+				'cream-100': '#f4f3ef',
+				'cream-200': '#efeee8',
+				'cream-300': '#eae8e0',
+				'cream-400': '#e5e3d9',
 			}
 		},
 		fontFamily: {
 			"helveticablack": "HelveticaNeueCE-Black",
 			"helvetica75": "HelveticaNeueCe70-Bold",
 			"helvetica": "Helvetica",
-			"chiquita": "Chiquita"
+			"chiquita": "Chiquita",
+			"anderson": "AndersonGrotesk",
+			"space": "Space Grotesk",
+			"playfair": ["Playfair Display", "serif"]
 		},
 		screens: {
 			'xxs': '380px',
