@@ -9,6 +9,7 @@ export default function Page({ params }) {
     const { item } = params;
 
     const [product, setProduct] = useState({ content: null, size: 4 });
+    const [scroll, setScroll] = useState(false);
 
     const addItemToCart = () => {
 
@@ -58,6 +59,19 @@ export default function Page({ params }) {
 
         getProduct();
 
+        const handleScroll = (event) => {
+
+            event.preventDefault();
+
+            const viewportHeight = window.innerHeight;
+            if (window.pageYOffset >= (viewportHeight / 2)) setScroll(true);
+
+        };
+
+        scroll == false && window.addEventListener('scroll', handleScroll);
+
+        return () => window.removeEventListener('scroll', handleScroll);
+
     }, []);
 
     return (
@@ -66,19 +80,19 @@ export default function Page({ params }) {
 
             {product.content && (
 
-                <section className="md:h-screen h-auto w-full pt-14 md:grid grid-cols-3 flex flex-col-reverse">
+                <section className="lg:h-screen h-auto w-full lg:pt-14 lg:pb-0 pb-10 lg:grid lg:grid-cols-3 grid-cols-2 flex flex-col-reverse">
 
 
                     <div className="h-full w-full flex flex-col items-center">
 
-                        <div className="w-full flex justify-between mt-20 px-8">
+                        <div className="w-full flex 3xl:flex-row lg:flex-col flex-row items-start justify-between mt-20 xs:px-8 3xl:space-y-0 lg:space-y-2 space-y-0">
 
-                            <p className="capitalize italic font-playfair text-4xl bg-neon-green">{product.content.title}</p>
-                            <p className="capitalize italic font-playfair text-4xl bg-neon-green">{product.content.price}€</p>
+                            <p className="capitalize italic font-playfair xs:text-4xl text-2xl bg-neon-green">{product.content.title}</p>
+                            <p className="capitalize italic font-playfair xs:text-4xl text-2xl bg-neon-green">{product.content.price}€</p>
 
                         </div>
 
-                        <div className="w-[28rem] h-auto mt-10 space-y-8">
+                        <div className="xs:w-[85%] h-auto mt-10 space-y-8">
 
                             <div className="space-y-2">
 
@@ -102,13 +116,13 @@ export default function Page({ params }) {
 
                                 <p className="text-xs capitalize">size clothing</p>
 
-                                <div className="grid grid-cols-4 gap-2">
+                                <div className="grid xs:grid-cols-4 grid-cols-2 gap-2">
 
                                     {['XS', 'S', 'M', 'L'].map((size, index) => (
-                                        <button 
-                                            onClick={(e) => setProduct(previous => ({ ...previous, size: index }))} 
+                                        <button
+                                            onClick={(e) => setProduct(previous => ({ ...previous, size: index }))}
                                             className={`${product.size == index && 'bg-neon-green text-black'} flex items-center justify-center uppercase text-sm border-[1px] border-neutral-900`}>
-                                                {size}
+                                            {size}
                                         </button>
                                     ))}
 
@@ -137,11 +151,22 @@ export default function Page({ params }) {
 
                     </div>
 
-                    <div className="h-full w-full flex items-center justify-center col-span-2">
-                        <img className="w-[80%]" src={product.content.image_url} alt="" />
+                    <div className="lg:h-full h-screen w-full lg:col-span-2 lg:static relative">
+
+                        <div className="h-full w-full lg:static absolute flex items-center justify-center">
+                            <img className="lg:w-[80%] md:w-[80%] sm:w-[90%] w-full" src={product.content.image_url} alt="" />
+                        </div>
+
+                        <div className="h-screen w-full lg:hidden lg:static absolute flex items-end justify-center py-4">
+                            <div className={`field ${scroll ? 'fade-out' : 'block'}`}>
+                                <div className="mouse"></div>
+                            </div>
+                        </div>  
+
+
                     </div>
 
-                    <div className="md:hidden block h-40 w-full"></div>
+                    {/* <div className="lg:hidden block h-32 w-full"></div> */}
 
                 </section>
 

@@ -25,13 +25,13 @@ export const NavigationBar = () => {
         <div className="md:h-10 h-auto w-full flex md:flex-row flex-col items-center justify-between px-0 py-2 bg-neon-green text-xs z-20 top-4">
 
             <div className="md:w-1/4 w-full md:block flex justify-center">
-                <Link className="/" href="">the<span className="font-semibold">longitude</span>brand</Link>
+                <Link href="/">the<span className="font-semibold">longitude</span>brand</Link>
             </div>
 
             <div className="md:w-3/4 w-full flex md:items-center items-end h-10">
 
                 <div className="md:w-2/3 w-1/2 flex justify-start space-x-2">
-                    <Link className="/shop" href="">shop</Link>
+                    <Link href="/shop">shop</Link>
                 </div>
 
                 <div className="md:w-1/3 w-1/2 flex justify-end space-x-4 ">
