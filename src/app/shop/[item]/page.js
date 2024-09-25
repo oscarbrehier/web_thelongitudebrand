@@ -53,8 +53,6 @@ export default function Page({ params }) {
 
             setProduct(previous => ({ ...previous, content: product[0] }));
 
-            console.log(product[0])
-
         };
 
         getProduct();
@@ -80,10 +78,10 @@ export default function Page({ params }) {
 
             {product.content && (
 
-                <section className="lg:h-screen h-auto w-full lg:pt-14 lg:pb-0 pb-10 lg:grid lg:grid-cols-3 grid-cols-2 flex flex-col-reverse">
+                <section className="lg:h-screen h-auto w-full lg:pb-0 pb-10 lg:grid lg:grid-cols-3 grid-cols-2 flex flex-col-reverse">
 
 
-                    <div className="h-full w-full flex flex-col items-center">
+                    <div className="h-full w-full flex flex-col items-center lg:pt-14">
 
                         <div className="w-full flex 3xl:flex-row lg:flex-col flex-row items-start justify-between mt-20 xs:px-8 3xl:space-y-0 lg:space-y-2 space-y-0">
 
@@ -151,10 +149,14 @@ export default function Page({ params }) {
 
                     </div>
 
-                    <div className="lg:h-full  w-full lg:col-span-2 pt-36 pb-10">
+                    <div className="lg:h-screen w-full lg:col-span-2 lg:py-0 pt-36 pb-10">
 
-                        <div className="h-full w-full flex items-center justify-center">
-                            <img className="lg:w-[80%] md:w-[80%] sm:w-[90%] w-full" src={product.content.image_url} alt="" />
+                        <div className="h-full w-full lg:flex hidden items-center justify-center pt-12 px-4">
+                            <img className="max-h-[80%]" src={product.content.image_url} alt="" />
+                        </div>
+                        
+                        <div className="h-full w-full lg:hidden flex items-center justify-center">
+                            <img className="md:w-[80%] sm:w-[90%] w-full" src={product.content.image_url} alt="" />
                         </div>
 
                         {/* <div className="h-screen w-full lg:hidden lg:static absolute flex items-end justify-center py-4">
