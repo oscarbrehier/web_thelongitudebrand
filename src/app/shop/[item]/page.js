@@ -59,18 +59,18 @@ export default function Page({ params }) {
 
         getProduct();
 
-        const handleScroll = (event) => {
+        // const handleScroll = (event) => {
 
-            event.preventDefault();
+        //     event.preventDefault();
 
-            const viewportHeight = window.innerHeight;
-            if (window.pageYOffset >= (viewportHeight / 2)) setScroll(true);
+        //     const viewportHeight = window.innerHeight;
+        //     if (window.pageYOffset >= (viewportHeight / 2)) setScroll(true);
 
-        };
+        // };
 
-        scroll == false && window.addEventListener('scroll', handleScroll);
+        // scroll == false && window.addEventListener('scroll', handleScroll);
 
-        return () => window.removeEventListener('scroll', handleScroll);
+        // return () => window.removeEventListener('scroll', handleScroll);
 
     }, []);
 
@@ -151,17 +151,17 @@ export default function Page({ params }) {
 
                     </div>
 
-                    <div className="lg:h-full h-screen w-full lg:col-span-2 lg:static relative">
+                    <div className="lg:h-full  w-full lg:col-span-2 pt-36 pb-10">
 
-                        <div className="h-full w-full lg:static absolute flex items-center justify-center">
+                        <div className="h-full w-full flex items-center justify-center">
                             <img className="lg:w-[80%] md:w-[80%] sm:w-[90%] w-full" src={product.content.image_url} alt="" />
                         </div>
 
-                        <div className="h-screen w-full lg:hidden lg:static absolute flex items-end justify-center py-4">
+                        {/* <div className="h-screen w-full lg:hidden lg:static absolute flex items-end justify-center py-4">
                             <div className={`field ${scroll ? 'fade-out' : 'block'}`}>
                                 <div className="mouse"></div>
                             </div>
-                        </div>  
+                        </div>   */}
 
 
                     </div>
