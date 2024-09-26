@@ -35,8 +35,8 @@ export const NavigationBar = () => {
                 </div>
 
                 <div className="md:w-1/3 w-1/2 flex justify-end space-x-4 ">
-                    <Link href="/account">account</Link>
-                    <Link href="/cart">cart ({cartLength})</Link>
+                    <Link href="/">account</Link>
+                    <Link href="/">cart ({cartLength})</Link>
                 </div>
 
             </div>
