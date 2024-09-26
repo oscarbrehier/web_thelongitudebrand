@@ -11,13 +11,18 @@ export const PageContainer = ({ children, className }) => {
 
             <div className={`z-20 px-4` + ' ' + className}>
                 {children}
+
+                <div>
+                    <Footer />
+                </div>
+
             </div>
 
             <div className="z-10 h-auto w-full px-4 fixed top-4">
                 <NavigationBar />
             </div>
 
-        
+
 
         </div>
 

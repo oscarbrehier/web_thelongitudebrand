@@ -7,7 +7,7 @@ import { StoreItem } from "@/components/store/StoreItem";
 export default function Home() {
 
 	const [data, setData] = useState({ products: null, filter: 'all' });
-	const categories = ['all', 't-shirts', 'tank tops', 'jeans'];
+	const [categories, setCategories] = useState([]);
 
 	useEffect(() => {
 
@@ -15,6 +15,12 @@ export default function Home() {
 
 			const CONTENT_QUERY = '*[_type == "product"] { title, images, _type, _id, category ->  { _ref, _type, title }, price, slug }';
 			const content = await client.fetch(CONTENT_QUERY);
+
+			const CATEGORY_QUERY = '*[_type == "category" && count(*[_type == "product" && references(^._id)]) > 0] { title }';
+			const res_categories = await client.fetch(CATEGORY_QUERY);
+
+			setCategories(['all', ...res_categories.map((category) => category.title).reverse()]);
+			
 			setData(previous => ({ ...previous, products: content }));
 
 		};
@@ -23,20 +29,11 @@ export default function Home() {
 
 	}, []);
 
-	// const productsFilter = data.filter == 'all' ? data.products : data.products.filter(product => product.category.title == data.filter);
+	const productsFilter = data.filter == 'all' ? data.products : data.products.filter(product => product.category.title == data.filter);
 
 	return (
 
 		<PageContainer className="pt-12 space-y-2">
-
-			{/* <div className="h-40 w-full grid grid-cols-6">
-
-				<div className="col-start-2 flex items-center">
-					<p className="font-playfair italic font-medium capitalize text-6xl">Shop</p>
-				</div>
-
-
-			</div> */}
 
 
 			<div className="h-40 w-full flex flex-col justify-center md:items-start items-center space-y-3 my-10">
@@ -45,18 +42,12 @@ export default function Home() {
 					<p className="capitalize font-playfair italic font-medium text-6xl">shop</p>
 				</div>
 
-				{/* <div className="bg-black w-full h-[1px]"></div> */}
-
 			</div>
 
 			<div className="w-full flex items-center text-sm space-x-4 cursor-pointer">
-				{/* <a className="bg-neon-green text-lg font-playfair italic capitalize font-bold" href="/">all</a> */}
-				{/* <a href="/">t-shirts</a>
-				<a href="/">tank tops</a>
-				<a href="/">jeans</a> */}
 
 				{
-					categories.map((category) => (
+					categories && categories.map((category) => (
 						<a
 							className={`${data.filter == category && "bg-neon-green"}`}
 							onClick={() => setData(prev => ({ ...prev, filter: category }))}
@@ -68,9 +59,9 @@ export default function Home() {
 
 			</div>
 
-			<div className="h-auto w-full grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2  gap-2">
+			<div className="h-auto w-full grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-2">
 
-				{data.products && data.products.map((item, index) => (
+				{data.products && productsFilter.map((item, index) => (
 					<StoreItem key={index} data={item} />
 				))}
 

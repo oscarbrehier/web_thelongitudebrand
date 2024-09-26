@@ -114,7 +114,7 @@ export default function Page({ params }) {
 
                                 <p className="text-xs capitalize">size clothing</p>
 
-                                <div className="grid xs:grid-cols-4 grid-cols-2 gap-2">
+                                <div className="grid grid-cols-4 gap-2">
 
                                     {['XS', 'S', 'M', 'L'].map((size, index) => (
                                         <button

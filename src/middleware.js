@@ -4,7 +4,7 @@ export async function middleware(request) {
 
     const pathname = request.nextUrl.pathname;
 
-    if (pathname !== "/") return NextResponse.redirect(new URL('/', request.url));
+    // if (pathname !== "/") return NextResponse.redirect(new URL('/', request.url));
 
     return NextResponse.next({});
 

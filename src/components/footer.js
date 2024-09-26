@@ -1,9 +1,9 @@
 'use client'
 import { useEffect, useState } from "react";
-
+import Link from "next/link";
 
 const CityTime = ({ cityName, timeZone }) => {
-    
+
     const [time, setTime] = useState('');
 
     useEffect(() => {
@@ -11,7 +11,7 @@ const CityTime = ({ cityName, timeZone }) => {
         const timer = setInterval(() => {
             setTime(getCurrentTime(timeZone));
         }, 1000);
-        
+
         return () => clearInterval(timer);
 
     }, [timeZone]);
@@ -33,7 +33,7 @@ const CityTime = ({ cityName, timeZone }) => {
     return (
 
         <p>
-            <span className={`${cityName == 'Paris' && 'font-bold'} text-primary-blue`}>{cityName}</span> : {time}
+            <span className={`${cityName == 'Paris' && 'font-bold'}`}>{cityName}</span> : {time}
         </p>
 
     );
@@ -41,6 +41,8 @@ const CityTime = ({ cityName, timeZone }) => {
 };
 
 export default function Footer() {
+
+    const [openMenu, setOpenMenu] = useState(null);
 
     const cities = [
         { name: "Athens", timeZone: 3 },
@@ -50,38 +52,82 @@ export default function Footer() {
         { name: "Tokyo", timeZone: 9 }
     ];
 
+    useEffect(() => {
+        
+        if (openMenu !== null) {
+
+            window.scrollTo({
+                top: document.body.scrollHeight,
+                behavior: 'smooth'
+            });
+
+        };
+
+    }, [openMenu]);
+
+    const handleMenuToggle = (menuId) => {
+        setOpenMenu(openMenu === menuId ? null : menuId);
+    };
 
     return (
 
-        <footer className="h-auto w-full bg-white z-40 relative  xs:flex grid grid-cols-1 justify-between p-8">
+        <footer className="h-auto w-full mt-10 mb-4">
 
-            <div className="uppercase font-helvetica children:text-primary-blue row-end-3 xs:mt-0 mt-4">
-                {/* <p>ATH: 22:42</p>
-                    <p>CDG: 22:42</p>
-                    <p>SYD: 22:42</p>
-                    <p>JFK: 22:42</p>
-                    <p>TYO: 22:42</p> */}
-                {cities.map(city => (
-                    <CityTime key={city.name} cityName={city.name} timeZone={city.timeZone} />
-                ))}
-            </div>
+            <section className="h-auto w-full py-2 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2">
 
-            <div className="xxs:space-x-12 xxs:space-y-0 space-y-4 flex xxs:flex-row flex-col">
+                <div className="flex flex-col space-y-2 sm:col-span-2">
 
-                <div className="h-full uppercase font-helvetica children:text-primary-blue">
-                    <p>services client</p>
-                    <p>terms and conditions</p>
-                    <p>privacy policy</p>
-                    <p>account</p>
+                    <p className="capitalize font-playfair text-4xl italic">newsletter</p>
+
+                    <div className="w-full text-xs">
+
+                        don’t miss out on the latest news, private sales and exclusive offers. sign up to our newsletter
+
+                    </div>
+
+                    <div className="w-full h-10 bg-cream-300 flex">
+
+                        <div className="flex-1 h-full">
+                            <input className="w-full h-full outline-none bg-transparent text-sm placeholder:text-neutral-900 px-2" type="email" placeholder="Email" />
+                        </div>
+
+                        <div className="w-auto flex items-start justify-end text-xs p-2 children:capitalize">
+                            <button>sign up</button>
+                        </div>
+
+
+                    </div>
+
                 </div>
 
-                <div className="h-full uppercase font-helvetica children:text-primary-blue">
-                    <p>newsletter</p>
-                    <p>instagram</p>
+            </section>
+
+            <section className="sm:h-10 w-full bg-neon-green flex sm:flex-row flex-col items-center justify-between children:text-xs children:sm:space-x-4 sm:py-0 py-2">
+
+                <button onClick={() => handleMenuToggle(1)} className="sm:hidden flex items-center justify-between w-full">
+                    <p>help & assistance</p>
+                    <p className="text-base pt-1">{openMenu === 1 ? '-' : '+'}</p>
+                </button>
+
+                <div className={`sm:flex ${openMenu === 1 ? 'w-full flex flex-col px-4 space-y-1' : 'hidden'}`}>
+                    <p>my account</p>
+                    <p>shipping</p>
+                    <p>billing</p>
+                    <p>customer service</p>
+                    <p>contact us</p>
+                </div>
+
+                <button onClick={() => handleMenuToggle(2)} className="sm:hidden flex items-center justify-between w-full">
+                    <p>follow us</p>
+                    <p className="text-base pt-1">{openMenu === 2 ? '-' : '+'}</p>
+                </button>
+
+                <div className={`sm:flex ${openMenu === 2 ? 'w-full h flex flex-col px-4 space-y-1' : 'hidden'}`}>
                     <p>x</p>
+                    <p>instagram</p>
                 </div>
 
-            </div>
+            </section>
 
         </footer>
 
