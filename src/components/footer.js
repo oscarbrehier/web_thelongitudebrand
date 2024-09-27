@@ -110,7 +110,6 @@ export default function Footer() {
                 </button>
 
                 <div className={`sm:flex ${openMenu === 1 ? 'w-full flex flex-col px-4 space-y-1' : 'hidden'}`}>
-                    <p>my account</p>
                     <p>shipping</p>
                     <p>billing</p>
                     <p>customer service</p>

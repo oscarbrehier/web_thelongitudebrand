@@ -8,10 +8,11 @@ import { useRouter, usePathname } from "next/navigation";
 import { checkout } from "@/lib/checkout";
 import { PageLayout } from "@/components/PageLayout";
 import { useAppContext } from "@/lib/context";
+import { PageContainer } from "@/components/container/page";
 
 export default function Page() {
 
-    const [cart, setCart] = useState({ content: [], price: getCartPrice() });
+    const [cart, setCart] = useState({ content: [], price: 0 });
 
     const router = useRouter();
     const pathname = usePathname();
@@ -23,6 +24,7 @@ export default function Page() {
 
         getCartContent();
         setWindowSize({ height: window.innerHeight, width: window.innerWidth });
+        setCart(prev => ({ ...prev, price: getCartPrice() }));
 
     }, []);
 
@@ -52,125 +54,83 @@ export default function Page() {
 
     return (
 
-        //         <div className="h-auto w-full relative">
+        <PageContainer>
 
-        //             <div className={`bg-white h-auto pb-28 w-full absolute z-30`}>
+            <section className="w-full min-h-screen pt-14">
 
-        //                 <Navigation />
+                <div className="h-40 w-full flex flex-col justify-center md:items-start items-center space-y-3 my-10">
 
-        //                 {/* {Object.values(cart).map((item) => (
-        // <div>{item}</div>
-        // ))} */}
+                    <div className="bg-neon-green md:mx-32">
+                        <p className="capitalize font-playfair italic font-medium text-6xl">cart</p>
+                    </div>
 
-        //                 <div className="px-4 mt-10 grid grid-cols-3 gap-4">
+                </div>
 
-        //                     <section className="space-y-4 col-span-1 bg-red-500">
-        //                         {cart.content && cart.content.map((item) => (
-        //                             <CartItem item={item} updateCart={() => getCartContent('cart_item')} />
-        //                         ))}
-        //                     </section>
+                <div className="w-full h-auto grid xl:grid-cols-4 2md:grid-cols-3 grid-cols-1 gap-2">
 
-        //                     <section className="cols-">
-
-        //                     </section>
-
-        //                     {/* <section className="col-span-1 h-60 p-4 flex flex-col justify-between">
-
-        //                         <p className="font-helvetica text-black font-bold text-lg capitalize">order summary</p>
-
-        //                         <div>
-        //                             <p className="font-helvetica text-base flex justify-between"><span className="capitalize">sub total :</span> 000 EUR</p>
-        //                             <p className="font-helvetica text-base flex justify-between"><span className="capitalize">shipping :</span> 000 EUR</p>
-        //                             <p className="font-helvetica"><span className="capitalize text-xl font-bold">shipping :</span> calculated at checkout</p>
-
-        //                             <button className="w-full py-6 flex items-center justify-center bg-black text-white text-2xl font-helvetica75 uppercase mt-4">
-        //                                 proceed to checkout
-        //                             </button>
-        //                         </div>
-
-        //                     </section> */}
-
-        //                 </div>
-
-        //             </div>
-
-        //             {/* <div className="h-screen w-full absolute flex items-end">
-
-        //                 <div className="h-auto py-4 px-4 w-full bg-neutral-200 fixed flex z-30 border-t-[1rem] border-x-[1rem] border-white">
-
-        //                     <div className="w-1/2 h-full flex items-center space-x-2">
-        //                         <div className="">
-        //                             <p className="text-2xl font-helvetica75 uppercase">subtotal: </p>
-        //                             <p className="text-xl font-helvetica">{cart.price.toFixed(2)} EUR</p>
-        //                         </div>
-        //                     </div>
-        //                     <div className="w-1/2 h-full flex items-center justify-end">
-        //                         <button onClick={getCheckout} className="bg-black text-white uppercase font-helvetica75 text-2xl px-8 py-4">
-        //                             proceed to checkout
-        //                         </button>
-        //                     </div>
-
-        //                 </div>
-
-        //             </div> */}
-
-        //             <Footer />
-
-        //         </div>
-
-        //         <div className={`bg-white h-auto w-full`}>
-
-        //             <div className="h-screen w-full flex flex-col">
-
-        //                 <Navigation />
-
-        //                 {/* {Object.values(cart).map((item) => (
-        // <div>{item}</div>
-        // ))} */}
-
-        //                 <div className="flex-1 w-full overflow-hidden px-4 mt-20 grid grid-cols-3 pb-4">
-
-        //                     <section className="h-full w-full overflow-y-scroll space-y-4 col-span-2 ">
-        //                         {cart.content && cart.content.map((item) => (
-        //                             <CartItem item={item} updateCart={() => getCartContent('cart_item')} />
-        //                         ))}
-        //                         {(!cart.content || cart.content.length == 0) && (
-        //                             <div className="h-full w-full flex items-center justify-center">
-        //                                 <p className="mb-20 font-helvetica font-bold text-xl uppercase">your cart is empty</p>
-        //                             </div>
-        //                         )}
-        //                     </section>
-
-        //                     <section className="col-span-1 flex flex-col justify-start">
-        //                         {/* <button onClick={getCheckout} className="bg-black text-white uppercase font-helvetica75 text-2xl w-full py-4 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2">
-        //                             proceed to checkout
-        //                         </button> */}
-
-        //                         <div>
-        //                             <button onClick={getCheckout} className="text-black uppercase font-helvetica75 text-4xl w-auto">
-        //                                 proceed to checkout
-        //                             </button>
-        //                         </div>
-
-        //                         <div className="flex flex-col ml-[2px]">
-        //                             <p className="text-2xl font-helvetica75 uppercase">subtotal: </p>
-        //                             <p className="text-xl font-helvetica">{cart.price.toFixed(2)} EUR</p>
-        //                         </div>
+                    <div className="w-full h-full xl:col-span-3 2md:col-span-2 space-y-2">
+                        {cart.content && cart.content.map((item, idx) => (
+                            <CartItem index={idx} item={item} updateCart={() => getCartContent('cart_item')} />
+                        ))}
+                    </div>
 
 
-        //                     </section>
 
-        //                 </div>
+                    <div className="w-full h-auto space-y-4 2md:static sticky bottom-0 2md:p-0 py-4 bg-cream-100">
 
-        //             </div>
+                        <div className="text-sm capitalize space-y-1">
 
-        //             <Footer />
+                            <div className="w-full flex justify-between">
+                                <p className="text-xs">shipping cost</p>
+                                <p className="text-xs">calculated at checkout</p>
+                            </div>
 
-        //         </div>
+                            <div className="w-full flex justify-between">
+                                <p className="text-sm">total</p>
+                                <p className="text-sm bg-neon-green">{cart.price} €</p>
+                            </div>
 
-        <PageLayout>
+                        </div>
 
-            <section style={{ height: `${windowSize.height - height}px` }} className="w-full grid grid-cols-3">
+                        <button className={`w-full py-1 bg-black text-white uppercase text-sm`}>
+                            proceed to checkout
+                        </button>
+
+                        {/* <div className="flex justify-between sm:children:h-5 grayscale children:select-none space-x-2">
+                            <img src="/images/icons/banks/visa.svg" alt="" />
+                            <img src="/images/icons/banks/mastercard.svg" alt="" />
+                            <img src="/images/icons/banks/amex.svg" alt="" />
+                            <img src="/images/icons/banks/diners.svg" alt="" />
+                            <img src="/images/icons/banks/unionpay.svg" alt="" />
+                            <img src="/images/icons/banks/discover.svg" alt="" />
+                            <img src="/images/icons/banks/bancontact.svg" alt="" />
+                            <img src="/images/icons/banks/eps.svg" alt="" />
+                            <img src="/images/icons/banks/giropay.svg" alt="" />
+                            <img src="/images/icons/banks/ideal.svg" alt="" />
+                        </div> */}
+
+                        <div className="children:text-sm space-y-1 pt-2 2md:block hidden">
+                            <div className="w-full flex justify-between">
+                                <p>shipping methods</p>
+                                <p>+</p>
+                            </div>
+                            <div className="w-full flex justify-between">
+                                <p>returns</p>
+                                <p>+</p>
+                            </div>
+                            <div className="w-full flex justify-between">
+                                <p>secure payment</p>
+                                <p>+</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            {/* <section style={{ height: `${windowSize.height - height}px` }} className="w-full grid grid-cols-3">
 
                 <div className="h-full overflow-y-scroll">
                     {cart.content && cart.content.map((item) => (
@@ -178,9 +138,9 @@ export default function Page() {
                     ))}
                 </div>
 
-            </section>
+            </section> */}
 
-        </PageLayout>
+        </PageContainer>
 
 
     );

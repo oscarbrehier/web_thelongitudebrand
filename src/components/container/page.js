@@ -22,8 +22,6 @@ export const PageContainer = ({ children, className }) => {
                 <NavigationBar />
             </div>
 
-
-
         </div>
 
     );
