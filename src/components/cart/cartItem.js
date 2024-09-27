@@ -46,17 +46,19 @@ export default function CartItem({ index, item, updateCart }) {
 
         <div className="w-full h-auto grid sm:grid-cols-4">
 
-            <div className="h-full flex col-span-3">
+            <div className="h-full col-span-3 flex">
 
                 <p className="font-playfair italic xl:pr-32 xl:block hidden">{index + 1}</p>
 
-                <img className="2md:h-52 max-h-40 bg-cream-200 py-3 px-1" src={item.assets.image} alt="" />
+                <div className="2md:w-52 max-w-40">
+                    <img className=" bg-cream-200 py-3 px-1" src={item.assets.image} alt="" />
+                </div>
 
                 <div className="px-2 flex flex-col justify-between">
 
                     <div>
 
-                        <p className="text-sm">{item.name}</p>
+                        <p className="text-sm 2md:font-normal font-medium">{item.name}</p>
 
                         <div className="h-2 w-full"></div>
 
