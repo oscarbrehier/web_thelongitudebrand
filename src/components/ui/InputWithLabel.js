@@ -1,0 +1,61 @@
+import camelize from "@/lib/camelize";
+import { useState, useEffect } from "react";
+
+export default function InputWithLabel({
+    title,
+    type,
+    value,
+    disabled = false,
+    optional = false,
+    onChange,
+    ...props
+}) {
+
+    const [inputValue, setInputValue] = useState(value || "");
+    const titleValue = title.toLowerCase().replace(/\s+/g, "_");
+
+    useEffect(() => {
+        setInputValue(value || ""); 
+    }, [value]);
+
+    const handleChange = (event) => {
+
+        setInputValue(event.target.value);
+
+        if (onChange) {
+            onChange(event);
+        };
+
+    };
+
+    return (
+        <div className="w-full h-14 bg-cream-300 relative group">
+
+            <label
+                htmlFor={titleValue}
+                className={`
+                    capitalize absolute text-sm left-4 transform transition-all duration-200 ease-in-out
+                    pointer-events-none select-none
+                    ${(inputValue || type === 'date') ? "top-1 text-xs translate-y-1" : "top-1/2 -translate-y-1/2"}
+                    group-focus-within:top-1 group-focus-within:text-xs group-focus-within:translate-y-1
+                    ${disabled ? 'text-neutral-500' : ''}
+                `}>
+                {title}
+                {optional && (
+                    <span className="text-[10px] text-neutral-600 uppercase mx-1">optional</span>
+                )}
+            </label>
+
+            <input
+                className={`w-full h-full outline-none bg-transparent text-sm px-4 pt-4 pb-1 ${disabled ? 'text-neutral-600' : ''}`}
+                type={type}
+                name={camelize(title)}
+                value={inputValue}  // Bind the controlled input to inputValue
+                onChange={handleChange}
+                disabled={disabled}
+                {...props}
+            />
+        </div>
+
+    );
+}

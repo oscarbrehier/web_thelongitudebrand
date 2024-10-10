@@ -20,7 +20,21 @@ module.exports = {
 				'cream-200': '#efeee8',
 				'cream-300': '#eae8e0',
 				'cream-400': '#e5e3d9',
-			}
+				'error-red': '#ff0033',
+			},
+			screens: {
+				'xxs': '380px',
+				'xs': '540px',
+				'sm': '640px',
+				'md': '768px',
+				'2md': '940px',
+				'lg': '1024px',
+				'2lg': '1200px',
+				'xl': '1280px',
+				'2xl': '1400px',
+				'3xl': '1536px',
+				'': '',
+			},
 		},
 		fontFamily: {
 			"helveticablack": "HelveticaNeueCE-Black",

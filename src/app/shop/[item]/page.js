@@ -3,19 +3,40 @@ import { addToCart } from "@/lib/cart";
 import { useEffect, useState } from "react";
 import { client } from "@/lib/sanity/client";
 import { PageContainer } from "@/components/container/page";
+import { useAuthContext } from "@/lib/context/AuthContext";
+import { useModalContext } from "@/lib/context/ModalContext";
+import fetchUserWishlist from "@/lib/sanity/wishlist/fetch";
+import addToWishlist from "@/lib/sanity/wishlist/add";
+import removeFromWishlist from "@/lib/sanity/wishlist/remove";
 
 export default function Page({ params }) {
 
     const { item } = params;
 
-    const [product, setProduct] = useState({ content: null, size: 4 });
-    const [scroll, setScroll] = useState(false);
+    const [product, setProduct] = useState({ content: null, size: 4, wishlist: null });
+    const [labels, setLabels] = useState({
+        size: {
+            text: 'sizes',
+            error: false,
+            errorMessage: 'please select your size first'
+        },
+    });
+
+    const { user, isAuth } = useAuthContext();
+    const { openModal } = useModalContext();
 
     const addItemToCart = () => {
 
         if (product.size == 4) {
 
-            setButtons(previous => ({ ...previous, cart: { clickable: true, text: 'select size' } }));
+            setLabels(prevLabels => ({
+                ...prevLabels,
+                size: {
+                    ...prevLabels.size,
+                    error: true,
+                }
+            }));
+
             return;
 
         };
@@ -40,6 +61,20 @@ export default function Page({ params }) {
 
     };
 
+    const handleWishlist = async () => {
+
+        const action = product.wishlist ? removeFromWishlist : addToWishlist;
+        const res = await action(user.uid, product.content._id);
+
+        if (!res.ok) console.error(res);
+
+        setProduct(prev => ({
+            ...prev,
+            wishlist: !prev.wishlist
+        }));
+
+    };
+
     useEffect(() => {
 
         async function getProduct() {
@@ -57,20 +92,44 @@ export default function Page({ params }) {
 
         getProduct();
 
-        // const handleScroll = (event) => {
-
-        //     event.preventDefault();
-
-        //     const viewportHeight = window.innerHeight;
-        //     if (window.pageYOffset >= (viewportHeight / 2)) setScroll(true);
-
-        // };
-
-        // scroll == false && window.addEventListener('scroll', handleScroll);
-
-        // return () => window.removeEventListener('scroll', handleScroll);
-
     }, []);
+
+    useEffect(() => {
+
+        if (product.size !== 4 && labels.size.error == true) {
+
+            setLabels(prevLabels => ({
+                ...prevLabels,
+                size: {
+                    ...prevLabels.size,
+                    error: false,
+                }
+            }));
+
+        };
+
+    }, [product.size]);
+
+    useEffect(() => {
+
+        const isInUserWishlist = async () => {
+
+            const res = await fetchUserWishlist(user.uid, "_id", product.content._id);
+
+            setProduct(prev => ({
+                ...prev,
+                wishlist: res.length > 0
+            }));
+
+        };
+
+        if (isAuth) {
+
+            isInUserWishlist();
+
+        };
+
+    }, [isAuth, product?.content]);
 
     return (
 
@@ -112,12 +171,13 @@ export default function Page({ params }) {
 
                             <div className="space-y-2">
 
-                                <p className="text-xs capitalize">size clothing</p>
+                                <p className={`text-xs capitalize ${labels.size.error && 'text-red-600'}`}>{labels.size.error ? labels.size.errorMessage : labels.size.text}</p>
 
                                 <div className="grid grid-cols-4 gap-2">
 
                                     {['XS', 'S', 'M', 'L'].map((size, index) => (
                                         <button
+                                            key={index}
                                             onClick={(e) => setProduct(previous => ({ ...previous, size: index }))}
                                             className={`${product.size == index && 'bg-neon-green text-black'} flex items-center justify-center uppercase text-sm border-[1px] border-neutral-900`}>
                                             {size}
@@ -131,12 +191,18 @@ export default function Page({ params }) {
 
                             <div className="flex flex-col space-y-2">
 
-                                <button onClick={addItemToCart} className={`w-full py-1 bg-black uppercase text-sm ${product.size == 4 ? "text-neutral-300" : "text-white "}`}>
-                                    {product.size == 4 ? 'select size' : 'add to cart'}
+                                <button onClick={addItemToCart} className={`w-full h-10 text-sm uppercase bg-black text-white`}>
+                                    add to cart
                                 </button>
 
-                                <button className="w-full py-1 border-[1px] border-black uppercase text-sm">
-                                    add to wishlist
+                                <button
+                                    onClick={handleWishlist}
+                                    className="w-full h-9 uppercase text-sm border-[1px] border-black">
+                                    {
+                                        product.wishlist
+                                            ? 'remove from wishlist'
+                                            : 'add to wishlist'
+                                    }
                                 </button>
 
                             </div>
@@ -154,7 +220,7 @@ export default function Page({ params }) {
                         <div className="h-full w-full lg:flex hidden items-center justify-center pt-12 px-4">
                             <img className="max-h-[80%]" src={product.content.image_url} alt="" />
                         </div>
-                        
+
                         <div className="h-full w-full lg:hidden flex items-center justify-center">
                             <img className="md:w-[80%] sm:w-[90%] w-full" src={product.content.image_url} alt="" />
                         </div>

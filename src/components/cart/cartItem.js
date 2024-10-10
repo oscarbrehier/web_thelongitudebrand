@@ -23,7 +23,6 @@ export default function CartItem({ index, item, updateCart }) {
 
     };
 
-
     return (
 
         // <div className="h-[15rem] w-full bg-neutral-200 flex items-center px-4 border-b-[1px] border-neutral-300">
@@ -51,7 +50,7 @@ export default function CartItem({ index, item, updateCart }) {
                 <p className="font-playfair italic xl:pr-32 xl:block hidden">{index + 1}</p>
 
                 <div className="2md:w-52 max-w-40">
-                    <img className=" bg-cream-200 py-3 px-1" src={item.assets.image} alt="" />
+                    <img className=" bg-cream-200 py-3 px-2" src={item.assets.image} alt="" />
                 </div>
 
                 <div className="px-2 flex flex-col justify-between">
@@ -84,7 +83,12 @@ export default function CartItem({ index, item, updateCart }) {
 
                     </div>
 
-                    <p className="text-[10px] underline capitalize py-2">remove</p>
+                    <div>
+                        <button onClick={() => {
+                            removeFromCart(item.item_id);
+                            updateCart();
+                        }} className="text-[10px] underline capitalize py-2">remove</button>
+                    </div>
 
                 </div>
 

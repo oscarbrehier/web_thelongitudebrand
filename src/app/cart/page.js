@@ -1,14 +1,11 @@
 'use client'
-import Navigation from "@/components/navigation";
-import Footer from "@/components/footer";
 import { getCartItems, getCartPrice, stripeCartFormat, sanityCartFormat } from "@/lib/cart";
 import { useEffect, useState } from "react";
 import CartItem from "@/components/cart/cartItem";
 import { useRouter, usePathname } from "next/navigation";
 import { checkout } from "@/lib/checkout";
-import { PageLayout } from "@/components/PageLayout";
-import { useAppContext } from "@/lib/context";
 import { PageContainer } from "@/components/container/page";
+import Button from "@/components/ui/Button";
 
 export default function Page() {
 
@@ -17,13 +14,9 @@ export default function Page() {
     const router = useRouter();
     const pathname = usePathname();
 
-    const { height, setHeight } = useAppContext();
-    const [windowSize, setWindowSize] = useState({ height: 0, width: 0 });
-
     useEffect(() => {
 
         getCartContent();
-        setWindowSize({ height: window.innerHeight, width: window.innerWidth });
         setCart(prev => ({ ...prev, price: getCartPrice() }));
 
     }, []);
@@ -48,6 +41,7 @@ export default function Page() {
         };
 
         let { url } = await checkout(carts, pathname);
+        console.log(url);
         if (url) router.push(url);
 
     };
@@ -56,47 +50,51 @@ export default function Page() {
 
         <PageContainer>
 
-            <section className="w-full min-h-screen pt-14">
+            <section className="w-full min-h-screen pt-12 flex flex-col">
 
-                <div className="h-40 w-full flex flex-col justify-center md:items-start items-center space-y-3 my-10">
+                <div className="h-40 w-full md:grid grid-cols-4 gap-4 flex flex-col justify-center md:items-end items-center space-y-3 my-10">
 
-                    <div className="bg-neon-green md:mx-32">
-                        <p className="capitalize font-playfair italic font-medium text-6xl">cart</p>
+                    <div className="h-full flex justify-start items-center col-start-2">
+                        <div className="bg-neon-green">
+                            <p className="capitalize font-playfair italic font-medium text-6xl">cart</p>
+                        </div>
                     </div>
 
                 </div>
 
-                <div className="w-full h-auto grid xl:grid-cols-4 2md:grid-cols-3 grid-cols-1 gap-2">
+                {
+                    cart.content.length >= 1 ? (
 
-                    <div className="w-full h-full xl:col-span-3 2md:col-span-2 space-y-2">
-                        {cart.content && cart.content.map((item, idx) => (
-                            <CartItem index={idx} item={item} updateCart={() => getCartContent('cart_item')} />
-                        ))}
-                    </div>
+                        <div className="w-full h-auto grid xl:grid-cols-4 2md:grid-cols-3 grid-cols-1 gap-2">
 
-
-
-                    <div className="w-full h-auto space-y-4 2md:static sticky bottom-0 2md:p-0 py-4 bg-cream-100">
-
-                        <div className="text-sm capitalize space-y-1">
-
-                            <div className="w-full flex justify-between">
-                                <p className="text-xs">shipping cost</p>
-                                <p className="text-xs">calculated at checkout</p>
+                            <div className="w-full h-full xl:col-span-3 2md:col-span-2 space-y-2">
+                                {cart.content && cart.content.map((item, idx) => (
+                                    <CartItem key={idx} index={idx} item={item} updateCart={() => getCartContent('cart_item')} />
+                                ))}
                             </div>
 
-                            <div className="w-full flex justify-between">
-                                <p className="text-sm">total</p>
-                                <p className="text-sm bg-neon-green">{cart.price} €</p>
-                            </div>
 
-                        </div>
+                            <div className="w-full h-auto space-y-4 2md:static sticky bottom-0 2md:p-0 py-4 bg-cream-100">
 
-                        <button className={`w-full py-1 bg-black text-white uppercase text-sm`}>
-                            proceed to checkout
-                        </button>
+                                <div className="text-sm capitalize space-y-1">
 
-                        {/* <div className="flex justify-between sm:children:h-5 grayscale children:select-none space-x-2">
+                                    <div className="w-full flex justify-between">
+                                        <p className="text-xs">shipping cost</p>
+                                        <p className="text-xs">calculated at checkout</p>
+                                    </div>
+
+                                    <div className="w-full flex justify-between">
+                                        <p className="text-sm">total</p>
+                                        <p className="text-sm bg-neon-green">{cart.price} €</p>
+                                    </div>
+
+                                </div>
+
+                                <button onClick={getCheckout} className={`w-full h-10 bg-black hover:bg-neon-green text-white hover:text-black uppercase text-sm`}>
+                                    proceed to checkout
+                                </button>
+
+                                {/* <div className="flex justify-between sm:children:h-5 grayscale children:select-none space-x-2">
                             <img src="/images/icons/banks/visa.svg" alt="" />
                             <img src="/images/icons/banks/mastercard.svg" alt="" />
                             <img src="/images/icons/banks/amex.svg" alt="" />
@@ -109,39 +107,78 @@ export default function Page() {
                             <img src="/images/icons/banks/ideal.svg" alt="" />
                         </div> */}
 
-                        <div className="children:text-sm space-y-1 pt-2 2md:block hidden">
-                            <div className="w-full flex justify-between">
-                                <p>shipping methods</p>
-                                <p>+</p>
+                                <Menu style='2md:block hidden' />
+
                             </div>
-                            <div className="w-full flex justify-between">
-                                <p>returns</p>
-                                <p>+</p>
-                            </div>
-                            <div className="w-full flex justify-between">
-                                <p>secure payment</p>
-                                <p>+</p>
-                            </div>
+
+                            <Menu style='2md:hidden block' />
+
                         </div>
 
-                    </div>
+                    ) : (
 
-                </div>
+                        <div className="flex-1 w-full flex flex-col items-center pt-32 space-y-4">
+
+                            <p>Your shopping cart is empty</p>     
+                            <Button 
+                                title="start shopping"
+                                size="w-96 h-10"
+                            />          
+
+                        </div>
+
+                    )
+                }
 
             </section>
 
-            {/* <section style={{ height: `${windowSize.height - height}px` }} className="w-full grid grid-cols-3">
-
-                <div className="h-full overflow-y-scroll">
-                    {cart.content && cart.content.map((item) => (
-                        <CartItem item={item} updateCart={() => getCartContent('cart_item')} />
-                    ))}
-                </div>
-
-            </section> */}
-
         </PageContainer>
 
+
+    );
+
+};
+
+function Menu({ style }) {
+
+    const [activeMenu, setActiveMenu] = useState(null);
+
+    const handleMenuToggle = (menuId) => {
+        setActiveMenu(activeMenu === menuId ? null : menuId);
+    };
+
+    return (
+
+        <div className={`children:text-sm space-y-1 pt-2 ${style}`}>
+
+            <button onClick={() => handleMenuToggle(1)} className="w-full flex justify-between">
+                <p>shipping methods</p>
+                <p className="text-base pt-1">{activeMenu === 1 ? '-' : '+'}</p>
+            </button>
+
+            <div className={`w-full h-20 ${activeMenu === 1 ? 'flex' : 'hidden'}`}>
+
+            </div>
+
+            <button onClick={() => handleMenuToggle(2)} className="w-full flex justify-between">
+                <p>returns</p>
+                <p className="text-base pt-1">{activeMenu === 2 ? '-' : '+'}</p>
+            </button>
+
+            <div className={`w-full h-20 ${activeMenu === 2 ? 'flex' : 'hidden'}`}>
+
+            </div>
+
+            <button onClick={() => handleMenuToggle(3)} className="w-full flex justify-between">
+                <p>secure payment</p>
+                <p className="text-base pt-1">{activeMenu === 3 ? '-' : '+'}</p>
+            </button>
+
+            <div className={`w-full h-20 ${activeMenu === 3 ? 'flex' : 'hidden'}`}>
+                <p className="text-xs">Ut commodo sunt est ut minim amet velit adipisicing nostrud ullamco tempor adipisicing labore. Cupidatat anim qui consectetur eiusmod enim ut.</p>
+            </div>
+
+        </div>
 
     );
 

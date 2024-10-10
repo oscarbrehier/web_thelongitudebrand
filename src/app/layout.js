@@ -1,19 +1,15 @@
-import { Inter } from "next/font/google";
-import { Poppins } from "next/font/google";
 import "./globals.css";
-import { AppWrapper } from "@/lib/context";
+import { Poppins } from "next/font/google";
 import { AuthContextProvider } from "@/lib/context/AuthContext";
-import { ColorContextProvider } from "@/lib/context/ColorContext";
-
-const inter = Inter({ subsets: ["latin"] });
+import ModalProvider from "@/lib/context/ModalContext";
 
 const poppins = Poppins({
 	display: "swap",
 	subsets: ["latin"],
 	variable: "--poppins-font",
 	weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900']
-  });
-  
+});
+
 
 export const metadata = {
 	title: "Create Next App",
@@ -21,23 +17,21 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+	
 	return (
+
 		<html lang="en">
-			{/* <CartProvider> */}
 
-			<AppWrapper>
+			<AuthContextProvider>
+				<ModalProvider>
 
-				<AuthContextProvider>
-					<ColorContextProvider>
+					<body className={poppins.className}>{children}</body>
 
-						<body className={poppins.className}>{children}</body>
-
-					</ColorContextProvider>
-				</AuthContextProvider>
-
-			</AppWrapper>
-			{/* </CartProvider> */}
+				</ModalProvider>
+			</AuthContextProvider>
 
 		</html>
+
 	);
+
 };

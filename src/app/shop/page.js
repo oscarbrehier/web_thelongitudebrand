@@ -20,7 +20,7 @@ export default function Home() {
 			const res_categories = await client.fetch(CATEGORY_QUERY);
 
 			setCategories(['all', ...res_categories.map((category) => category.title).reverse()]);
-			
+
 			setData(previous => ({ ...previous, products: content }));
 
 		};
@@ -36,19 +36,30 @@ export default function Home() {
 		<PageContainer className="pt-12 space-y-2">
 
 
-			<div className="h-40 w-full flex flex-col justify-center md:items-start items-center space-y-3 my-10">
+			<div className="h-40 w-full md:grid grid-cols-4 gap-4 flex flex-col justify-center md:items-end items-center space-y-3 my-10">
+
+				<div className="h-full flex justify-start items-center col-start-2">
+					<div className="bg-neon-green">
+						<p className="capitalize font-playfair italic font-medium text-6xl">shop</p>
+					</div>
+				</div>
+
+			</div>
+
+			{/* <div className="h-40 w-full flex flex-col justify-center md:items-start items-center space-y-3 my-10">
 
 				<div className="bg-neon-green md:mx-32">
 					<p className="capitalize font-playfair italic font-medium text-6xl">shop</p>
 				</div>
 
-			</div>
+			</div> */}
 
 			<div className="w-full flex items-center text-sm space-x-4 cursor-pointer">
 
 				{
-					categories && categories.map((category) => (
+					categories && categories.map((category, index) => (
 						<a
+							key={index}
 							className={`${data.filter == category && "bg-neon-green"}`}
 							onClick={() => setData(prev => ({ ...prev, filter: category }))}
 						>
