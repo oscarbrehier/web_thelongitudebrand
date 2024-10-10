@@ -1,6 +1,4 @@
 'use client'
-import Navigation from "@/components/navigation";
-import Footer from "@/components/footer";
 import { useEffect, useState } from "react";
 import { client } from "@/lib/sanity/client";
 import { getImage } from "@/lib/sanity/getImage";

@@ -1,6 +1,5 @@
 'use client'
-import { useState, useEffect } from "react";
-import login from "@/lib/authentication/login";
+import { useState } from "react";
 import { PageContainer } from "@/components/container/page";
 import Input from "@/components/ui/Input";
 
