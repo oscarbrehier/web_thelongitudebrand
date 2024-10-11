@@ -1,17 +1,10 @@
 'use client'
 import { useEffect, useState } from "react";
-import { client } from "@/lib/sanity/client";
 import { PageContainer } from "@/components/container/page";
 import { useAuthContext } from "@/lib/context/AuthContext";
 import { useModalContext } from "@/lib/context/ModalContext";
-import fetchUserWishlist from "@/lib/sanity/wishlist/fetch";
-// import addToWishlist from "@/lib/sanity/wishlist/add";
-// import removeFromWishlist from "@/lib/sanity/wishlist/remove";
 import addToWishlist from "@/lib/firestore/wishlist/add";
 import removeFromWishlist from "@/lib/firestore/wishlist/remove";
-
-// import { addToCart } from "@/lib/cart";
-// import addToCart from "@/lib/firestore/cart";
 import { useCartContext } from "@/lib/context/CartContext";
 import { getProductBySlug } from "@/lib/sanity/getProduct";
 import isProductInWishlist from "@/lib/firestore/wishlist/isProductInWishlist";
@@ -80,7 +73,7 @@ export default function Page({ params }) {
     const handleWishlist = async () => {
 
         const action = product.wishlist ? removeFromWishlist : addToWishlist;
-        
+
         await action(product.content._id, user.uid);
 
         setProduct(prev => ({
