@@ -2,6 +2,7 @@ import "./globals.css";
 import { Poppins } from "next/font/google";
 import { AuthContextProvider } from "@/lib/context/AuthContext";
 import ModalProvider from "@/lib/context/ModalContext";
+import { CartProvider } from "@/lib/context/CartContext";
 
 const poppins = Poppins({
 	display: "swap",
@@ -17,17 +18,19 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-	
+
 	return (
 
 		<html lang="en">
 
 			<AuthContextProvider>
-				<ModalProvider>
+				<CartProvider>
+					<ModalProvider>
 
-					<body className={poppins.className}>{children}</body>
+						<body className={poppins.className}>{children}</body>
 
-				</ModalProvider>
+					</ModalProvider>
+				</CartProvider>
 			</AuthContextProvider>
 
 		</html>

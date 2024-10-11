@@ -2,7 +2,7 @@
 import { useAuthContext } from "@/lib/context/AuthContext";
 import { useEffect, useState } from "react";
 import { StoreItem } from "@/components/store/StoreItem";
-import fetchUserWishlist from "@/lib/sanity/wishlist/fetch";
+import fetchUserWishlist from "@/lib/firestore/wishlist/fetch";
 
 export default function Page() {
 
@@ -14,7 +14,7 @@ export default function Page() {
         const fetchData = async () => {
 
             const res = await fetchUserWishlist(user.uid);
-            setData(res);
+            if (res) setData(res);
 
         };
 

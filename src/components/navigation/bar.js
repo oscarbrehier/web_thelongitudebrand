@@ -6,27 +6,29 @@ import { useAuthContext } from "@/lib/context/AuthContext";
 import signOut from "@/lib/authentication/signOut";
 import { useModalContext } from "@/lib/context/ModalContext";
 import { useRouter } from "next/navigation";
+import { useCartContext } from "@/lib/context/CartContext";
 
 export const NavigationBar = () => {
 
-    const [cartLength, setCartLength] = useState(null);
+    // const [cartLength, setCartLength] = useState(null);
     const [authenticated, setAuthenticated] = useState(false);
 
     const { user, isAuth, logout } = useAuthContext();
+    const { cartLength } = useCartContext();
     const { openModal } = useModalContext();
 
     const router = useRouter();
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        const updateCartLength = () => setCartLength(getCartLength());
-        updateCartLength();
+    //     const updateCartLength = () => setCartLength(getCartLength());
+    //     updateCartLength();
 
-        window.addEventListener('cart_update', updateCartLength);
+    //     window.addEventListener('cart_update', updateCartLength);
 
-        return () => window.removeEventListener('cart_update', updateCartLength);
+    //     return () => window.removeEventListener('cart_update', updateCartLength);
 
-    }, []);
+    // }, []);
 
     useEffect(() => {
 

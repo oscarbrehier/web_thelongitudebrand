@@ -6,43 +6,38 @@ import { useRouter, usePathname } from "next/navigation";
 import { checkout } from "@/lib/checkout";
 import { PageContainer } from "@/components/container/page";
 import Button from "@/components/ui/Button";
+import { useAuthContext } from "@/lib/context/AuthContext";
+import getCartFromDb from "@/lib/firestore/getCartFromDb";
+import { useCartContext } from "@/lib/context/CartContext";
 
 export default function Page() {
 
-    const [cart, setCart] = useState({ content: [], price: 0 });
+    // const [cart, setCart] = useState({ content: [], price: 0 });
 
     const router = useRouter();
     const pathname = usePathname();
 
-    useEffect(() => {
+    const { user } = useAuthContext();
+    const { cart, total } = useCartContext();
 
-        getCartContent();
-        setCart(prev => ({ ...prev, price: getCartPrice() }));
+    // const getCartContent = async (trigger) => {
 
-    }, []);
+    //     // setCart(previous => ({ ...previous, content: getCartItems() }));
 
-    const getCartContent = (trigger) => {
-
-        if (trigger == 'cart_item') {
-
-            setCart(previous => ({ ...previous, price: getCartPrice() }));
-
-        };
-
-        setCart(previous => ({ ...previous, content: getCartItems() }));
-
-    };
+    //     const { items, total } = await getCartFromDb(user.uid);
+    //     setCart(previous => ({ ...previous, content: items, price: total }));
+    // };
 
     const getCheckout = async () => {
 
         let carts = {
             stripe_cart: stripeCartFormat(),
-            sanity_cart: sanityCartFormat(),
+            // sanity_cart: sanityCartFormat(),
         };
 
-        let { url } = await checkout(carts, pathname);
-        console.log(url);
-        if (url) router.push(url);
+        await checkout(carts, pathname, user);
+        // console.log(url);
+        // if (url) router.push(url);
 
     };
 
@@ -63,12 +58,12 @@ export default function Page() {
                 </div>
 
                 {
-                    cart.content.length >= 1 ? (
+                    cart !== null ? (
 
                         <div className="w-full h-auto grid xl:grid-cols-4 2md:grid-cols-3 grid-cols-1 gap-2">
 
                             <div className="w-full h-full xl:col-span-3 2md:col-span-2 space-y-2">
-                                {cart.content && cart.content.map((item, idx) => (
+                                {cart.map((item, idx) => (
                                     <CartItem key={idx} index={idx} item={item} updateCart={() => getCartContent('cart_item')} />
                                 ))}
                             </div>
@@ -85,7 +80,8 @@ export default function Page() {
 
                                     <div className="w-full flex justify-between">
                                         <p className="text-sm">total</p>
-                                        <p className="text-sm bg-neon-green">{cart.price} €</p>
+                                        {/* <p className="text-sm bg-neon-green">{cart.price} €</p> */}
+                                        <p className="text-sm bg-neon-green">{total} €</p>
                                     </div>
 
                                 </div>
@@ -119,11 +115,11 @@ export default function Page() {
 
                         <div className="flex-1 w-full flex flex-col items-center pt-32 space-y-4">
 
-                            <p>Your shopping cart is empty</p>     
-                            <Button 
+                            <p>Your shopping cart is empty</p>
+                            <Button
                                 title="start shopping"
                                 size="w-96 h-10"
-                            />          
+                            />
 
                         </div>
 

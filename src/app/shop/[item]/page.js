@@ -1,13 +1,20 @@
 'use client'
-import { addToCart } from "@/lib/cart";
 import { useEffect, useState } from "react";
 import { client } from "@/lib/sanity/client";
 import { PageContainer } from "@/components/container/page";
 import { useAuthContext } from "@/lib/context/AuthContext";
 import { useModalContext } from "@/lib/context/ModalContext";
 import fetchUserWishlist from "@/lib/sanity/wishlist/fetch";
-import addToWishlist from "@/lib/sanity/wishlist/add";
-import removeFromWishlist from "@/lib/sanity/wishlist/remove";
+// import addToWishlist from "@/lib/sanity/wishlist/add";
+// import removeFromWishlist from "@/lib/sanity/wishlist/remove";
+import addToWishlist from "@/lib/firestore/wishlist/add";
+import removeFromWishlist from "@/lib/firestore/wishlist/remove";
+
+// import { addToCart } from "@/lib/cart";
+// import addToCart from "@/lib/firestore/cart";
+import { useCartContext } from "@/lib/context/CartContext";
+import { getProductBySlug } from "@/lib/sanity/getProduct";
+import isProductInWishlist from "@/lib/firestore/wishlist/isProductInWishlist";
 
 export default function Page({ params }) {
 
@@ -24,8 +31,9 @@ export default function Page({ params }) {
 
     const { user, isAuth } = useAuthContext();
     const { openModal } = useModalContext();
+    const { addToCart } = useCartContext();
 
-    const addItemToCart = () => {
+    const addItemToCart = async () => {
 
         if (product.size == 4) {
 
@@ -43,30 +51,37 @@ export default function Page({ params }) {
 
         // setButtons(previous => ({ ...previous, cart: { clickable: true, text: 'add to cart' } }))
 
-        addToCart({
-            item_id: `${product.content._id}&size=${product.size}`,
-            slug: item,
+        // addToCart({
+        //     item_id: `${product.content._id}&size=${product.size}`,
+        //     slug: item,
+        //     name: product.content.title,
+        //     quantity: 1,
+        //     unit_price: product.content.price,
+        //     price: product.content.price,
+        //     size: product.size,
+        //     assets: {
+        //         image: product.content.image_url,
+        //     },
+        // });
+
+        await addToCart({
+            productId: `${product.content._id}&size=${product.size}`,
             name: product.content.title,
-            quantity: 1,
-            unit_price: product.content.price,
-            price: product.content.price,
             size: product.size,
-            assets: {
-                image: product.content.image_url,
-            },
+            price: product.content.price,
+            cover: product.content.cover,
         });
 
-        const updateCartEvent = new Event('cart_update');
-        window.dispatchEvent(updateCartEvent);
+        // const updateCartEvent = new Event('cart_update');
+        // window.dispatchEvent(updateCartEvent);
 
     };
 
     const handleWishlist = async () => {
 
         const action = product.wishlist ? removeFromWishlist : addToWishlist;
-        const res = await action(user.uid, product.content._id);
-
-        if (!res.ok) console.error(res);
+        
+        await action(product.content._id, user.uid);
 
         setProduct(prev => ({
             ...prev,
@@ -77,20 +92,14 @@ export default function Page({ params }) {
 
     useEffect(() => {
 
-        async function getProduct() {
+        async function getProductContent() {
 
-
-            const PRODUCT_QUERY = `*[_type == "product" && slug.current == "${item}"]`;
-            const product = await client.fetch(PRODUCT_QUERY);
-
-            let image_url = `https://cdn.sanity.io/images/xgcgiqjg/production/${product[0].images[0].asset._ref.slice(6).replace('-png', '.png')}`
-            product[0].image_url = image_url;
-
-            setProduct(previous => ({ ...previous, content: product[0] }));
+            const res = await getProductBySlug(item);
+            setProduct(prev => ({ ...prev, content: res }));
 
         };
 
-        getProduct();
+        getProductContent();
 
     }, []);
 
@@ -112,24 +121,21 @@ export default function Page({ params }) {
 
     useEffect(() => {
 
-        const isInUserWishlist = async () => {
-
-            const res = await fetchUserWishlist(user.uid, "_id", product.content._id);
-
-            setProduct(prev => ({
-                ...prev,
-                wishlist: res.length > 0
-            }));
-
-        };
-
         if (isAuth) {
 
-            isInUserWishlist();
+            (async () => {
+
+                const exists = await isProductInWishlist(user.uid, product.content._id);
+                setProduct(prev => ({
+                    ...prev,
+                    wishlist: exists,
+                }));
+
+            })();
 
         };
 
-    }, [isAuth, product?.content]);
+    }, [isAuth]);
 
     return (
 
@@ -161,7 +167,7 @@ export default function Page({ params }) {
                                 <div className="grid grid-cols-5 gap-2">
 
                                     <div className="flex items-center justify-center uppercase text-sm border-[1px] border-neutral-900 px-2 py-4">
-                                        <img className="w-full" src={product.content.image_url} alt="" />
+                                        <img className="w-full" src={product.content.cover} alt="" />
                                     </div>
 
 
@@ -218,11 +224,11 @@ export default function Page({ params }) {
                     <div className="lg:h-screen w-full lg:col-span-2 lg:py-0 pt-36 pb-10">
 
                         <div className="h-full w-full lg:flex hidden items-center justify-center pt-12 px-4">
-                            <img className="max-h-[80%]" src={product.content.image_url} alt="" />
+                            <img className="max-h-[80%]" src={product.content.cover} alt="" />
                         </div>
 
                         <div className="h-full w-full lg:hidden flex items-center justify-center">
-                            <img className="md:w-[80%] sm:w-[90%] w-full" src={product.content.image_url} alt="" />
+                            <img className="md:w-[80%] sm:w-[90%] w-full" src={product.content.cover} alt="" />
                         </div>
 
                         {/* <div className="h-screen w-full lg:hidden lg:static absolute flex items-end justify-center py-4">
