@@ -6,6 +6,7 @@ import { CartProvider } from "@/lib/context/CartContext";
 import { dir } from "i18next";
 import { languages, fallbackLng } from "../i18n/settings";
 import { useTranslation } from "../i18n";
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const poppins = Poppins({
 	display: "swap",
@@ -40,7 +41,10 @@ export default function RootLayout({
 				<CartProvider>
 					<ModalProvider>
 
-						<body  className={poppins.className}>{children}</body>
+						<body  className={poppins.className}>
+							{children}
+							<SpeedInsights />
+						</body>
 
 					</ModalProvider>
 				</CartProvider>
