@@ -3,10 +3,9 @@
 import firebase_app from "@/lib/authentication/firebase";
 import { useAuthContext } from "@/lib/context/AuthContext"
 import { getAuth } from "firebase/auth";
-import useTranslation from "i18n/client";
-import { useEffect } from "react"
+import { useTranslation } from "@/app/i18n/client";
+
 const auth = getAuth(firebase_app);
-import { v4 as uuidv4 } from 'uuid';
 
 export default function Page({ params: { lang } }) {
 
