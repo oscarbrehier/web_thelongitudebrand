@@ -4,7 +4,12 @@ import { PageContainer } from "@/components/container/page";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-export default function Layout({ children }) {
+export default function Layout({ 
+    children,
+    params: {
+        lang
+    }
+ }) {
 
     const pathname = usePathname();
 
@@ -12,7 +17,7 @@ export default function Layout({ children }) {
 
     return (
 
-        <PageContainer>
+        <PageContainer lang={lang}>
 
             <div className="min-h-screen w-full md:pt-16 pt-24 flex flex-col">
 

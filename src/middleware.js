@@ -19,7 +19,6 @@ export async function middleware(request) {
     let lng;
 
     const isLocked = process.env.SITE_LOCKED === "true";
-
     const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
 
     const token = cookieStore.get("authToken")?.value || null;
@@ -29,6 +28,8 @@ export async function middleware(request) {
     if (cookieStore.has(cookieName)) lng = acceptLanguage.get(cookieStore.get(cookieName).value);
     if (!lng) lng = acceptLanguage.get(headersList.get("Accept-Language"));
     if (!lng) lng = fallbackLng;
+
+    if (!cookieStore.get(cookieName).value) NextResponse.next().cookies.set(cookieName, lng);
 
     if (
         !languages.some(loc => pathname.startsWith(`/${loc}`))
@@ -42,6 +43,8 @@ export async function middleware(request) {
         const refererUrl = new URL(headersList.get("referer"));
         const lngInReferer = languages.find((l) => refererUrl.pathname.startsWith(`/${l}`));
         const res = NextResponse.next();
+
+        console.log(lngInReferer)
 
         if (lngInReferer) res.cookies.set(cookieName, lngInReferer);
 

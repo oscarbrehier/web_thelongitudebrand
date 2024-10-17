@@ -55,7 +55,9 @@ export function useTranslation(lng, ns, options) {
 
         useEffect(() => {
 
+            
             if (cookies.i18next === lng) return;
+            console.log(lng);
             setCookie(cookieName, lng, { path: '/' });
 
         }, [lng, cookies.i18next]);
