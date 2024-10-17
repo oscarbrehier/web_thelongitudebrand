@@ -3,10 +3,11 @@ import createCart from "./createCart";
 export default async function createCheckoutSession(items, cancelUrl) {
 
     const { cart } = createCart(items);
+    const { origin } = window.location;
 
     try {
 
-        let { url, id } = await fetch('/api/checkout-session', {
+        let { url, id } = await fetch(`${origin}/api/checkout-session`, {
             method: 'POST',
             body: JSON.stringify({
                 cart: cart,

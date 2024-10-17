@@ -44,8 +44,6 @@ export async function middleware(request) {
         const lngInReferer = languages.find((l) => refererUrl.pathname.startsWith(`/${l}`));
         const res = NextResponse.next();
 
-        console.log(lngInReferer)
-
         if (lngInReferer) res.cookies.set(cookieName, lngInReferer);
 
         return res;

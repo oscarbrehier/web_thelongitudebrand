@@ -1,8 +1,10 @@
 export default async function getCheckoutData(checkoutId) {
 
+	const { origin } = window.location;
+
 	try {
 
-		let res = await fetch('http://localhost:3000/api/checkout-session', {
+		let res = await fetch(`${origin}/api/checkout-session`, {
 			method: 'GET',
 			headers: {
 				'session-id': checkoutId

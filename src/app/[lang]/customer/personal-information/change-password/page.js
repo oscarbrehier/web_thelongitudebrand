@@ -24,9 +24,14 @@ const calculatePasswordStrength = (password) => {
 export default function Page() {
 
     const [form, setForm] = useState({
-        newPassword: "",
-        confirmNewPassword: "",
-        error: "",
+        newPassword: {
+            value: "",
+            error: null
+        },
+        confirmNewPassword: {
+            value: "",
+            error: null
+        },
     });
 
     const [passwordStrength, setPasswordStrength] = useState({
@@ -40,7 +45,10 @@ export default function Page() {
 
         setForm(prev => ({
             ...prev,
-            [name]: type === "checkbox" ? checked : value
+            [name]: {
+                ...prev[name],
+                value: type === "checkbox" ? checked : value
+            }
         }));
 
         if (type === "password") {
@@ -60,10 +68,32 @@ export default function Page() {
         event.preventDefault();
 
         const { newPassword: password, confirmNewPassword: confirmPassword } = form;
+        const { score } = calculatePasswordStrength(password);
+
+        console.log(score)
+
+        if (score !== 40) {
+
+            setForm(prev => ({
+                ...prev,
+                newPassword: {
+                    ...prev.newPassword,
+                    error: "Choose a password with at least 6 characters, including a mix of letters, numbers, and symbols"
+                },
+            }));
+
+        };
 
         if (password !== confirmPassword) {
 
-            setForm(prev => ({ ...prev, error: "Password do not match" }));
+            setForm(prev => ({
+                ...prev,
+                confirmNewPassword: {
+                    ...prev.confirmNewPassword,
+                    error: "Passwords don't match"
+                },
+            }));
+
             return;
 
         };
@@ -86,38 +116,15 @@ export default function Page() {
 
                             <InputWithLabel
                                 title='new password'
-                                value={form.newPassword}
+                                value={form.newPassword.value}
                                 type='password'
                                 onChange={(e) => handleInputChange(e)}
+                                error={form.newPassword.error}
                             />
 
                             <div className="flex flex-col space-y-1">
 
-                                <p className="text-sm text-neutral-600">Minimum of 6 characters, with upper and lowercase, a number and a symbol</p>
-
-                                <div className="flex space-x-1">
-
-                                    <p>{
-
-                                    }</p>
-
-                                    <div className="w-40 h-1 relative">
-
-                                        <div className="w-full h-full absolute bg-neutral-200"></div>
-
-                                        <div style={{
-                                            width: `${(passwordStrength.score / 40) * 100}%`,
-                                            backgroundColor:
-                                                passwordStrength.score === 0 ? '#d9534f' :
-                                                    passwordStrength.score <= 10 ? '#d9534f' :
-                                                        passwordStrength.score <= 20 ? '#f0ad4e' :
-                                                            passwordStrength.score <= 30 ? '#5cb85c' : '#5bc0de',
-                                        }}
-                                            className="h-full absolute bg-red-400"></div>
-
-                                    </div>
-
-                                </div>
+                                {/* <p className="text-sm text-neutral-600">Minimum of 6 characters, with upper and lowercase, a number and a symbol</p> */}
 
                             </div>
 
@@ -125,9 +132,10 @@ export default function Page() {
 
                         <InputWithLabel
                             title='confirm new password'
-                            value={form.confirmNewPassword}
+                            value={form.confirmNewPassword.value}
                             type='password'
                             onChange={(e) => handleInputChange(e)}
+                            error={form.confirmNewPassword.error}
                         />
 
                         {form.error !== "" && (
