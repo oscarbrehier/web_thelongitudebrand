@@ -1,5 +1,4 @@
 import { addDoc, collection, doc, setDoc } from "@firebase/firestore";
-import createUser from "../sanity/createUser";
 import firebase_app, { database } from "./firebase";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 

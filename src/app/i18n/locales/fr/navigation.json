@@ -1,0 +1,12 @@
+{
+    "shop": "boutique",
+    "account": "compte",
+    "cart": "panier",
+    "wishlist": "wishlist",
+    "shipping": "expéditon",
+    "billing": "facturation",
+    "customer_service": "service client",
+    "contact_us": "nous contacter",
+    "help_and_assistance": "aide et assistance",
+    "follow us": "nous suivre"
+}

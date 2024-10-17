@@ -13,6 +13,7 @@ export default function Button({
                     ? 'bg-transparent border-[1px] border-black hover:bg-neon-green'
                     : 'bg-black text-white hover:bg-neon-green hover:text-black'
                 }
+                select-none
                 capitalize text-sm transition-all duration-300 ease-in-out` 
                 + ' ' + size
             }

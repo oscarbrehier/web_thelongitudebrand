@@ -1,18 +1,21 @@
-import Link from "next/link"
+import Link from "next/link";
 
 export default function Hyperlink({
     to,
     title,
     size,
+    border = false,
     ...props
 }) {
 
     return (
 
-        <Link 
+        <Link
             className={`
-                bg-black text-white 
-                hover:bg-neon-green hover:text-black
+                ${border
+                    ? 'bg-transparent border-[1px] border-black hover:bg-neon-green'
+                    : 'bg-black text-white hover:bg-neon-green hover:text-black'
+                }
                 flex items-center justify-center
                 capitalize mt-4 text-sm transition-all duration-300 ease-in-out` + ' ' + size}
             href={to}

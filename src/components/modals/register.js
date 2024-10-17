@@ -146,7 +146,7 @@ export default function RegisterModal() {
 
                     <div className="mt-4 space-y-2">
 
-                        <div className="flex text-sm space-x-4">
+                        <div className="flex text-xs space-x-4">
                             <input
                                 type="checkbox"
                                 checked={form.newsletter}
@@ -155,15 +155,14 @@ export default function RegisterModal() {
                             <p>Subscribe to our newsletter</p>
                         </div>
 
-                        <div className="flex text-sm space-x-4">
+                        <div className="flex text-xs space-x-4">
                             <input
                                 type="checkbox"
                                 checked={form.termsAndConditions}
                                 onChange={() => setForm(prev => ({ ...prev, termsAndConditions: !prev.termsAndConditions }))}
                             />
                             <p>
-                                By selecting "Register", you are confirming that you have read and agree to thelongitudebrand's
-                                <span>Terms & Conditions</span>
+                                By selecting "Register", you are confirming that you have read and agree to thelongitudebrand's <span>Terms & Conditions</span>
                             </p>
                         </div>
 

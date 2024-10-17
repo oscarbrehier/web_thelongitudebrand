@@ -1,17 +1,18 @@
 import Link from "next/link";
 
-export default function OrderTableRow() {
+export default function OrderTableRow({ id, order, ...props }) {
 
     return (
 
         <Link
-            href={`/customer/orders/205039`}
+            href={`/customer/orders/${id}`}
             className="w-full md:h-10 h-auto bg-cream-200 grid md:grid-cols-4 md:gap-2 children:flex children:items-center children:mx-2 cursor-pointer md:p-0 py-2"
+            {...props}
         >
 
             <div>
                 <span className="md:hidden block capitalize text-sm">order ID: &nbsp;</span>
-                <p className="md:font-normal font-medium text-base">#205039</p>
+                <p className="md:font-normal font-medium text-base">#{order.orderId}</p>
             </div>
 
             <div className="md:hidden block w-full h-2"></div>
@@ -23,7 +24,7 @@ export default function OrderTableRow() {
 
             <div>
                 <span className="md:hidden block capitalize text-sm">total: &nbsp;</span>
-                <p className="text-sm">4150€</p>
+                <p className="text-sm">{order.total}€</p>
             </div>
 
             <div className="md:hidden block mt-1">
@@ -35,7 +36,7 @@ export default function OrderTableRow() {
 
                 <p className="capitalize bg-neon-green text-sm md:block hidden">delivered</p>
 
-                <p className="text-sm md:block hidden">view</p>
+                {/* <p className="text-sm md:block hidden">view</p> */}
 
             </div>
 

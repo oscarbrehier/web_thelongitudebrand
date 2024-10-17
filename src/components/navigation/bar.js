@@ -1,16 +1,17 @@
 'use client'
-import { useState, useEffect, useContext } from "react";
-import { getCartLength } from "@/lib/cart";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useAuthContext } from "@/lib/context/AuthContext";
 import signOut from "@/lib/authentication/signOut";
 import { useModalContext } from "@/lib/context/ModalContext";
 import { useRouter } from "next/navigation";
 import { useCartContext } from "@/lib/context/CartContext";
+import { useTranslation } from "@/app/i18n/client";
 
-export const NavigationBar = () => {
+export const NavigationBar = ({ lang }) => {
 
-    // const [cartLength, setCartLength] = useState(null);
+    const { t } = useTranslation(lang, "navigation");
+
     const [authenticated, setAuthenticated] = useState(false);
 
     const { user, isAuth, logout } = useAuthContext();
@@ -18,17 +19,6 @@ export const NavigationBar = () => {
     const { openModal } = useModalContext();
 
     const router = useRouter();
-
-    // useEffect(() => {
-
-    //     const updateCartLength = () => setCartLength(getCartLength());
-    //     updateCartLength();
-
-    //     window.addEventListener('cart_update', updateCartLength);
-
-    //     return () => window.removeEventListener('cart_update', updateCartLength);
-
-    // }, []);
 
     useEffect(() => {
 
@@ -59,30 +49,30 @@ export const NavigationBar = () => {
             </div>
 
             <div className="h-full w-full md:flex hidden items-center justify-end lg:col-span-2">
-                <Link className="text-black" href="/shop">shop</Link>
+                <Link className="text-black" href="/shop">{t('shop')}</Link>
             </div>
 
             <div className="w-full flex items-center justify-end h-10 col-span-1">
 
-                <div className="md:hidden w-1/2 flex justify-start space-x-2">
-                    <Link className="" href="/shop">shop</Link>
+                <div className="md:hidden w-auto flex justify-start space-x-2">
+                    <Link className="" href="/shop">{t('shop')}</Link>
                 </div>
 
-                <div className="md:w-full w-1/2 flex justify-end space-x-4 children:lowercase">
+                <div className="md:w-full w-full flex justify-end space-x-4 children:lowercase">
 
 
                     {authenticated
                         ? (
                             <>
                                 <button onClick={handleSignOut} className="">logout</button>
-                                <Link className="" href="/customer/wishlist">wishlist</Link>
-                                <Link className="" href="/customer/personal-information">account</Link>
+                                <Link className="" href="/customer/wishlist">{t("wishlist")}</Link>
+                                <Link className="" href="/customer/personal-information">{t("account")}</Link>
                             </>
                         )
-                        : <button onClick={() => openModal('signin')}>account</button>
+                        : <button onClick={() => openModal('signin')}>{t("account")}</button>
                     }
 
-                    <Link className="" href="/cart">cart ({cartLength})</Link>
+                    <Link className="" href="/cart">{t("cart")} ({cartLength})</Link>
 
                 </div>
 

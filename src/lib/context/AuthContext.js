@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, createContext, useContext } from "react";
+import { useState, useEffect, createContext, useContext, useRef } from "react";
 import { onAuthStateChanged, getAuth } from "firebase/auth";
 import firebase_app from "../authentication/firebase";
 import { setAuthCookie, deleteAuthCookie } from "@/actions/handleAuthCookie";
@@ -16,11 +16,11 @@ export const AuthContextProvider = ({ children }) => {
 
     useEffect(() => {
 
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
 
             if (user) {
 
-                handleUserSignIn(user);
+                await handleUserSignIn(user);
                 handleTokenRefresh(user);
 
             } else {
@@ -33,7 +33,7 @@ export const AuthContextProvider = ({ children }) => {
 
         return () => {
             unsubscribe();
-            clearInterval(tokenRefreshInterval);    
+            clearInterval(tokenRefreshInterval.current);    
         };
 
     }, []);
@@ -43,7 +43,7 @@ export const AuthContextProvider = ({ children }) => {
         setUser(user);
         setIsAuth(true);
 
-        const token = await user.getIdToken();
+        const token = await user.getIdToken(true);
         await setAuthCookie(token);
 
     };
@@ -57,7 +57,7 @@ export const AuthContextProvider = ({ children }) => {
 
     };
 
-    let tokenRefreshInterval;
+    const tokenRefreshInterval = useRef(null);
 
     const refreshToken = async (user) => {
 
@@ -78,11 +78,11 @@ export const AuthContextProvider = ({ children }) => {
 
     const handleTokenRefresh = (user) => {
 
-        // Refresh the token every 55 minutes
+        // Refresh the token every 50 minutes
 
-        tokenRefreshInterval = setInterval(async () => {
+        tokenRefreshInterval.current = setInterval(async () => {
             await refreshToken(user);
-        }, 3300000);
+        }, 50 * 60 * 1000);
 
     };
 

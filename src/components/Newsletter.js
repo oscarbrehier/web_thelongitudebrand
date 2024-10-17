@@ -1,21 +1,24 @@
 'use client'
 import { useModalContext } from "@/lib/context/ModalContext";
 import { useState } from "react";
+import { useTranslation } from "@/app/i18n/client";
 
-export default function Newsletter() {
+export default function Newsletter({ lang }) {
 
     const [inputValue, setInputValue] = useState('');
     const [error, setError] = useState(false);
 
-    const { openModal } = useModalContext();
+    const { openModal, setValue } = useModalContext();
+
+    const { t } = useTranslation(lang, "newsletter");
 
     const validateEmail = (email) => {
-        
+
         return String(email)
             .toLowerCase()
             .match(
                 /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        );
+            );
 
     };
 
@@ -32,17 +35,9 @@ export default function Newsletter() {
 
             <div className="flex flex-col space-y-2 sm:col-span-2">
 
-                <p className="capitalize font-playfair text-4xl italic">newsletter</p>
+                <p className="capitalize font-playfair text-4xl italic">{t("newsletter")}</p>
 
-                <div className={`w-full text-xs ${error && 'text-red-600'}`}>
-
-                    {
-                        error
-                            ? "please provide a valid email adress"
-                            : "don’t miss out on the latest news, private sales and exclusive offers. sign up to our newsletter"
-                    }
-
-                </div>
+                <div className="w-full text-xs">{t("subscribe_prompt")}</div>
 
                 <div className="w-full h-10 bg-cream-300 flex">
 
@@ -54,23 +49,25 @@ export default function Newsletter() {
                             value={inputValue}
                             onChange={(e) => setInputValue(e.target.value)}
                             placeholder="email"
-                            />
+                        />
 
                     </div>
 
                     <div className="w-auto h-full flex items-center justify-end text-sm p-2 children:capitalize">
-                        <button onClick={() => openModal('newsletter')} className={`${inputValue != '' ? 'block' : 'hidden'}`}>subscribe</button>
+
+                        <button onClick={() => {
+                            openModal('newsletter');
+                            setValue(inputValue);
+                        }}
+                            className={`${inputValue != '' ? 'block' : 'hidden'}`}>
+                            {t("subscribe")}
+                        </button>
+                        
                     </div>
 
                 </div>
 
             </div>
-
-            {/* <div className="col-start-1 h-10">
-                <button>
-                    subscribe
-                </button>
-            </div> */}
 
         </section>
 

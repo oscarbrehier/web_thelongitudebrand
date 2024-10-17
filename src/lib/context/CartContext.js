@@ -22,15 +22,43 @@ export const CartProvider = ({ children }) => {
 
             getCart(user.uid);
 
+        } else {
+
+            getCartFromLocalStorage();
+
         };
 
     }, [user]);
 
     useEffect(() => {
 
-        if (cart.length !== 0) calculateTotal();
+        if (cart.length !== 0) {
+
+            calculateTotal();
+
+        } else {
+
+            setTotal(0);
+
+        };
 
     }, [cart]);
+
+    useEffect(() => {
+
+        const handleStorageChange = () => {
+
+            const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
+            setCart(savedCart);
+
+        };
+
+        window.addEventListener('cartupdate', handleStorageChange);
+
+        return () => {
+            window.removeEventListener("cartupdate", handleStorageChange);
+        };
+    }, []);
 
     const getIndexOfItem = (data, item) => {
 
@@ -69,6 +97,22 @@ export const CartProvider = ({ children }) => {
 
     };
 
+    const saveCartToLocalStorage = (items) => {
+
+        localStorage.setItem("cart", JSON.stringify(items));
+
+        const event = new Event("cartupdate");
+        window.dispatchEvent(event);
+
+    };
+
+    const getCartFromLocalStorage = () => {
+
+        const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
+        setCart(savedCart);
+
+    };
+
     const calculateTotal = () => {
 
         const total = cart.reduce((accumulator, item) => {
@@ -86,7 +130,7 @@ export const CartProvider = ({ children }) => {
 
     };
 
-    const addToCart = async (item) => { 
+    const addToCart = async (item) => {
 
         let temp = [...cart];
 
@@ -105,8 +149,16 @@ export const CartProvider = ({ children }) => {
 
         };
 
-        const { error } = await updateCartInDb(temp);
-        if (error) console.log(error);
+        if (user) {
+
+            const { error } = await updateCartInDb(temp);
+            if (error) console.log(error);
+
+        } else {
+
+            saveCartToLocalStorage(temp);
+
+        };
 
     };
 
@@ -120,8 +172,16 @@ export const CartProvider = ({ children }) => {
 
         temp.splice(itemIndex, 1);
 
-        const { error } = await updateCartInDb(temp);
-        if (error) console.log(error);
+        if (user) {
+
+            const { error } = await updateCartInDb(temp);
+            if (error) console.log(error);
+
+        } else {
+
+            saveCartToLocalStorage(temp);
+
+        };
 
 
     };
@@ -139,9 +199,17 @@ export const CartProvider = ({ children }) => {
             : temp[itemIndex].quantity -= 1;
 
         setCart(temp);
-        
-        const { error } = await updateCartInDb(temp);
-        if (error) console.log(error);
+
+        if (user) {
+
+            const { error } = await updateCartInDb(temp);
+            if (error) console.log(error);
+
+        } else {
+
+            saveCartToLocalStorage(temp);
+
+        };
 
     };
 

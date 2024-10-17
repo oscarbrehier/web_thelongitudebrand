@@ -1,9 +1,10 @@
 import camelize from "@/lib/camelize";
 import { useState, useEffect } from "react";
+import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 
 export default function InputWithLabel({
     title,
-    type,
+    type = "text",
     value,
     disabled = false,
     optional = false,
@@ -14,8 +15,10 @@ export default function InputWithLabel({
     const [inputValue, setInputValue] = useState(value || "");
     const titleValue = title.toLowerCase().replace(/\s+/g, "_");
 
+    const [visible, setVisible] = useState(false);
+
     useEffect(() => {
-        setInputValue(value || ""); 
+        setInputValue(value || "");
     }, [value]);
 
     const handleChange = (event) => {
@@ -29,7 +32,7 @@ export default function InputWithLabel({
     };
 
     return (
-        <div className="w-full h-14 bg-cream-300 relative group">
+        <div className="w-full h-14 bg-cream-300 relative group flex items-center">
 
             <label
                 htmlFor={titleValue}
@@ -48,13 +51,26 @@ export default function InputWithLabel({
 
             <input
                 className={`w-full h-full outline-none bg-transparent text-sm px-4 pt-4 pb-1 ${disabled ? 'text-neutral-600' : ''}`}
-                type={type}
+                type={type === "password" && visible ? "text" : type}
                 name={camelize(title)}
                 value={inputValue}  // Bind the controlled input to inputValue
                 onChange={handleChange}
                 disabled={disabled}
                 {...props}
             />
+
+            {
+                type == "password" && (
+                    <div onClick={() => setVisible(!visible)} className="size-14 flex items-center justify-end children:cursor-pointer text-xs underline hover:no-underline p-4 select-none">
+                        <p>
+                            {
+                                visible ? "hide" : "show"
+                            }
+                        </p>
+                    </div>
+                )
+            }
+
         </div>
 
     );

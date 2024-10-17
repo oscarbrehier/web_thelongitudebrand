@@ -1,18 +1,19 @@
 'use client';
 import { forwardRef, useEffect, useState } from "react";
 
-const Input = forwardRef(({ 
-        title, 
-        type, 
-        required = false, 
-        onChange, 
-        reset, 
-        error = false, 
-        validate = false,
-        ...props 
-    }, ref) => {
+const Input = forwardRef(({
+    title,
+    type = "text",
+    required = false,
+    onChange,
+    reset,
+    error = false,
+    validate = false,
+    value: inputValue,
+    ...props
+}, ref) => {
 
-    const [value, setValue] = useState('');
+    const [value, setValue] = useState(inputValue || "");
     const [errorMessage, setErrorMessage] = useState(null);
 
     const titleValue = title.toLowerCase().replace(/\s+/g, "_");
@@ -20,15 +21,23 @@ const Input = forwardRef(({
     const handleChange = (e) => {
 
         const newValue = e.target.value;
-        
+
         if (errorMessage) {
-            validateField();
-        };
+            validateField(newValue);
+        }
 
         setValue(newValue);
         if (onChange) onChange(newValue);
 
     };
+
+    useEffect(() => {
+
+        if (inputValue !== value) {
+            setValue(inputValue || "");
+        };
+
+    }, [inputValue]);
 
     useEffect(() => {
 
@@ -39,41 +48,37 @@ const Input = forwardRef(({
 
         };
 
-        if (validate == true) validateField();
+        if (validate) {
+
+            validateField(value);
+
+        };
 
     }, [reset, validate]);
 
-    const validateField = () => {
-
+    const validateField = (fieldValue = value) => {
         let error = '';
 
-        if (!value) {
+        if (!fieldValue && required) {
             error = `${title.charAt(0).toUpperCase() + title.slice(1)} is required`;
-        };
+        }
 
-        if (title === 'email' && value) {
-
+        if (title === 'email' && fieldValue) {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-            if (!emailRegex.test(value)) {
+            if (!emailRegex.test(fieldValue)) {
                 error = 'Please enter a valid email address';
-            };
+            }
+        }
 
-        };
-
-        if (props.password && props.password !== value) {
-
+        if (props.password && props.password !== fieldValue) {
             error = "Your passwords don't match.";
-
-        };
+        }
 
         setErrorMessage(error);
-        return;
-
     };
 
     return (
-
         <div className={`w-full ${errorMessage ? 'h-auto' : 'h-10'} bg-cream-300 flex flex-col justify-center`}>
 
             <input
@@ -86,18 +91,19 @@ const Input = forwardRef(({
                 placeholder={title}
                 required={required}
                 ref={ref}
-                onBlur={validateField}
+                onBlur={() => validateField(value)}
                 {...props}
             />
 
             {errorMessage && (
+
                 <div className="h-auto w-full bg-cream-100 py-1">
                     <p className="text-xs text-error-red">{errorMessage}</p>
                 </div>
+
             )}
 
         </div>
-
     );
 });
 

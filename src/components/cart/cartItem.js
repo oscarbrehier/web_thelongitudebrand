@@ -10,7 +10,7 @@ export default function CartItem({ index, item, updateCart }) {
 
         const {productId} = item;
 
-        if (!direction && item.quantity === 1) {
+        if (direction == "down" && item.quantity === 1) {
 
             removeFromCart(productId);
 

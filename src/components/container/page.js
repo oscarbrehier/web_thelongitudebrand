@@ -6,7 +6,7 @@ import RegisterModal from "../modals/register";
 import NewsletterModal from "../modals/newsletter";
 import { useModalContext } from "@/lib/context/ModalContext";
 
-export const PageContainer = ({ children, className }) => {
+export const PageContainer = ({ children, className, lang }) => {
 
     const { activeModal } = useModalContext();
 
@@ -22,13 +22,13 @@ export const PageContainer = ({ children, className }) => {
                     </div>
 
                     <div>
-                        <Footer />
+                        <Footer lang={lang} />
                     </div>
 
                 </div>
 
                 <div className="z-10 h-auto w-full px-4 fixed top-4">
-                    <NavigationBar />
+                    <NavigationBar lang={lang} />
                 </div>
 
             </div>
