@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { createSessionCookie } from "@/lib/authentication/firebaseAdmin";
 
-// const isDevelopment = (process.env.NODE_ENV || 'production') === 'development';
+const isDevelopment = (process.env.NODE_ENV || 'production') === 'development';
 
 export async function POST(request) {
     
@@ -15,10 +15,10 @@ export async function POST(request) {
 
     cookies().set("__session", sessionCookie, {
         maxAge: expiresIn,
-        httpOnly: true,
-        secure: true,
-        // httpOnly: !isDevelopment,
-        // secure: !isDevelopment,
+        // httpOnly: true,
+        // secure: true,
+        httpOnly: !isDevelopment,
+        secure: !isDevelopment,
     });
 
     return NextResponse.json({
