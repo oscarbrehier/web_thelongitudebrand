@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { createSessionCookie } from "@/lib/authentication/firebaseAdmin";
 
-const isDevelopment = process.env.NODE_ENV === 'development';
+const isDevelopment = (process.env.NODE_ENV || 'production') === 'development';
 
 export async function POST(request) {
     
