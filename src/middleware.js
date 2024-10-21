@@ -34,7 +34,7 @@ export async function middleware(request) {
     if (!lng) lng = acceptLanguage.get(headersList.get("Accept-Language"));
     if (!lng) lng = fallbackLng;
 
-    if (!cookieStore.get(cookieName).value) NextResponse.next().cookies.set(cookieName, lng);
+    if (!cookieStore.get(cookieName)?.value) NextResponse.next().cookies.set(cookieName, lng);
 
     if (!languages.some(loc => pathname.startsWith(`/${loc}`)) && !pathname.startsWith("/_next")) {
         return NextResponse.redirect(new URL(`/${lng}${pathname}${request.nextUrl.search}`, request.url));
