@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import verifyFirebaseJwt from './lib/authentication/verifyFirebaseJwt';
 import { cookies } from 'next/headers';
 import { headers } from 'next/headers';
 import acceptLanguage from 'accept-language';
 import { fallbackLng, languages, cookieName } from './app/i18n/settings';
+import verifyFirebaseSessionJwt from './lib/authentication/verifyFirebaseJwt';
 
 acceptLanguage.languages(languages);
 
@@ -13,15 +13,20 @@ const authRoutes = [
 
 export async function middleware(request) {
 
+    let lng;
+    
     const cookieStore = cookies();
     const headersList = headers();
     const pathname = request.nextUrl.pathname;
-    let lng;
+    const { origin } = request.nextUrl;
+    const response = NextResponse.next();
 
     const isLocked = process.env.SITE_LOCKED === "true";
-    const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
 
-    const token = cookieStore.get("authToken")?.value || null;
+    const languageRegex = new RegExp(`^/(${languages.join('|')})`);
+    const isAuthRoute = authRoutes.some((route) => pathname.replace(languageRegex, "").startsWith(route));
+
+    const session = cookieStore.get("__session")?.value;
 
     if (request.nextUrl.pathname.indexOf("icon") > -1 || request.nextUrl.pathname.indexOf("chrome") > -1) return NextResponse.next();
 
@@ -31,10 +36,7 @@ export async function middleware(request) {
 
     if (!cookieStore.get(cookieName).value) NextResponse.next().cookies.set(cookieName, lng);
 
-    if (
-        !languages.some(loc => pathname.startsWith(`/${loc}`))
-        && !pathname.startsWith("/_next")
-    ) {
+    if (!languages.some(loc => pathname.startsWith(`/${loc}`)) && !pathname.startsWith("/_next")) {
         return NextResponse.redirect(new URL(`/${lng}${pathname}${request.nextUrl.search}`, request.url));
     };
 
@@ -49,32 +51,26 @@ export async function middleware(request) {
         return res;
 
     };
-    
+
     if (pathname === "/shop" || pathname === "/password") {
         return NextResponse.next();
     };
 
-    if (!token) {
+    if (isAuthRoute) {
 
-        if (isLocked && !pathname.startsWith("/password")) {
-            
-            return NextResponse.redirect(new URL("/password", request.url));
-            
-        };
+        if (session) {
 
-        if (isAuthRoute) {
+            try {
 
-            return NextResponse.redirect(new URL('/shop', request.url));
+                await verifyFirebaseSessionJwt(session);
+        
+            } catch (err) {
+                
+                if (session && !pathname.includes("/auth/sign-out")) return NextResponse.redirect(new URL("/auth/sign-out", request.url));
+        
+            };
 
-        };
-
-    } else {
-
-        try {
-
-            await verifyFirebaseJwt(token);
-
-        } catch (e) {
+        } else {
 
             return NextResponse.redirect(new URL('/shop', request.url));
 
@@ -82,9 +78,7 @@ export async function middleware(request) {
 
     };
 
-    return NextResponse.next({
-
-    });
+    return response;
 
 };
 

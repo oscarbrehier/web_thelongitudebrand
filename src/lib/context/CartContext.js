@@ -5,6 +5,7 @@ import { useAuthContext } from "./AuthContext";
 import getCartFromDb from "../firestore/getCartFromDb";
 import { doc, setDoc, Timestamp, updateDoc } from "@firebase/firestore";
 import { database } from "../authentication/firebase";
+import updateCartInFirestore from "@/actions/addToCart";
 
 export const CartContext = createContext();
 export const useCartContext = () => useContext(CartContext);
@@ -58,6 +59,7 @@ export const CartProvider = ({ children }) => {
         return () => {
             window.removeEventListener("cartupdate", handleStorageChange);
         };
+
     }, []);
 
     const getIndexOfItem = (data, item) => {
@@ -72,28 +74,44 @@ export const CartProvider = ({ children }) => {
 
     const updateCartInDb = async (items) => {
 
+        // let error;
+
+        // try {
+
+        //     const cartRef = doc(database, "carts", user.uid);
+
+        //     await updateDoc(cartRef, {
+        //         items,
+        //         updatedAt: Timestamp.now()
+        //     });
+
+        //     setCart(items);
+
+        // } catch (err) {
+
+        //     error = err;
+
+        // };
+
+        // return {
+        //     error: error || false
+        // }
+
         let error;
 
         try {
 
-            const cartRef = doc(database, "carts", user.uid);
-
-            await updateDoc(cartRef, {
-                items,
-                updatedAt: Timestamp.now()
-            });
-
-            setCart(items);
+            await updateCartInFirestore(items, user.uid);
 
         } catch (err) {
 
-            error = err;
+            error = err; 
 
         };
 
         return {
             error: error || false
-        }
+        };
 
     };
 
@@ -153,6 +171,7 @@ export const CartProvider = ({ children }) => {
 
             const { error } = await updateCartInDb(temp);
             if (error) console.log(error);
+            setCart(temp);
 
         } else {
 
@@ -176,6 +195,7 @@ export const CartProvider = ({ children }) => {
 
             const { error } = await updateCartInDb(temp);
             if (error) console.log(error);
+            setCart(temp);
 
         } else {
 
@@ -204,6 +224,7 @@ export const CartProvider = ({ children }) => {
 
             const { error } = await updateCartInDb(temp);
             if (error) console.log(error);
+            setCart(temp);
 
         } else {
 

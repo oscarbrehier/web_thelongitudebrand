@@ -8,19 +8,11 @@ export default async function fetchUserWishlist(userId) {
     try {
 
         const wishlist = await getDoc(ref);
-
-        if (wishlist.exists()) {
-
-            return wishlist.data().items;
-
-        } else {
-
-            return null;
-
-        };
+        return wishlist.exists() ? wishlist.data().items : null;
 
     } catch (err) {
 
+        console.log(err);
         return null;
 
     };

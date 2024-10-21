@@ -1,5 +1,5 @@
 "use client"
-import InputWithLabel from "@/components/ui/InputWithLabel";
+import InputWithLabel from "@/app/components/ui/InputWithLabel";
 import secureSignIn from "@/lib/authentication/secureSignIn";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

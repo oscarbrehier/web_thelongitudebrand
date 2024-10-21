@@ -3,13 +3,13 @@ import { cookies } from "next/headers";
 
 async function deleteAuthCookie() {
 
-    cookies().delete("authToken");
+    cookies().delete("__session");
 
 };
 
 async function setAuthCookie(token) {
 
-    cookies().set("authToken", token, {
+    cookies().set("__session", token, {
         httpOnly: true,
         secure: true,
         sameSite: "strict",
@@ -22,3 +22,4 @@ export {
     setAuthCookie,
     deleteAuthCookie,
 };
+

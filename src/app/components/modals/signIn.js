@@ -1,14 +1,15 @@
+"use client"
 import Input from "../ui/Input";
 import { IoClose } from "react-icons/io5";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useModalContext } from "@/lib/context/ModalContext";
-import signIn from "@/lib/authentication/signIn";
-import { useRouter } from "next/navigation";
+import signIn from "@/lib/authentication/auth";
+import * as navigation from "next/navigation";
 
 export default function SignInModal() {
 
     const { activeModal, openModal, closeModal } = useModalContext();
-    const router = useRouter();
+    const router = navigation.useRouter();
 
     const [resetInputs, setResetInputs] = useState(false);
     const [form, setForm] = useState({

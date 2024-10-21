@@ -57,6 +57,7 @@ const Input = forwardRef(({
     }, [reset, validate]);
 
     const validateField = (fieldValue = value) => {
+
         let error = '';
 
         if (!fieldValue && required) {

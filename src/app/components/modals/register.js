@@ -1,3 +1,4 @@
+"use client"
 import { useModalContext } from "@/lib/context/ModalContext";
 import Input from "../ui/Input";
 import { IoClose } from "react-icons/io5";

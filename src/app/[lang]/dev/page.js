@@ -1,29 +1,29 @@
-'use client'
+// import { isUserAuthenticated } from "@/lib/authentication/firebaseAdmin";
+// import { cookies, headers } from "next/headers"
+"use client"
 
-import firebase_app from "@/lib/authentication/firebase";
-import { useAuthContext } from "@/lib/context/AuthContext"
-import { getAuth } from "firebase/auth";
-import { useTranslation } from "@/app/i18n/client";
-
-const auth = getAuth(firebase_app);
+import { deleteAuthCookie } from "@/actions/handleAuthCookie"
+import { useEffect } from "react"
 
 export default function Page({ params: { lang } }) {
 
-    const { user } = useAuthContext();
-    const { t } = useTranslation(lang, "dev");
+    // const cookieStore = cookies();
+    // console.log(cookieStore.get("user-id")?.value)
 
-    const handleButton = async () => {
+    // const isAuth = await isUserAuthenticated();
+    // console.log("is authed", isAuth);
 
-        console.log(t("title"));
+    const handleButtonClick = async () => {
+
+        await deleteAuthCookie();
 
     };
 
     return (
 
         <div>
-            <button onClick={handleButton}>
-                click
-            </button>
+            {/* {isAuth && "logout"} */}
+            <button onClick={handleButtonClick}>delete</button>
         </div>
 
     )

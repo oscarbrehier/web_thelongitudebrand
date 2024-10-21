@@ -1,19 +1,24 @@
-import { collection, getDocs, query, where } from "@firebase/firestore";
-import { database } from "../authentication/firebase";
+import { getCurrentUser } from "../authentication/firebaseAdmin";
+import { adminFirestore } from "./firebaseAdmin";
 
-export default async function getOrders(userId) {
+export default async function getOrders() {
+
+    const user = await getCurrentUser();
+    if (!user) return [];
 
     try {
 
-        const res = await getDocs(query(collection(database, "order"),
-            where("userId", "==", userId),
-        ));
+        const snap = await adminFirestore
+            .collection("order")
+            .where("userId", "==", user.uid).get();
 
-        return res.empty ? [] : res.docs;
+        snap.docs.map((item) => console.log(item.data()));
+
+        return snap.empty ? [] : snap.docs;
 
     } catch (err) {
 
-        throw new Error("Failed to fetch orders.");
+        return [];
 
     };
 

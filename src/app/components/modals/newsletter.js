@@ -1,3 +1,4 @@
+"use client"
 import { useModalContext } from "@/lib/context/ModalContext";
 import { IoClose } from "react-icons/io5";
 import { useState, useEffect, useRef } from "react";
@@ -108,7 +109,7 @@ export default function NewsletterModal() {
         if (form.error) return;
 
         // handleCloseModal();
-        setForm(prev => ({ ...prev, success: true }));
+        setForm(prev => ({ ...prev, submit: false, success: true }));
 
     };
 

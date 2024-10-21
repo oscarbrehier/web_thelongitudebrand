@@ -1,25 +1,39 @@
 'use client'
 import { getCartItems, getCartPrice, stripeCartFormat, sanityCartFormat } from "@/lib/cart";
 import { useEffect, useState } from "react";
-import CartItem from "@/components/cart/cartItem";
+import CartItem from "@/app/components/cart/cartItem";
 import { useRouter, usePathname } from "next/navigation";
 import { checkout } from "@/lib/checkout";
-import { PageContainer } from "@/components/container/page";
-import Button from "@/components/ui/Button";
+import { PageContainer } from "@/app/components/container/page";
+import Button from "@/app/components/ui/Button";
 import { useAuthContext } from "@/lib/context/AuthContext";
 import getCartFromDb from "@/lib/firestore/getCartFromDb";
 import { useCartContext } from "@/lib/context/CartContext";
+import { useCartStore } from "@/lib/stores/useCartStore";
 
-export default function Page() {
+export default function Page({ params: { lang }}) {
 
     // const [cart, setCart] = useState({ content: [], price: 0 });
 
     const router = useRouter();
-    const pathname = usePathname();
 
     const { user } = useAuthContext();
-    const { cart, total } = useCartContext();
+    // const { total } = useCartContext();
+    const cart = useCartStore((state) => state.cart);
+    const total = useCartStore((state) => state.total);
 
+    // useEffect(() => {
+
+    //     const setCartContent = () => {
+
+    //         setCartContent(cart);
+
+    //     };
+
+    //     setCartContent();
+
+    // }, []);
+    
     // const getCartContent = async (trigger) => {
 
     //     // setCart(previous => ({ ...previous, content: getCartItems() }));
@@ -38,7 +52,7 @@ export default function Page() {
 
     return (
 
-        <PageContainer>
+        <PageContainer lang={lang}>
 
             <section className="w-full min-h-screen pt-12 flex flex-col">
 

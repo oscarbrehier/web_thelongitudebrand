@@ -1,29 +1,17 @@
 'use client';
-import { useState } from "react";
-import InputWithLabel from "@/components/ui/InputWithLabel";
-import Button from "@/components/ui/Button";
+import { useEffect, useState } from "react";
+import InputWithLabel from "@/app/components/ui/InputWithLabel";
+import Button from "@/app/components/ui/Button";
+import updatePassword from "@/lib/authentication/updatePassword";
+import getPasswordStrength from "@/lib/getPasswordStrength";
 
-const calculatePasswordStrength = (password) => {
+export default function Page({ params: { lang } }) {
 
-    let score = 0;
-
-    if (password.length >= 6) score += 10;
-    if (/[a-z]/.test(password)) score += 10;
-    if (/[A-Z]/.test(password)) score += 10;
-    if (/\d/.test(password)) score += 10;
-    if (/[\W_]/.test(password)) score += 10;
-
-    if (score === 0) return { score, label: 'very weak' };
-    if (score <= 10) return { score, label: 'weak' };
-    if (score <= 20) return { score, label: 'average' };
-    if (score <= 30) return { score, label: 'good' };
-    return { score, label: 'strong' };
-
-};
-
-export default function Page() {
-
-    const [form, setForm] = useState({
+    const [inputValues, setInputValues] = useState({
+        currentPassword: {
+            value: "",
+            error: null
+        },
         newPassword: {
             value: "",
             error: null
@@ -31,19 +19,20 @@ export default function Page() {
         confirmNewPassword: {
             value: "",
             error: null
-        },
-    });
+        }
+    })
 
-    const [passwordStrength, setPasswordStrength] = useState({
-        score: 0,
-        label: "very weak",
+    const [form, setForm] = useState({
+        submit: false,
+        error: null,
+        hasErrors: false
     });
 
     const handleInputChange = (e) => {
 
         const { name, value, type, checked } = e.target;
 
-        setForm(prev => ({
+        setInputValues(prev => ({
             ...prev,
             [name]: {
                 ...prev[name],
@@ -51,42 +40,23 @@ export default function Page() {
             }
         }));
 
-        if (type === "password") {
-
-            const passwordScore = calculatePasswordStrength(value);
-
-            setPasswordStrength({
-                ...passwordScore
-            });
-
-        };
-
     };
 
     const handleSubmitForm = async (event) => {
 
         event.preventDefault();
 
-        const { newPassword: password, confirmNewPassword: confirmPassword } = form;
-        const { score } = calculatePasswordStrength(password);
+        const { currentPassword, newPassword: password, confirmNewPassword: confirmPassword } = inputValues;
+        let error = false;
 
-        console.log(score)
+        setForm(prev => ({
+            ...prev,
+            submit: true
+        }));
 
-        if (score !== 40) {
+        if (password.value !== confirmPassword.value) {
 
-            setForm(prev => ({
-                ...prev,
-                newPassword: {
-                    ...prev.newPassword,
-                    error: "Choose a password with at least 6 characters, including a mix of letters, numbers, and symbols"
-                },
-            }));
-
-        };
-
-        if (password !== confirmPassword) {
-
-            setForm(prev => ({
+            setInputValues(prev => ({
                 ...prev,
                 confirmNewPassword: {
                     ...prev.confirmNewPassword,
@@ -94,9 +64,62 @@ export default function Page() {
                 },
             }));
 
-            return;
+            error = true;
 
         };
+
+        if (error) {
+
+            console.log(error);
+
+            setTimeout(() => {
+                setForm(prev => ({
+                    ...prev,
+                    submit: false
+                }));
+            }, 300);
+
+            return
+
+        };
+
+        setTimeout(() => {
+            setForm(prev => ({
+                ...prev,
+                submit: false
+            }));
+        }, 300);
+
+        try {
+
+            await updatePassword(currentPassword.value, password.value);
+
+        } catch (e) {
+
+            let returnMessage;
+
+            if (e == "auth/invalid-credential") {
+
+                setInputValues(prev => ({
+                    ...prev,
+                    currentPassword: {
+                        ...prev.currentPassword,
+                        error: "Current password is invalid",
+                    }
+                }));
+
+            } else if (e == "auth/too-many-requests") {
+
+                setForm(prev => ({
+                    ...prev,
+                    error: "Too many requests! Please wait a moment before trying again."
+                }))
+
+            }
+
+        };
+
+        // router.push("/customer/personal-ininputValuesation")
 
     };
 
@@ -112,30 +135,39 @@ export default function Page() {
 
                     <div className="space-y-2">
 
-                        <div className="flex flex-col space-y-1">
+                        <InputWithLabel
+                            title='current password'
+                            value={inputValues.currentPassword.value}
+                            type='password'
+                            onChange={(e) => handleInputChange(e)}
+                            error={inputValues.currentPassword.error}
+                            required={true}
+                            submit={form.submit}
+                            handleError={(e) => setForm(prev => ({ ...prev, hasErrors: e }))}
+                        />
 
-                            <InputWithLabel
-                                title='new password'
-                                value={form.newPassword.value}
-                                type='password'
-                                onChange={(e) => handleInputChange(e)}
-                                error={form.newPassword.error}
-                            />
-
-                            <div className="flex flex-col space-y-1">
-
-                                {/* <p className="text-sm text-neutral-600">Minimum of 6 characters, with upper and lowercase, a number and a symbol</p> */}
-
-                            </div>
-
-                        </div>
+                        <InputWithLabel
+                            title='new password'
+                            value={inputValues.newPassword.value}
+                            type='password'
+                            onChange={(e) => handleInputChange(e)}
+                            error={inputValues.newPassword.error}
+                            required={true}
+                            submit={form.submit}
+                            handleError={(e) => setForm(prev => ({ ...prev, hasErrors: e }))}
+                            checkPasswordStrength={true}
+                        />
 
                         <InputWithLabel
                             title='confirm new password'
-                            value={form.confirmNewPassword.value}
+                            value={inputValues.confirmNewPassword.value}
                             type='password'
                             onChange={(e) => handleInputChange(e)}
-                            error={form.confirmNewPassword.error}
+                            error={inputValues.confirmNewPassword.error}
+                            required={true}
+                            submit={form.submit}
+                            handleError={(e) => setForm(prev => ({ ...prev, hasErrors: e }))}
+                            password={inputValues.newPassword.value}
                         />
 
                         {form.error !== "" && (

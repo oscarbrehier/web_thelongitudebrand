@@ -2,16 +2,15 @@ import * as jose from 'jose';
 
 let publicKeys;
 const firebaseProjectId = "auth-thelongitudebrand";
+const publicKeysUrl = "https://www.googleapis.com/identitytoolkit/v3/relyingparty/publicKeys";
 
-const getPublicKeys = async () => {
+const getPublicKeys = async (url) => {
 
     if (publicKeys) {
         return publicKeys;
     };
 
-    const res = await fetch(
-        `https://www.googleapis.com/service_accounts/v1/metadata/x509/securetoken@system.gserviceaccount.com`,
-    );
+    const res = await fetch(url);
 
     publicKeys = await res.json();
     return publicKeys;
@@ -20,7 +19,7 @@ const getPublicKeys = async () => {
 
 const verifyFirebaseJwt = async (firebaseJwt) => {
 
-    const publicKeys = await getPublicKeys();
+    const publicKeys = await getPublicKeys(`https://www.googleapis.com/service_accounts/v1/metadata/x509/securetoken@system.gserviceaccount.com`);
 
     const decodedToken = await jose.jwtVerify(
 
@@ -47,4 +46,29 @@ const verifyFirebaseJwt = async (firebaseJwt) => {
 
 };
 
-export default verifyFirebaseJwt;
+const verifyFirebaseSessionJwt = async (session) => {
+
+    const publicKeys = await getPublicKeys(publicKeysUrl);
+
+    const { payload, protectedHeader } = await jose.jwtVerify(session, async (header) => {
+
+        const x509Cert = publicKeys[header.kid];
+
+        if (!x509Cert) {
+            throw new Error("Invalid key ID");
+        };
+
+        return await jose.importX509(x509Cert, "RS256");
+
+    });
+
+    if (payload.aud !== firebaseProjectId) throw new Error("Invalid audience");
+    if (payload.iss !== `https://session.firebase.google.com/${firebaseProjectId}`) throw new Error("Invalid issuer");
+    if (!payload.sub || typeof payload.sub !== 'string') throw new Error("Invalid subject");
+
+    return payload.sub;
+
+};
+
+// export default verifyFirebaseJwt;
+export default verifyFirebaseSessionJwt

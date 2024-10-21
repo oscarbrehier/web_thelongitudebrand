@@ -6,6 +6,7 @@ async function getProduct(query) {
 
     let image_url = `https://cdn.sanity.io/images/xgcgiqjg/production/${product[0].images[0].asset._ref.slice(6).replace('-png', '.png')}`
     product[0].cover = image_url;
+    product[0].image_ref = product[0].images[0].asset._ref;
 
     return product[0];
 

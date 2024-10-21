@@ -1,14 +1,16 @@
 'use client'
 import { useState } from "react";
 import { useTranslation } from "@/app/i18n/client";
-import { StoreItem } from "@/components/store/StoreItem";
+import { StoreItem } from "@/app/components/store/StoreItem";
 
 export default function ProductsFilter({ lang, products, categories }) {
 
     const [filter, setFilter] = useState('view_all');
     const { t } = useTranslation(lang, "shop");
 
-    const filteredProducts = filter === 'view_all' ? products : products.filter(product => product.category.title === filter);
+    const filteredProducts = filter === 'view_all'
+        ? products
+        : products.filter(product => product.category.title === filter);
 
     return (
 
@@ -30,13 +32,12 @@ export default function ProductsFilter({ lang, products, categories }) {
 
             </div>
 
-            <div className="h-auto w-full grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-2 mt-1">
+            <div className="h-auto w-full grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-2">
 
-                {products && filteredProducts.map((item, index) => (
-                    <StoreItem key={index} data={item} />
+                {filteredProducts.map((item) => (
+                    <StoreItem key={item._id} data={item} />
                 ))}
-
-
+                
             </div>
 
         </>

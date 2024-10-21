@@ -1,30 +1,37 @@
-'use client'
-import { useAuthContext } from "@/lib/context/AuthContext";
-import { useEffect, useState } from "react";
-import { StoreItem } from "@/components/store/StoreItem";
-import fetchUserWishlist from "@/lib/firestore/wishlist/fetch";
+import { adminFirestore } from "@/lib/firestore/firebaseAdmin";
+import { getProductById } from "@/lib/sanity/getProduct";
+import { StoreItem } from "@/app/components/store/StoreItem";
+import { getCurrentUser } from "@/lib/authentication/firebaseAdmin";
 
-export default function Page() {
+export default async function Page() {
+    
+    let data = null;
 
-    const [data, setData] = useState(null);
-    const { user, isAuth } = useAuthContext();
+    const user = await getCurrentUser();
+    if (!user) return;
+    
+    const ref = adminFirestore.collection("wishlist").doc(user.uid);
+    const doc = await ref.get();
 
-    useEffect(() => {
 
-        const fetchData = async () => {
+    if (doc.exists) {
 
-            const res = await fetchUserWishlist(user.uid);
-            if (res) setData(res);
+        data = [];
 
-        };
+        const productsId = doc.data().items;
+        data = await Promise.all(
 
-        if (isAuth) {
+            productsId.map(async (productId) => {
 
-            fetchData();
+                const res = await getProductById(productId);
+                return res;
 
-        };
+            })
 
-    }, [isAuth]);
+        );
+
+    };
+
 
     return (
 

@@ -1,6 +1,6 @@
 import { client } from "@/lib/sanity/client";
-import { PageContainer } from "@/components/container/page";
-import ProductsFilter from "@/components/ProductsFilter";
+import { PageContainer } from "@/app/components/container/page";
+import ProductsFilter from "@/app/components/ProductsFilter";
 import { useTranslation } from "@/app/i18n";
 
 export default async function Page({ params: { lang } }) {

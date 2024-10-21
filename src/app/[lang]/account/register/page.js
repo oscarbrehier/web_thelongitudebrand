@@ -1,7 +1,7 @@
 'use client'
 import { useState } from "react";
-import { PageContainer } from "@/components/container/page";
-import Input from "@/components/ui/Input";
+import { PageContainer } from "@/app/components/container/page";
+import Input from "@/app/components/ui/Input";
 
 export default function Page() {
 

@@ -1,48 +1,18 @@
-'use client'
-import Hyperlink from "@/components/ui/Hyperlink";
-import OrderTableRow from "@/components/OrderTableRow";
-import { useEffect, useState } from "react";
+import Hyperlink from "@/app/components/ui/Hyperlink";
+import OrderTableRow from "@/app/components/OrderTableRow";
 import getOrders from "@/lib/firestore/getOrders";
-import { useAuthContext } from "@/lib/context/AuthContext";
 
-export default function Page() {
+export default async function Page() {
 
-    const [data, setData] = useState([]);
-
-    const { user } = useAuthContext();
-
-    useEffect(() => {
-
-        const getData = async () => {
-
-            try {
-
-                const res = await getOrders(user.uid);
-                setData(res);
-
-            } catch (err) {
-
-                console.error(err);
-
-            };
-            
-
-        };
-
-        if (user) {
-
-            getData();
-
-        };
-
-    }, [user]);
+    const orders = await getOrders();
+    console.log(orders)
 
     return (
 
-        <div className={`w-full ${data.length !== 0 ? 'h-auto' : 'flex-1'}`}>
+        <div className={`w-full ${orders.length !== 0 ? 'h-auto' : 'flex-1'}`}>
 
             {
-                data.length === 0 ? (
+                orders.length === 0 ? (
 
                     <div className="w-full h-full flex flex-col items-center justify-center space-y-4 pb-20">
 
@@ -73,7 +43,7 @@ export default function Page() {
                             </div>
 
                             {
-                                data.map((order, index) => (
+                                orders.map((order, index) => (
                                     <OrderTableRow key={index} id={order.id} order={order.data()} />
                                 ))
                             }

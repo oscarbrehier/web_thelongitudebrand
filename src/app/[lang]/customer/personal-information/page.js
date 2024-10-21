@@ -1,12 +1,12 @@
 'use client';
 import { useState, useEffect } from "react";
-import InputWithLabel from "@/components/ui/InputWithLabel";
-import Button from "@/components/ui/Button";
+import InputWithLabel from "@/app/components/ui/InputWithLabel";
+import Button from "@/app/components/ui/Button";
 import { IoCheckmark } from "react-icons/io5";
 import { useAuthContext } from "@/lib/context/AuthContext";
 import getUserFromUid from "@/lib/authentication/getUserFromUid";
 import updateUserProfile from "@/lib/authentication/updateUserProfile";
-import Hyperlink from '@/components/ui/Hyperlink';
+import Hyperlink from '@/app/components/ui/Hyperlink';
 
 export default function Page() {
 

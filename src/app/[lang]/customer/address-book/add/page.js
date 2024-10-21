@@ -1,11 +1,11 @@
 'use client';
-import { PageContainer } from "@/components/container/page";
+import { PageContainer } from "@/app/components/container/page";
 import { useState } from "react";
-import InputWithLabel from "@/components/ui/InputWithLabel";
-import Button from "@/components/ui/Button";
+import InputWithLabel from "@/app/components/ui/InputWithLabel";
+import Button from "@/app/components/ui/Button";
 import { IoChevronDownOutline } from "react-icons/io5";
-import Select from "@/components/ui/Select";
-import PhoneSelect from "@/components/ui/PhoneSelect";
+import Select from "@/app/components/ui/Select";
+import PhoneSelect from "@/app/components/ui/PhoneSelect";
 
 const countries = [
     "afghanistan", "albania", "algeria", "andorra", "angola", "antigua and barbuda", "argentina", "armenia", "australia", "austria", "azerbaijan",

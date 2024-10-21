@@ -1,6 +1,6 @@
 'use client';
-import Button from "@/components/ui/Button";
-import Hyperlink from "@/components/ui/Hyperlink";
+import Button from "@/app/components/ui/Button";
+import Hyperlink from "@/app/components/ui/Hyperlink";
 
 export default function Page() {
 

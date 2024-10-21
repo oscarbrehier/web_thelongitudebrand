@@ -1,4 +1,4 @@
-'use client'
+"use client"
 import { createContext, useContext, useState } from "react";
 
 export const ModalContext = createContext();
@@ -9,13 +9,13 @@ export default function ModalProvider({ children }) {
     const [activeModal, setActiveModal] = useState(null);
     const [value, setValue] = useState(null);
 
-    const openModal = (modalName) => {
-        setActiveModal(modalName);
-    };
+    const openModal = (modalName) => setActiveModal(modalName);
 
     const closeModal = () => {
+
         setActiveModal(null);
         setValue(null);
+
     };
 
     return (

@@ -7,6 +7,8 @@ import { dir } from "i18next";
 import { languages, fallbackLng } from "../i18n/settings";
 import { useTranslation } from "../i18n";
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Analytics } from "@vercel/analytics/react";
+import { getCurrentUser, isUserAuthenticated } from "@/lib/authentication/firebaseAdmin";
 
 const poppins = Poppins({
 	display: "swap",
@@ -26,28 +28,32 @@ export async function generateStaticParams() {
 
 };
 
-export default function RootLayout({ 
+export default async function RootLayout({ 
 	children,
 	params: {
 		lang
 	}
 }) {
 
+	const user = await getCurrentUser();
+
 	return (
 
 		<html lang={lang} dir={dir(lang)}>
 
 			<AuthContextProvider>
-				<CartProvider>
+
+				<CartProvider user={user ? user.uid : null} >
 					<ModalProvider>
 
-						<body  className={poppins.className}>
+						<body className={poppins.className}>
 							{children}
-							<SpeedInsights />
+							{/* <SpeedInsights /> */}
 						</body>
 
 					</ModalProvider>
 				</CartProvider>
+
 			</AuthContextProvider>
 
 		</html>
