@@ -1,6 +1,6 @@
 'use client'
 import { useState } from "react";
-import { PageContainer } from "@/app/components/container/page";
+import { PageContainer } from "@/app/components/container/PageContainer";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 

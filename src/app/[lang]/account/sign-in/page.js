@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from "react";
 import signIn from "@/lib/authentication/signIn";
-import { PageContainer } from "@/app/components/container/page";
+import { PageContainer } from "@/app/components/container/PageContainer";
 import Input from "@/app/components/ui/Input";
 
 export default function Page() {

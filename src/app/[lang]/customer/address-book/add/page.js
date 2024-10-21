@@ -1,5 +1,5 @@
 'use client';
-import { PageContainer } from "@/app/components/container/page";
+import { PageContainer } from "@/app/components/container/PageContainer";
 import { useState } from "react";
 import InputWithLabel from "@/app/components/ui/InputWithLabel";
 import Button from "@/app/components/ui/Button";

@@ -1,5 +1,5 @@
 import { client } from "@/lib/sanity/client";
-import { PageContainer } from "@/app/components/container/page";
+import { PageContainer } from "@/app/components/container/PageContainer";
 import ProductsFilter from "@/app/components/ProductsFilter";
 import { useTranslation } from "@/app/i18n";
 

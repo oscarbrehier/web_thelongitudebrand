@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import CartItem from "@/app/components/cart/cartItem";
 import { useRouter, usePathname } from "next/navigation";
 import { checkout } from "@/lib/checkout";
-import { PageContainer } from "@/app/components/container/page";
+import { PageContainer } from "@/app/components/container/PageContainer";
 import Button from "@/app/components/ui/Button";
 import { useAuthContext } from "@/lib/context/AuthContext";
 import getCartFromDb from "@/lib/firestore/getCartFromDb";
