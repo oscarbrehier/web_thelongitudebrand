@@ -54,9 +54,7 @@ export async function middleware(request) {
     if (pathname.startsWith("/shop") || pathname.startsWith("/password")) {
         return NextResponse.next();
     };
-
-    console.log(session)
-
+    
     if (session) {
 
         try {
