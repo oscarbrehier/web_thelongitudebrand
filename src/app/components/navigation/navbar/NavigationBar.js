@@ -1,19 +1,21 @@
 "use client"
-import { useTranslation } from "@/app/i18n/client";
-import { signOut } from "@/lib/authentication/auth";
-import { useAuthContext } from "@/lib/context/AuthContext";
 import { useModalContext } from "@/lib/context/ModalContext";
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useAuthContext } from "@/lib/context/AuthContext";
 import { useCartStore } from "@/lib/stores/useCartStore";
+import { usePathname, useRouter } from "next/navigation";
+import { signOut } from "@/lib/authentication/service";
+import { useTranslation } from "@/app/i18n/client";
+import { languages } from "@/app/i18n/settings";
+import { authRoutes } from "@/lib/settings";
+import Link from "next/link";
 
 export default function NavigationBar({ lang }) {
 
-    // const [cartLength, setCartLength] = useState(0);
- 
+    const pathname = usePathname();
+    const router = useRouter();
+
     const { isAuth } = useAuthContext();
     const { openModal } = useModalContext();
-    // const { cartLength } = useCartContext();
     const cartLength = useCartStore((state) => state.cart.length);
 
     const { t } = useTranslation(lang, "navigation");
@@ -24,19 +26,18 @@ export default function NavigationBar({ lang }) {
 
     const handleSignOut = async () => {
 
+        const languageRegex = new RegExp(`^/(${languages.join('|')})`);
+        const isAuthRoute = authRoutes.some((route) => pathname.replace(languageRegex, "").startsWith(route));
+
         clearCart();
         localStorage.removeItem("cart");
 
         const res = await signOut();
+
         if (!res) console.error("error signing out");
+        if (isAuthRoute) router.push("/shop");
 
     };
-
-    // useEffect(() => {
-
-    //     setCartLength(JSON.parse(localStorage.getItem("cart-storage")).state.cart.length);        
-
-    // }, []);
 
     return (
 
@@ -67,7 +68,7 @@ export default function NavigationBar({ lang }) {
                                 <Link className="" href="/customer/personal-information">{t("account")}</Link>
                             </>
                         )
-                        : <button onClick={() => openModal('signin')}>{t("account")}</button>
+                        : <button onClick={() => openModal('sign_in')}>{t("account")}</button>
                     }
 
                     <Link className="" href="/cart">{t("cart")} (

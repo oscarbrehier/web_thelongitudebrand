@@ -1,4 +1,4 @@
-import firebase_app from "./firebase";
+import firebase_app from "../firebase/firebase";
 import { signInWithEmailAndPassword, getAuth, signOut } from "firebase/auth";
 import getUserFromUid from "./getUserFromUid";
 

@@ -1,6 +1,6 @@
 import "server-only";
 import { cookies } from "next/headers";
-import { adminAuth } from "../firestore/firebaseAdmin";
+import { adminAuth } from "../firebase/firebaseAdmin";
 
 export async function isUserAuthenticated(session) {
 

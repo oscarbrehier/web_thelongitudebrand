@@ -3,7 +3,7 @@ import Input from "../ui/Input";
 import { IoClose } from "react-icons/io5";
 import { useEffect, useState } from "react";
 import { useModalContext } from "@/lib/context/ModalContext";
-import signIn from "@/lib/authentication/auth";
+import { signIn } from "@/lib/authentication/service";
 import * as navigation from "next/navigation";
 
 export default function SignInModal() {
@@ -35,9 +35,14 @@ export default function SignInModal() {
         setLoading(true);
         setForm(prev => ({ ...prev, submit: true, error: '' }));
 
-        const { error } = await signIn(form.email, form.password);
+        try {
 
-        if (error) {
+            await signIn(form.email, form.password);
+            closeModal();
+
+        } catch (error) {
+
+            console.log(error);
 
             const commonErrorMessage = "No account matches the provided credentials. Please try again.";
             const errorMessages = {
@@ -51,11 +56,6 @@ export default function SignInModal() {
             // Set message based on error code or default message
             const message = errorMessages[error.code] || "Oops! An unexpected error occurred. Please try again.";
             setForm(prev => ({ ...prev, error: message }));
-
-        } else {
-
-            // router.push('/my-account/overview');
-            closeModal();
 
         };
 
@@ -72,7 +72,7 @@ export default function SignInModal() {
 
     return (
 
-        <div className={`${activeModal !== 'signin' && 'hidden'} h-screen w-full fixed p-4 z-20 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 bg-black bg-opacity-20`}>
+        <div className={`${activeModal !== 'sign_in' && 'hidden'} h-screen w-full fixed p-4 z-20 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 bg-black bg-opacity-20`}>
 
             <div className="flex w-full h-full xl:col-start-4 lg:col-start-3 md:col-start-2 md:col-span-2 col-start-1 col-span-full items-start">
 
@@ -116,7 +116,7 @@ export default function SignInModal() {
 
                         <div onClick={(event) => handleFormSubmit(event)} className="w-full h-10 bg-black flex items-center justify-center cursor-pointer">
 
-                                {
+                            {
                                 loading
                                     ? (
                                         <div
@@ -148,7 +148,7 @@ export default function SignInModal() {
                         <p>Forgot your password?</p>
                         <div className="flex">
                             <p className="text-neutral-500">Don't have an account? &nbsp;</p>
-                            <p className="cursor-pointer capitalize" onClick={() => openModal('register')}>register</p>
+                            <p className="cursor-pointer capitalize" onClick={() => openModal('sign_up')}>sign up</p>
                         </div>
 
                     </div>

@@ -1,7 +1,7 @@
-import { adminFirestore } from "@/lib/firestore/firebaseAdmin";
+import { adminFirestore } from "@/lib/firebase/firebaseAdmin";
 import { getProductById } from "@/lib/sanity/getProduct";
 import { StoreItem } from "@/app/components/store/StoreItem";
-import { getCurrentUser } from "@/lib/authentication/firebaseAdmin";
+import { getCurrentUser } from "@/lib/authentication/sessionHelpers";
 
 export default async function Page() {
     
@@ -10,7 +10,7 @@ export default async function Page() {
     const user = await getCurrentUser();
     if (!user) return;
     
-    const ref = adminFirestore.collection("wishlist").doc(user.uid);
+    const ref = adminFirestore.collection("wishlists").doc(user.uid);
     const doc = await ref.get();
 
 

@@ -1,0 +1,158 @@
+"use client"
+import { PageContainer } from "@/app/components/container/PageContainer";
+import Button from "@/app/components/ui/Button";
+import InputWithLabel from "@/app/components/ui/InputWithLabel";
+import { signIn } from "@/lib/authentication/service";
+import { useAuthContext } from "@/lib/context/AuthContext";
+import handleFirebaseError from "@/lib/handleFirebaseError";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { z } from "zod";
+
+export default function Page({
+    params: {
+        lang
+    }
+}) {
+
+    const query = useSearchParams();
+    const router = useRouter();
+    const { isAuth } = useAuthContext();
+
+    const [status, setStatus] = useState("idle");
+    const [form, setForm] = useState({
+        error: null,
+    });
+    const [inputErrors, setInputErrors] = useState({
+        email: null,
+        password: null
+    });
+
+    const handleForm = async (event) => {
+
+        event.preventDefault();
+        setStatus("loading");
+
+        try {
+
+            const formData = event.target;
+            const data = {
+                email: formData.get("email"),
+                password: formData.get("password"),
+            };
+
+            signInSchema.parse(data);
+
+            await signIn(data.email, data.password);
+            router.push("/shop");
+
+            setStatus("success");
+
+        } catch (error) {
+
+            if (error.errors) {
+
+                const errors = error.errors.reduce((acc, curr) => {
+
+                    acc[curr.path[0]] = curr.message;
+                    return acc;
+
+                }, {});
+
+                setInputErrors(prev => ({
+                    ...prev,
+                    email: errors.email,
+                    password: errors.password,
+                }));
+
+            } else if (error.code) {
+
+                const formatError = handleFirebaseError(error.code);
+                setForm(prev => ({ ...prev, error: formatError }));
+
+            } else {
+
+                setForm(prev => ({ ...prev, error: "An error occured. Please try again or come back later." }));
+
+            };
+
+            setStatus("error");
+
+        };
+
+    };
+
+    return (
+
+        <PageContainer lang={lang}>
+
+            <div className="h-screen w-full mt-16 md:pt-16 pt-24 2md:grid grid-cols-4 gap-2">
+
+                <div className="col-start-2 col-span-2 h-auto">
+
+                    <div className="mx-2 mb-4">
+
+                        <p className="capitalize text-lg">sign in</p>
+
+                    </div>
+
+                    <form onSubmit={handleForm}>
+
+                        <div className="space-y-2">
+
+                            <InputWithLabel
+                                title="email"
+                                type="email"
+                                required={true}
+                                value={query.get("email") || null}
+                                error={inputErrors.email}
+                            />
+
+                            <InputWithLabel
+                                title="password"
+                                type="password"
+                                required={true}
+                                error={inputErrors.password}
+                            />
+
+                            {
+                                form.error && <p className="text-error-red text-sm">{form.error}</p>
+                            }
+
+                        </div>
+
+                        <div className="mt-4 space-y-2">
+
+                            <Button
+                                title="sign in"
+                                size="w-full h-14"
+                                type="submit"
+                                loading={status == "loading"}
+                            />
+
+                            <div>
+
+                                <Link
+                                    className="text-sm"
+                                    href="/auth/reset-password"
+                                >
+                                    Forgot your password?
+                                </Link>
+
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+
+            </div>
+
+        </PageContainer>
+
+    )
+
+}

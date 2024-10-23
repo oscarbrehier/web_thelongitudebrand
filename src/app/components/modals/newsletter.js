@@ -6,7 +6,7 @@ import LoadingSpinner from "../ui/loadingSpinner";
 import Input from "../ui/Input";
 import Button from "../ui/Button";
 import { doc, setDoc, Timestamp } from "@firebase/firestore";
-import { database } from "@/lib/authentication/firebase";
+import { database } from "@/lib/firebase/firebase";
 
 export default function NewsletterModal() {
 

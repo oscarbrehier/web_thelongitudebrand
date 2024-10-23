@@ -1,9 +1,9 @@
-import { database } from "@/lib/authentication/firebase";
+import { database } from "@/lib/firebase/firebase";
 import { arrayRemove, doc, Timestamp, updateDoc } from "@firebase/firestore";
 
 export default async function removeFromWishlist(productId, userId) {
 
-    const ref = doc(database, "wishlist", userId);
+    const ref = doc(database, "wishlists", userId);
 
     try {
 

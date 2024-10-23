@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { revokeAllSessions } from "@/lib/authentication/firebaseAdmin";
+import { revokeAllSessions } from "@/lib/authentication/sessionHelpers";
 
 export async function GET() {
 

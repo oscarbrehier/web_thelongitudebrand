@@ -8,7 +8,7 @@ import { languages, fallbackLng } from "../i18n/settings";
 import { useTranslation } from "../i18n";
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from "@vercel/analytics/react";
-import { getCurrentUser, isUserAuthenticated } from "@/lib/authentication/firebaseAdmin";
+import { getCurrentUser, isUserAuthenticated } from "@/lib/authentication/sessionHelpers";
 
 const poppins = Poppins({
 	display: "swap",

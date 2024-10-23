@@ -1,9 +1,9 @@
-import { database } from "@/lib/authentication/firebase";
+import { database } from "@/lib/firebase/firebase";
 import { arrayUnion, doc, getDoc, setDoc, Timestamp, updateDoc } from "@firebase/firestore";
 
 export default async function addToWishlist(productId, userId) {
 
-    const ref = doc(database, "wishlist", userId);
+    const ref = doc(database, "wishlists", userId);
     const snapshot = await getDoc(ref);
 
     try {
@@ -17,7 +17,7 @@ export default async function addToWishlist(productId, userId) {
 
         } else {
 
-            const createRef = doc(database, "wishlist", userId);
+            const createRef = doc(database, "wishlists", userId);
 
             await setDoc(createRef, {
                 items: [

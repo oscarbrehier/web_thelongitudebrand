@@ -1,6 +1,6 @@
 "use client"
 import SignInModal from "./signIn";
-import RegisterModal from "./register";
+import SignUpModal from "./SignUp";
 import NewsletterModal from "./newsletter";
 import { useModalContext } from "@/lib/context/ModalContext";
 
@@ -17,7 +17,7 @@ export default function ClientModals({ children }) {
             </div>
 
             <SignInModal />
-            <RegisterModal />
+            <SignUpModal />
             <NewsletterModal />
         </div>
 

@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react"
 import { useAuthContext } from "./AuthContext";
 import getCartFromDb from "../firestore/getCartFromDb";
 import { doc, setDoc, Timestamp, updateDoc } from "@firebase/firestore";
-import { database } from "../authentication/firebase";
+import { database } from "../firebase/firebase";
 import updateCartInFirestore from "@/actions/addToCart";
 
 export const CartContext = createContext();

@@ -1,7 +1,8 @@
-import zxcvbn from "zxcvbn";
+    import zxcvbn from "zxcvbn";
 
 export default function getPasswordStrength(password) {
 
-    return zxcvbn(password);
+    const {score} = zxcvbn(password);
+    return score >= 4; 
 
 };

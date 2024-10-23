@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { adminAuth, adminFirestore } from "@/lib/firestore/firebaseAdmin";
+import { adminAuth, adminFirestore } from "@/lib/firebase/firebaseAdmin";
 
 export default async function getUserFromServer() {
 

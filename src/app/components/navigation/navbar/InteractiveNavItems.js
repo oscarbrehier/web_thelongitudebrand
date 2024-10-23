@@ -1,6 +1,6 @@
 "use client"
 import { useTranslation } from "@/app/i18n/client";
-import { signOut } from "@/lib/authentication/auth";
+import { signOut } from "@/lib/authentication/service";
 import { useModalContext } from "@/lib/context/ModalContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -47,7 +47,7 @@ export default function InteractiveNavItems({ authenticated, lang }) {
                             <Link className="" href="/customer/personal-information">{t("account")}</Link>
                         </>
                     )
-                    : <button onClick={() => openModal('signin')}>{t("account")}</button>
+                    : <button onClick={() => openModal('sign_in')}>{t("account")}</button>
                 }
 
                 <Link className="" href="/cart">{t("cart")} ({cartLength})</Link>

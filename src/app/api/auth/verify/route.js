@@ -1,4 +1,4 @@
-import { isUserAuthenticated } from "@/lib/authentication/firebaseAdmin";
+import { isUserAuthenticated } from "@/lib/authentication/sessionHelpers";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 

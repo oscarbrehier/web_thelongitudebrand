@@ -1,6 +1,6 @@
 'use client'
 import { deleteAuthCookie } from "@/actions/handleAuthCookie";
-import { auth } from "@/lib/authentication/firebase";
+import { auth } from "@/lib/firebase/firebase";
 import { useCartStore } from "@/lib/stores/useCartStore";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -31,6 +31,8 @@ export default function Page() {
 
     }, [router]);
 
-    return null;
+    return (
+        <></>
+    );
 
 };

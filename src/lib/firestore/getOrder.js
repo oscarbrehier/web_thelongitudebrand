@@ -1,12 +1,12 @@
 import { doc, getDoc } from "@firebase/firestore";
-import { database } from "../authentication/firebase";
+import { database } from "../firebase/firebase";
 import getCheckoutData from "../stripe/getCheckoutData";
 
 export default async function getOrder(orderId) {
 
     try {
 
-        const ref = doc(database, "order", orderId);
+        const ref = doc(database, "s", orderId);
         const res = await getDoc(ref);
 
         if (res.exists) {

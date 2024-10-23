@@ -1,11 +1,32 @@
 'use client';
-import { useEffect, useState } from "react";
-import InputWithLabel from "@/app/components/ui/InputWithLabel";
-import Button from "@/app/components/ui/Button";
 import updatePassword from "@/lib/authentication/updatePassword";
+import InputWithLabel from "@/app/components/ui/InputWithLabel";
 import getPasswordStrength from "@/lib/getPasswordStrength";
+import Button from "@/app/components/ui/Button";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { z } from "zod";
+
+const passwordCriteria = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
+const required_error = (fieldName) => `${fieldName} is required`;
+
+const formSchema = z.object({
+    currentPassword: z.string().min(1, { message: required_error("Current password") }),
+    newPassword: z.string()
+        .min(6, { message: "New password" })
+        .refine(getPasswordStrength, {
+            message: "Password is too weak. Choose a password with at least 6 characters, including a mix of letters, numbers, and symbols"
+        }),
+    confirmNewPassword: z.string()
+        .min(1, { message: "Please confirm your new password " })
+}).refine((data) => data.newPassword === data.confirmNewPassword, {
+    message: "Passwords don't match",
+    path: ["confirmNewPassword"]
+});
 
 export default function Page({ params: { lang } }) {
+
+    const router = useRouter();
 
     const [inputValues, setInputValues] = useState({
         currentPassword: {
@@ -28,6 +49,8 @@ export default function Page({ params: { lang } }) {
         hasErrors: false
     });
 
+    const [loading, setLoading] = useState(false);
+
     const handleInputChange = (e) => {
 
         const { name, value, type, checked } = e.target;
@@ -42,63 +65,60 @@ export default function Page({ params: { lang } }) {
 
     };
 
-    const handleSubmitForm = async (event) => {
+    const resetErrors = () => {
 
-        event.preventDefault();
-
-        const { currentPassword, newPassword: password, confirmNewPassword: confirmPassword } = inputValues;
-        let error = false;
-
-        setForm(prev => ({
+        setInputValues((prev) => ({
             ...prev,
-            submit: true
+            currentPassword: { ...prev.currentPassword, error: "" },
+            newPassword: { ...prev.newPassword, error: "" },
+            confirmNewPassword: { ...prev.confirmNewPassword, error: "" }
         }));
 
-        if (password.value !== confirmPassword.value) {
+    };
 
-            setInputValues(prev => ({
-                ...prev,
-                confirmNewPassword: {
-                    ...prev.confirmNewPassword,
-                    error: "Passwords don't match"
-                },
-            }));
+    const handleSubmitForm = async (formData) => {
 
-            error = true;
-
-        };
-
-        if (error) {
-
-            console.log(error);
-
-            setTimeout(() => {
-                setForm(prev => ({
-                    ...prev,
-                    submit: false
-                }));
-            }, 300);
-
-            return
-
-        };
-
-        setTimeout(() => {
-            setForm(prev => ({
-                ...prev,
-                submit: false
-            }));
-        }, 300);
+        resetErrors();
+        setLoading(true);
 
         try {
 
-            await updatePassword(currentPassword.value, password.value);
+            const data = {
+                currentPassword: formData.get("currentPassword"),
+                newPassword: formData.get("newPassword"),
+                confirmNewPassword: formData.get("confirmNewPassword"),
+            };
 
-        } catch (e) {
+            formSchema.parse(data);
 
-            let returnMessage;
+            await updatePassword(data.currentPassword, data.newPassword);
+            router.push("/customer/personal-information");
 
-            if (e == "auth/invalid-credential") {
+        } catch (error) {
+
+            console.error(error)
+
+            if (error.errors) {
+
+                const errors = error.errors.reduce((acc, curr) => {
+
+                    acc[curr.path[0]] = curr.message;
+                    return acc;
+
+                }, {});
+
+                setInputValues((prev) => ({
+                    ...prev,
+                    currentPassword: { ...prev.currentPassword, error: errors.currentPassword || "" },
+                    newPassword: { ...prev.newPassword, error: errors.newPassword || "" },
+                    confirmNewPassword: { ...prev.confirmNewPassword, error: errors.confirmNewPassword || "" }
+                }));
+
+                return;
+
+            };
+
+            if (error == "auth/invalid-credential") {
 
                 setInputValues(prev => ({
                     ...prev,
@@ -108,18 +128,27 @@ export default function Page({ params: { lang } }) {
                     }
                 }));
 
-            } else if (e == "auth/too-many-requests") {
+            } else if (error == "auth/too-many-requests") {
 
                 setForm(prev => ({
                     ...prev,
                     error: "Too many requests! Please wait a moment before trying again."
                 }))
 
-            }
+            } else {
+
+                setForm(prev => ({
+                    ...prev,
+                    error: "An error occured. Please try again later",
+                }));
+
+            };
+
+        } finally {
+
+            setLoading(false);
 
         };
-
-        // router.push("/customer/personal-ininputValuesation")
 
     };
 
@@ -129,7 +158,7 @@ export default function Page({ params: { lang } }) {
 
             <div className="col-start-2 col-span-2 h-auto">
 
-                <div>
+                <form action={handleSubmitForm}>
 
                     <p className="capitalize mx-2 my-1">change password</p>
 
@@ -142,8 +171,6 @@ export default function Page({ params: { lang } }) {
                             onChange={(e) => handleInputChange(e)}
                             error={inputValues.currentPassword.error}
                             required={true}
-                            submit={form.submit}
-                            handleError={(e) => setForm(prev => ({ ...prev, hasErrors: e }))}
                         />
 
                         <InputWithLabel
@@ -154,8 +181,6 @@ export default function Page({ params: { lang } }) {
                             error={inputValues.newPassword.error}
                             required={true}
                             submit={form.submit}
-                            handleError={(e) => setForm(prev => ({ ...prev, hasErrors: e }))}
-                            checkPasswordStrength={true}
                         />
 
                         <InputWithLabel
@@ -166,8 +191,6 @@ export default function Page({ params: { lang } }) {
                             error={inputValues.confirmNewPassword.error}
                             required={true}
                             submit={form.submit}
-                            handleError={(e) => setForm(prev => ({ ...prev, hasErrors: e }))}
-                            password={inputValues.newPassword.value}
                         />
 
                         {form.error !== "" && (
@@ -182,12 +205,14 @@ export default function Page({ params: { lang } }) {
                         <Button
                             title='save'
                             size='w-full h-14'
-                            onClick={(e) => handleSubmitForm(e)}
+                            // onClick={(e) => handleSubmitForm(e)}
+                            type="submit"
+                            loading={loading}
                         />
 
                     </div>
 
-                </div>
+                </form>
 
             </div>
 

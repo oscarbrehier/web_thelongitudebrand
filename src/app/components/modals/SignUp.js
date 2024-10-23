@@ -4,9 +4,9 @@ import Input from "../ui/Input";
 import { IoClose } from "react-icons/io5";
 import { useState, useEffect, useRef } from "react";
 import LoadingSpinner from "../ui/loadingSpinner";
-import register from "@/lib/authentication/register";
+import { signUp } from "@/lib/authentication/service";
 
-export default function RegisterModal() {
+export default function SignUpModal() {
 
     const { activeModal, closeModal } = useModalContext();
 
@@ -21,7 +21,7 @@ export default function RegisterModal() {
         password: '',
         confirmPassword: '',
         newsletter: false,
-        termsAndConditions: false,
+        terms: false,
     });
 
     const handleCloseModal = () => {
@@ -43,25 +43,26 @@ export default function RegisterModal() {
         setLoading(true);
         setForm(prev => ({ ...prev, error: '', submit: true }));
 
-        const { password, confirmPassword, termsAndConditions } = form;
+        const { password, confirmPassword, terms } = form;
 
-        // Validate passwords and terms and conditions
         if (password !== confirmPassword) {
             setForm(prev => ({ ...prev, error: "Your passwords don't match." }));
             setLoading(false);
             return;
         };
 
-        if (!termsAndConditions) {
+        if (!terms) {
             setForm(prev => ({ ...prev, error: 'You must agree to the terms and conditions before proceeding.' }));
             setLoading(false);
             return;
         };
 
-        // Attempt registration
-        const { error } = await register(form);
+        try {
+            
+            await signUp(form);
+            handleCloseModal();
 
-        if (error) {
+        } catch (error) {
 
             const errorMessages = {
                 'auth/weak-password': 'Password should at least be 6 characters long.',
@@ -80,7 +81,7 @@ export default function RegisterModal() {
 
     return (
 
-        <div className={`${activeModal !== 'register' && 'hidden'} h-screen w-full fixed p-4 z-20 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 bg-black bg-opacity-20`}>
+        <div className={`${activeModal !== 'sign_up' && 'hidden'} h-screen w-full fixed p-4 z-20 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 bg-black bg-opacity-20`}>
 
             <div className="flex w-full h-full xl:col-start-4 lg:col-start-3 md:col-start-2 md:col-span-2 col-start-1 col-span-full items-start">
 
@@ -88,7 +89,7 @@ export default function RegisterModal() {
 
                     <div className="w-full h-auto flex justify-between items-center">
 
-                        <p className="text-sm capitalize">register</p>
+                        <p className="text-sm capitalize">sign up</p>
 
                         <button onClick={handleCloseModal} className="h-full bg-neon-green p-1">
                             <IoClose />
@@ -159,11 +160,11 @@ export default function RegisterModal() {
                         <div className="flex text-xs space-x-4">
                             <input
                                 type="checkbox"
-                                checked={form.termsAndConditions}
-                                onChange={() => setForm(prev => ({ ...prev, termsAndConditions: !prev.termsAndConditions }))}
+                                checked={form.terms}
+                                onChange={() => setForm(prev => ({ ...prev, terms: !prev.terms }))}
                             />
                             <p>
-                                By selecting "Register", you are confirming that you have read and agree to thelongitudebrand's <span>Terms & Conditions</span>
+                                By selecting "Sign Up", you are confirming that you have read and agree to thelongitudebrand's <span>Terms & Conditions</span>
                             </p>
                         </div>
 
@@ -176,7 +177,7 @@ export default function RegisterModal() {
                             {
                                 loading
                                     ? <LoadingSpinner />
-                                    : <p className="text-white text-sm capitalize">register</p>
+                                    : <p className="text-white text-sm capitalize">Sign Up</p>
                             }
 
                         </div>

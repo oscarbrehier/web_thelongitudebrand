@@ -1,6 +1,6 @@
 import { deleteCart } from "./cart";
 import { addDoc, collection, Timestamp } from "@firebase/firestore";
-import { database } from "./authentication/firebase";
+import { database } from "./firebase/firebase";
 import createCheckoutSession from "./stripe/createCheckoutSession";
 import generateOrderId from "./generateOrderId";
 
@@ -10,7 +10,7 @@ export const checkout = async (userId, cart, total, cancelUrl) => {
 
         const { url, id } = await createCheckoutSession(cart, cancelUrl);
 
-        const cartRef = collection(database, "order");
+        const cartRef = collection(database, "orders");
 
         const orderId = generateOrderId(userId);
 

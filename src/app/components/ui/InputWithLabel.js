@@ -42,6 +42,15 @@ export default function InputWithLabel({
 
         let err = null;
 
+        if (type === 'email' && inputValue) {
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!emailRegex.test(inputValue)) {
+                err = 'Please enter a valid email address';
+            };
+
+        };
         
         if (type == "password" && props.checkPasswordStrength) {
             

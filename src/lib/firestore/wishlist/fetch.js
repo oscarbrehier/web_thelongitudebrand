@@ -1,9 +1,9 @@
-import { database } from "@/lib/authentication/firebase";
+import { database } from "@/lib/firebase/firebase";
 import { doc, getDoc } from "@firebase/firestore";
 
 export default async function fetchUserWishlist(userId) {
 
-    const ref = doc(database, "wishlist", userId);
+    const ref = doc(database, "wishlists", userId);
 
     try {
 

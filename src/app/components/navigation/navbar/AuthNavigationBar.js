@@ -1,5 +1,5 @@
 import { useTranslation } from "@/app/i18n";
-import { isUserAuthenticated } from "@/lib/authentication/firebaseAdmin";
+import { isUserAuthenticated } from "@/lib/authentication/sessionHelpers";
 import Link from "next/link";
 import InteractiveNavItems from "./InteractiveNavItems";
 

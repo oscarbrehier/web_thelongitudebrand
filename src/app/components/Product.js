@@ -63,7 +63,7 @@ export default function Product({
         if (!isAuth) {
 
             setPendingWishlistAction(true);
-            return openModal("signin");
+            return openModal("sign_in");
 
         };
 

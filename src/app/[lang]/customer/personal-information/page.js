@@ -18,6 +18,9 @@ export default function Page() {
         newsletterSubscriber: "",
     });
 
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+
     const { user } = useAuthContext();
 
     const handleInputChange = (e) => {
@@ -33,7 +36,20 @@ export default function Page() {
 
     const handleSubmitForm = async () => {
 
-        await updateUserProfile(user.uid, formValues);
+        try {
+
+            setLoading(true);
+            await updateUserProfile(user.uid, formValues);
+
+        } catch (error) {
+
+            setError("An error occured. Please try again or come back later");
+
+        } finally {
+
+            setLoading(false);
+
+        };
 
     };
 
@@ -61,6 +77,29 @@ export default function Page() {
         };
 
     }, [user]);
+
+    const handleSubscribeCheckbox = async (event) => {
+
+        const { checked } = event.target;
+
+        try {
+
+            setFormValues(prev => ({
+                ...prev,
+                newsletterSubscriber: checked
+            }));
+    
+            await updateUserProfile(user.uid, {
+                newsletterSubscriber: checked
+            });
+
+        } catch (error) {
+
+            console.error(error);
+
+        };
+
+    };
 
     return user ? (
 
@@ -102,14 +141,20 @@ export default function Page() {
                             value={formValues.dateOfBirth}
                             onChange={(e) => handleInputChange(e)}
                         />
+
+                        {error !== "" && (
+                            <p className="text-sm text-error-red">{error}</p>
+                        )}
+
                     </div>
 
                     <div className="mt-4 space-y-2">
 
-                        <Button
+                        <Button 
                             title='save'
                             size='w-full h-14'
                             onClick={handleSubmitForm}
+                            loading={loading}
                         />
 
                         <Hyperlink
@@ -119,7 +164,7 @@ export default function Page() {
                             onClick={handleSubmitForm}
                             border={true}
                         />
-                        
+
                     </div>
 
                 </div>
@@ -137,7 +182,7 @@ export default function Page() {
                                 <input
                                     className="appearance-none size-6 border-[1px] border-black bg-cream-50 peer"
                                     type="checkbox"
-                                    onChange={(e) => handleInputChange(e)}
+                                    onChange={(e) => handleSubscribeCheckbox(e)}
                                     name="newsletterSubscriber"
                                     checked={formValues.newsletterSubscriber}
                                 />

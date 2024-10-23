@@ -1,5 +1,5 @@
 import { doc, getDoc } from "@firebase/firestore";
-import { database } from "./firebase";
+import { database } from "../firebase/firebase";
 
 export default async function getUserFromUid(userUid) {
 

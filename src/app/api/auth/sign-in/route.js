@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { createSessionCookie } from "@/lib/authentication/firebaseAdmin";
+import { createSessionCookie } from "@/lib/authentication/sessionHelpers";
 
 const isDevelopment = (process.env.NODE_ENV || 'production') === 'development';
 

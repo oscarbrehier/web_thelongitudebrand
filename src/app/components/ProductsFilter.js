@@ -16,7 +16,7 @@ export default function ProductsFilter({ lang, products, categories }) {
 
         <>
 
-            <div className="w-full flex items-center text-sm space-x-4 cursor-pointer">
+            <div className="w-full flex items-center text-sm space-x-4 cursor-pointer mb-2">
 
                 {
                     categories && categories.map((category, index) => (

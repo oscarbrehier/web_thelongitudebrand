@@ -1,5 +1,5 @@
-import { getCurrentUser } from "../authentication/firebaseAdmin";
-import { adminFirestore } from "./firebaseAdmin";
+import { getCurrentUser } from "../authentication/sessionHelpers";
+import { adminFirestore } from "../firebase/firebaseAdmin";
 
 export default async function getOrders() {
 
@@ -9,7 +9,7 @@ export default async function getOrders() {
     try {
 
         const snap = await adminFirestore
-            .collection("order")
+            .collection("orders")
             .where("userId", "==", user.uid).get();
 
         snap.docs.map((item) => console.log(item.data()));
