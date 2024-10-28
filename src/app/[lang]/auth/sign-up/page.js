@@ -2,10 +2,8 @@
 import { PageContainer } from "@/app/components/container/PageContainer";
 import Button from "@/app/components/ui/Button";
 import InputWithLabel from "@/app/components/ui/InputWithLabel";
-import { signIn } from "@/lib/authentication/service";
 import { useAuthContext } from "@/lib/context/AuthContext";
-import getPasswordStrength from "@/lib/getPasswordStrength";
-import handleFirebaseError from "@/lib/handleFirebaseError";
+import handleFirebaseError from "@/lib/firebase/handleFirebaseError";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -98,12 +96,6 @@ export default function Page({
         };
 
     };
-
-    useEffect(() => {
-
-        if (isAuth) router.push("/shop");
-
-    }, [isAuth]);
 
     return (
 

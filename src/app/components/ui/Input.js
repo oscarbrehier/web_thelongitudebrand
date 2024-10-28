@@ -1,4 +1,5 @@
 'use client';
+import camelize from "@/lib/utils/camelize";
 import { forwardRef, useEffect, useState } from "react";
 
 const Input = forwardRef(({
@@ -15,6 +16,7 @@ const Input = forwardRef(({
 
     const [value, setValue] = useState(inputValue || "");
     const [errorMessage, setErrorMessage] = useState(null);
+    const [visible, setVisible] = useState(false);
 
     const titleValue = title.toLowerCase().replace(/\s+/g, "_");
 
@@ -23,13 +25,19 @@ const Input = forwardRef(({
         const newValue = e.target.value;
 
         if (errorMessage) {
-            validateField(newValue);
+            // validateField(newValue);
         }
 
         setValue(newValue);
         if (onChange) onChange(newValue);
 
     };
+
+    useEffect(() => {
+
+        setErrorMessage(error || null);
+
+    }, [error])
 
     useEffect(() => {
 
@@ -48,11 +56,11 @@ const Input = forwardRef(({
 
         };
 
-        if (validate) {
+        // if (validate) {
 
-            validateField(value);
+        //     validateField(value);
 
-        };
+        // };
 
     }, [reset, validate]);
 
@@ -82,19 +90,29 @@ const Input = forwardRef(({
     return (
         <div className={`w-full ${errorMessage ? 'h-auto' : 'h-10'} bg-cream-300 flex flex-col justify-center`}>
 
-            <input
-                className={`w-full h-10 outline-none text-sm px-4 bg-transparent placeholder:capitalize placeholder-black ${errorMessage && 'border-l-2 border-error-red'}`}
-                type={type}
-                name={titleValue}
-                id={titleValue}
-                onChange={handleChange}
-                value={value}
-                placeholder={title}
-                required={required}
-                ref={ref}
-                onBlur={() => validateField(value)}
-                {...props}
-            />
+            <div className="w-full h-full flex justify-between">
+
+                <input
+                    className={`w-full h-10 outline-none text-sm px-4 bg-transparent placeholder:capitalize placeholder-black ${errorMessage && 'border-l-2 border-error-red'}`}
+                    type={type === "password" && visible ? "text" : type}
+                    name={camelize(title)}
+                    id={titleValue}
+                    onChange={handleChange}
+                    value={value}
+                    placeholder={title}
+                    required={required}
+                    ref={ref}
+                    // onBlur={() => validateField(value)}
+                    {...props}
+                />
+
+                {type === "password" && (
+                    <div onClick={() => setVisible(!visible)} className="h-10 p-2 flex items-center justify-center children:cursor-pointer text-xs underline hover:no-underline select-none">
+                        <p>{visible ? "hide" : "show"}</p>
+                    </div>
+                )}
+                
+            </div>
 
             {errorMessage && (
 

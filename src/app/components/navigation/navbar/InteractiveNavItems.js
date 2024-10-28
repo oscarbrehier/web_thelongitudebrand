@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useCartContext } from "@/lib/context/CartContext";
 import { useCartStore } from "@/lib/stores/useCartStore";
+import { storageKeys } from "@/lib/constants/settings.config";
 
 export default function InteractiveNavItems({ authenticated, lang }) {
 
@@ -21,7 +22,7 @@ export default function InteractiveNavItems({ authenticated, lang }) {
     const handleSignOut = async () => {
 
         clearCart();
-        localStorage.removeItem("cart");
+        localStorage.removeItem(storageKeys.CART);
 
         const res = await signOut();
         if (!res) console.error("error signing out");

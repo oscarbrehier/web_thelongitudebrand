@@ -6,8 +6,9 @@ import { usePathname, useRouter } from "next/navigation";
 import { signOut } from "@/lib/authentication/service";
 import { useTranslation } from "@/app/i18n/client";
 import { languages } from "@/app/i18n/settings";
-import { authRoutes } from "@/lib/settings";
+import { authRoutes } from "@/lib/constants/settings.config";
 import Link from "next/link";
+import { storageKeys } from "@/lib/constants/settings.config";
 
 export default function NavigationBar({ lang }) {
 
@@ -30,7 +31,7 @@ export default function NavigationBar({ lang }) {
         const isAuthRoute = authRoutes.some((route) => pathname.replace(languageRegex, "").startsWith(route));
 
         clearCart();
-        localStorage.removeItem("cart");
+        localStorage.removeItem(storageKeys.CART);
 
         const res = await signOut();
 

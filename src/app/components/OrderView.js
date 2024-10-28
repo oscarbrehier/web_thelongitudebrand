@@ -1,10 +1,9 @@
 'use client'
 import Button from "@/app/components/ui/Button";
 import { IoCalendarSharp } from "react-icons/io5";
+import SanityImage from "./ui/SanityImage";
 
 export default function OrderView({ order, checkout }) {
-
-    // console.log(order);
 
     return (
 
@@ -202,7 +201,7 @@ export default function OrderView({ order, checkout }) {
                             <a href={`/shop/${item.name}`} key={index} className=" bg-cream-200 flex flex-col p-2 space-y-2">
 
                                 <div className="w-full">
-                                    <img className="py-3 px-2" src={item.cover} alt="" />
+                                    <SanityImage className="py-3 px-2" source={item.image_ref} alt={item.name} quality={60} />
                                 </div>
 
                                 <div className="h-full children:text-xs py-1 space-y-2 flex flex-col justify-between">

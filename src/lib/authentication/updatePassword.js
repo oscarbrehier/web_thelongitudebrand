@@ -1,5 +1,5 @@
 import { getAuth, updatePassword as updateUserPassword } from 'firebase/auth';
-import firebase_app, { database } from '../firebase/firebase';
+import firebase_app, { database } from '../firebase/client';
 import reauthenticateUser from './reauthenticateUser';
 import { doc, getDoc, Timestamp, updateDoc } from '@firebase/firestore';
 const auth = getAuth(firebase_app);

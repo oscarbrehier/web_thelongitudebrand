@@ -2,7 +2,9 @@ import { persist } from "zustand/middleware";
 import { create } from "zustand";
 import getCartFromDb from "../firestore/getCartFromDb";
 import updateCartInFirestore from "@/actions/addToCart";
-import { useAuthContext } from "../context/AuthContext";
+import { storageKeys } from "../constants/settings.config";
+
+const updateError = () => console.error('Failed to update cart in Firebase. Saving to local storage');
 
 export const useCartStore = create(
     persist(
@@ -18,22 +20,23 @@ export const useCartStore = create(
                 
                 if (user) {
                     
-                    const { items } = await getCartFromDb(user);
-                    
-                    if (items.length !== 0) {
+                    try {
 
-                        set({ cart: items });
-                        localStorage.setItem('cart', JSON.stringify(items));
+                        const { items } = await getCartFromDb(user);
+                        set({ cart: items.length !== 0 ? items : [] });
+                        localStorage.setItem(storageKeys.CART, JSON.stringify(items));
 
-                    } else {
+                    } catch (err) {
 
-                        set({ cart: [] });                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
-  
+                        console.error('Failed to fetch cart from Firebase');
+                        const savedCart = JSON.parse(localStorage.getItem(storageKeys.CART)) || [];
+                        set({ cart: savedCart });
+
                     };
 
                 } else {
                     
-                    const savedCart = JSON.parse(localStorage.getItem('cart')) || [];
+                    const savedCart = JSON.parse(localStorage.getItem(storageKeys.CART)) || [];
                     set({ cart: savedCart });
 
                 };
@@ -64,11 +67,20 @@ export const useCartStore = create(
 
                 if (user) {
 
-                    await updateCartInFirestore(cart, user);
+                    try {
+
+                        await updateCartInFirestore(cart, user);
+
+                    } catch (err) {
+
+                        updateError();
+                        localStorage.setItem(storageKeys.CART, JSON.stringify(cart));
+
+                    };
 
                 } else {
 
-                    localStorage.setItem('cart', JSON.stringify(cart));
+                    localStorage.setItem(storageKeys.CART, JSON.stringify(cart));
 
                 };
 
@@ -77,10 +89,9 @@ export const useCartStore = create(
 
             },
 
-            removeFromCart: async (productId) => {
+            removeFromCart: async (productId, user) => {
 
                 const cart = [...get().cart];
-                const { user } = useAuthContext();
 
                 const updatedCart = cart.filter(
                     (cartItem) => cartItem.productId !== productId
@@ -88,11 +99,20 @@ export const useCartStore = create(
 
                 if (user) {
 
-                    await updateCartInFirestore(updatedCart, user.uid);
+                    try {
 
+                        await updateCartInFirestore(updatedCart, user.uid);
+
+                    } catch (err) {
+
+                        updateError();
+                        localStorage.setItem(storageKeys.CART, JSON.stringify(updatedCart));
+                        
+                    };
+                    
                 } else {
-
-                    localStorage.setItem('cart', JSON.stringify(updatedCart));
+                    
+                    localStorage.setItem(storageKeys.CART, JSON.stringify(updatedCart));
 
                 };
 
@@ -101,10 +121,9 @@ export const useCartStore = create(
 
             },
 
-            editItemQuantity: async (productId, direction) => {
+            editItemQuantity: async (productId, direction, user) => {
 
                 const cart = [...get().cart];
-                const { user } = useAuthContext();
 
                 const itemIndex = cart.findIndex(
                     (cartItem) => cartItem.productId === productId
@@ -122,11 +141,20 @@ export const useCartStore = create(
 
                 if (user) {
 
-                    await updateCartInFirestore(cart, user.uid);
+                    try {
+
+                        await updateCartInFirestore(cart, user.uid);
+
+                    } catch (err) {
+
+                        updateError();
+                        localStorage.setItem(storageKeys.CART, JSON.stringify(cart));
+
+                    };
 
                 } else {
 
-                    localStorage.setItem('cart', JSON.stringify(cart));
+                    localStorage.setItem(storageKeys.CART, JSON.stringify(cart));
 
                 };
 

@@ -1,4 +1,4 @@
-import { database } from "@/lib/firebase/firebase";
+import { database } from "@/lib/firebase/client";
 import { doc, getDoc } from "@firebase/firestore";
 
 export default async function fetchUserWishlist(userId) {

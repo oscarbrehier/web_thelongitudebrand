@@ -1,6 +1,7 @@
 import "server-only";
 import { cookies } from "next/headers";
-import { adminAuth } from "../firebase/firebaseAdmin";
+import { adminAuth } from "../firebase/admin";
+import { storageKeys } from "../constants/settings.config";
 
 export async function isUserAuthenticated(session) {
 
@@ -40,7 +41,7 @@ async function getSession() {
 
     try {
 
-        return cookies().get("__session")?.value;
+        return cookies().get(storageKeys.SESSION)?.value;
 
     } catch (error) {
 

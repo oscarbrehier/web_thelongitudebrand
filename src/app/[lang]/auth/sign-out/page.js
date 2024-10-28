@@ -4,6 +4,7 @@ import { auth } from "@/lib/firebase/firebase";
 import { useCartStore } from "@/lib/stores/useCartStore";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { storageKeys } from "@/lib/constants/settings.config";
 
 export default function Page() {
 
@@ -18,7 +19,7 @@ export default function Page() {
         const signOut = async () => {
 
             clearCart();
-            localStorage.removeItem("cart");
+            localStorage.removeItem(storageKeys.CART);
 
             await auth.signOut();
             await deleteAuthCookie();

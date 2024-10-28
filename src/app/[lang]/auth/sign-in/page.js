@@ -4,11 +4,11 @@ import Button from "@/app/components/ui/Button";
 import InputWithLabel from "@/app/components/ui/InputWithLabel";
 import { signIn } from "@/lib/authentication/service";
 import { useAuthContext } from "@/lib/context/AuthContext";
-import handleFirebaseError from "@/lib/handleFirebaseError";
+import handleFirebaseError from "@/lib/firebase/handleFirebaseError";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { z } from "zod";
+import { signInSchema } from "@/lib/constants/zodSchema";
 
 export default function Page({
     params: {
@@ -36,7 +36,7 @@ export default function Page({
 
         try {
 
-            const formData = event.target;
+            const formData = new FormData(event.target);
             const data = {
                 email: formData.get("email"),
                 password: formData.get("password"),
@@ -50,6 +50,8 @@ export default function Page({
             setStatus("success");
 
         } catch (error) {
+
+            console.log(error)
 
             if (error.errors) {
 

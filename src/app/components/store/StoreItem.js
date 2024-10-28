@@ -44,7 +44,7 @@ export function StoreItem({ data: content }) {
                     <SanityImage 
                         source={content.images[0].asset._ref} 
                         quality={70}
-                        alt="" 
+                        alt={content.title}
                     />
                 </div>
 

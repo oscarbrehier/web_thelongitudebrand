@@ -1,4 +1,4 @@
-import { database } from "@/lib/firebase/firebase";
+import { database } from "@/lib/firebase/client";
 import { arrayRemove, doc, Timestamp, updateDoc } from "@firebase/firestore";
 
 export default async function removeFromWishlist(productId, userId) {

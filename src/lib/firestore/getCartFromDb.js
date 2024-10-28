@@ -1,5 +1,5 @@
 import { doc, getDoc } from "@firebase/firestore";
-import { database } from "../firebase/firebase";
+import { database } from "../firebase/client";
 
 export default async function getCartFromDb(userId) {
 

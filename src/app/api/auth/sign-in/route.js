@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { createSessionCookie } from "@/lib/authentication/sessionHelpers";
+import { storageKeys } from "@/lib/constants/settings.config";
 
 const isDevelopment = (process.env.NODE_ENV || 'production') === 'development';
 
@@ -13,10 +14,8 @@ export async function POST(request) {
 
     const sessionCookie = await createSessionCookie(idToken, { expiresIn });
 
-    cookies().set("__session", sessionCookie, {
+    cookies().set(storageKeys.SESSION, sessionCookie, {
         maxAge: expiresIn,
-        // httpOnly: true,
-        // secure: true,
         httpOnly: !isDevelopment,
         secure: !isDevelopment,
     });

@@ -19,10 +19,12 @@ export default function Button({
         <button
             className={`
                 ${border
-                    ? 'bg-transparent border-[1px] border-black hover:bg-neon-green'
-                    : 'bg-black hover:bg-neon-green'
+                    ? `bg-transparent border-[1px] border-black ${!loading && "hover:bg-neon-green"}`
+                    : `bg-black ${!loading && "hover:bg-neon-green"}`
                 }
+                ${loading && "cursor-not-allowed"}
                 select-none
+                flex items-center justify-center
                 capitalize text-sm transition-all duration-300 ease-in-out`
                 + ' ' + size
             }

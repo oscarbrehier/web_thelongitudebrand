@@ -1,7 +1,9 @@
+import { storageKeys } from "@/lib/constants/settings.config";
+
 export const fallbackLng = 'en';
 export const languages = [fallbackLng, 'fr'];
 export const defaultNS = 'translation';
-export const cookieName = 'i18next';
+export const cookieName = storageKeys.LANGUAGE;
 
 export function getOptions(lng = fallbackLng, ns = defaultNS) {
 

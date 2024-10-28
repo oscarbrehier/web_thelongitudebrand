@@ -1,5 +1,5 @@
 import { doc, getDoc } from "@firebase/firestore";
-import { database } from "../firebase/firebase";
+import { database } from "../firebase/client";
 import getCheckoutData from "../stripe/getCheckoutData";
 
 export default async function getOrder(orderId) {

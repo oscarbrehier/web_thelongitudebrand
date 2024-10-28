@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { headers } from 'next/headers';
 import acceptLanguage from 'accept-language';
 import { fallbackLng, languages, cookieName } from './app/i18n/settings';
 import verifyFirebaseSessionJwt from './lib/authentication/verifyFirebaseJwt';
-import { authRoutes } from './lib/settings';
+import { authRoutes, guestRoutes } from './lib/constants/settings.config';
+import { storageKeys } from './lib/constants/settings.config';
 
 acceptLanguage.languages(languages);
 
@@ -12,29 +12,40 @@ export async function middleware(request) {
 
     let lng;
     let isAuth = false;
-    
+
     const cookieStore = cookies();
-    const headersList = headers();
     const response = NextResponse.next();
-    
+    const headersList = request.headers;
+
     const languageRegex = new RegExp(`^/(${languages.join('|')})`);
     const fullPathname = request.nextUrl.pathname;
     const pathname = request.nextUrl.pathname.replace(languageRegex, "");
 
-    const isLocked = process.env.SITE_LOCKED === "true";
+    response.headers.set('x-pathname', pathname);
 
-    const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
+    const session = cookieStore.get(storageKeys.SESSION)?.value;
 
-    const session = cookieStore.get("__session")?.value;
+    if (fullPathname === "/sitemap.xml" || fullPathname === "/robots.txt" || fullPathname.includes("icon") || fullPathname.includes("chrome")) {
+        return response;
+    };
 
-    if (request.nextUrl.pathname.indexOf("icon") > -1 || request.nextUrl.pathname.indexOf("chrome") > -1) return NextResponse.next();
+    if (cookieStore.has(cookieName)) {
+        lng = acceptLanguage.get(cookieStore.get(cookieName).value);
+    } else {
+        lng = acceptLanguage.get(headersList.get("Accept-Language"));
+    };
 
-    if (cookieStore.has(cookieName)) lng = acceptLanguage.get(cookieStore.get(cookieName).value);
-    if (!lng) lng = acceptLanguage.get(headersList.get("Accept-Language"));
     if (!lng) lng = fallbackLng;
 
-    if (!cookieStore.get(cookieName)?.value) NextResponse.next().cookies.set(cookieName, lng);
+    response.headers.set('x-language', lng);
 
+    if (!cookieStore.get(cookieName)?.value) {
+
+        response.cookies.set(cookieName, lng);
+
+    };
+
+    // Redirect if the language prefix is missing
     if (!languages.some(loc => fullPathname.startsWith(`/${loc}`)) && !fullPathname.startsWith("/_next")) {
         return NextResponse.redirect(new URL(`/${lng}${pathname}${request.nextUrl.search}`, request.url));
     };
@@ -43,49 +54,43 @@ export async function middleware(request) {
 
         const refererUrl = new URL(headersList.get("referer"));
         const lngInReferer = languages.find((l) => refererUrl.pathname.startsWith(`/${l}`));
-        const res = NextResponse.next();
 
-        if (lngInReferer) res.cookies.set(cookieName, lngInReferer);
-
-        return res;
+        if (lngInReferer) {
+            response.cookies.set(cookieName, lngInReferer);
+        };
 
     };
 
     if (pathname.startsWith("/shop") || pathname.startsWith("/password")) {
-        return NextResponse.next();
+        return response;
     };
-    
+
     if (session) {
 
         try {
 
             await verifyFirebaseSessionJwt(session);
             isAuth = true;
-    
+
         } catch (err) {
-            
-            if (session && !pathname.includes("/auth/sign-out")) return NextResponse.redirect(new URL("/auth/sign-out", request.url));
+
+            if (session && !pathname.includes("/auth/sign-out")) {
+                return NextResponse.redirect(new URL("/auth/sign-out", request.url));
+            };
 
         };
-
-    }
-
-    if (isAuthRoute && !isAuth) {
-
-        return NextResponse.redirect(new URL('/shop', request.url));
-
     };
 
-    if (isAuth && (pathname.startsWith("/auth/sign-in") || pathname.startsWith("/auth/sign-up"))) {
+    if (authRoutes.some((route) => pathname.startsWith(route)) && !isAuth) {
+        return NextResponse.redirect(new URL('/shop', request.url));
+    };
 
-        console.log('hello')
+    if (isAuth && guestRoutes.includes(pathname)) {
         return NextResponse.redirect(new URL("/customer/personal-information", request.url));
-
-    }
+    };
 
     return response;
-
-};
+}
 
 export const config = {
     matcher: '/((?!api|_next/static|_next/image|.*\\.png$|password).*)',

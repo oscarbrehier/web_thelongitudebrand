@@ -4,8 +4,9 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react"
 import { useAuthContext } from "./AuthContext";
 import getCartFromDb from "../firestore/getCartFromDb";
 import { doc, setDoc, Timestamp, updateDoc } from "@firebase/firestore";
-import { database } from "../firebase/firebase";
+import { database } from "../firebase/client";
 import updateCartInFirestore from "@/actions/addToCart";
+import { useCartStore } from "../stores/useCartStore";
 
 export const CartContext = createContext();
 export const useCartContext = () => useContext(CartContext);
@@ -17,233 +18,236 @@ export const CartProvider = ({ children }) => {
 
     const { user } = useAuthContext();
 
-    useEffect(() => {
-
-        if (user) {
-
-            getCart(user.uid);
-
-        } else {
-
-            getCartFromLocalStorage();
-
-        };
-
-    }, [user]);
+    // const { getCart } = useCartStore(state => state.getCart);
 
     useEffect(() => {
 
-        if (cart.length !== 0) {
+        // if (user) {
 
-            calculateTotal();
+        //     getCart(user.uid);
 
-        } else {
+        // } else {
 
-            setTotal(0);
-
-        };
-
-    }, [cart]);
-
-    useEffect(() => {
-
-        const handleStorageChange = () => {
-
-            const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
-            setCart(savedCart);
-
-        };
-
-        window.addEventListener('cartupdate', handleStorageChange);
-
-        return () => {
-            window.removeEventListener("cartupdate", handleStorageChange);
-        };
-
-    }, []);
-
-    const getIndexOfItem = (data, item) => {
-
-        const existsIndex = data.findIndex(
-            (cartItem) => cartItem.productId === item.productId && cartItem.size === item.size
-        );
-
-        return existsIndex;
-
-    };
-
-    const updateCartInDb = async (items) => {
-
-        // let error;
-
-        // try {
-
-        //     const cartRef = doc(database, "carts", user.uid);
-
-        //     await updateDoc(cartRef, {
-        //         items,
-        //         updatedAt: Timestamp.now()
-        //     });
-
-        //     setCart(items);
-
-        // } catch (err) {
-
-        //     error = err;
+        //     getCart();
 
         // };
 
-        // return {
-        //     error: error || false
-        // }
+    }, [user]);
 
-        let error;
+    // useEffect(() => {
 
-        try {
+    //     if (cart.length !== 0) {
 
-            await updateCartInFirestore(items, user.uid);
+    //         calculateTotal();
 
-        } catch (err) {
+    //     } else {
 
-            error = err; 
+    //         setTotal(0);
 
-        };
+    //     };
 
-        return {
-            error: error || false
-        };
+    // }, [cart]);
 
-    };
+    // useEffect(() => {
 
-    const saveCartToLocalStorage = (items) => {
+    //     const handleStorageChange = () => {
 
-        localStorage.setItem("cart", JSON.stringify(items));
+    //         const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    //         setCart(savedCart);
 
-        const event = new Event("cartupdate");
-        window.dispatchEvent(event);
+    //     };
 
-    };
+    //     window.addEventListener('cartupdate', handleStorageChange);
 
-    const getCartFromLocalStorage = () => {
+    //     return () => {
+    //         window.removeEventListener("cartupdate", handleStorageChange);
+    //     };
 
-        const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
-        setCart(savedCart);
+    // }, []);
 
-    };
+    // const getIndexOfItem = (data, item) => {
 
-    const calculateTotal = () => {
+    //     const existsIndex = data.findIndex(
+    //         (cartItem) => cartItem.productId === item.productId && cartItem.size === item.size
+    //     );
 
-        const total = cart.reduce((accumulator, item) => {
-            return accumulator + (item.price * item.quantity);
-        }, 0);
+    //     return existsIndex;
 
-        setTotal(total);
+    // };
 
-    };
+    // const updateCartInDb = async (items) => {
 
-    const getCart = async (userId) => {
+    //     // let error;
 
-        const { items } = await getCartFromDb(userId);
-        setCart(items || []);
+    //     // try {
 
-    };
+    //     //     const cartRef = doc(database, "carts", user.uid);
 
-    const addToCart = async (item) => {
+    //     //     await updateDoc(cartRef, {
+    //     //         items,
+    //     //         updatedAt: Timestamp.now()
+    //     //     });
 
-        let temp = [...cart];
+    //     //     setCart(items);
 
-        const existsIndex = getIndexOfItem(temp, item);
+    //     // } catch (err) {
 
-        if (existsIndex !== -1) {
+    //     //     error = err;
 
-            temp[existsIndex] = {
-                ...temp[existsIndex],
-                quantity: temp[existsIndex].quantity += 1
-            };
+    //     // };
 
-        } else {
+    //     // return {
+    //     //     error: error || false
+    //     // }
 
-            temp.push({ ...item, quantity: 1 });
+    //     let error;
 
-        };
+    //     try {
 
-        if (user) {
+    //         await updateCartInFirestore(items, user.uid);
 
-            const { error } = await updateCartInDb(temp);
-            if (error) console.log(error);
-            setCart(temp);
+    //     } catch (err) {
 
-        } else {
+    //         error = err; 
 
-            saveCartToLocalStorage(temp);
+    //     };
 
-        };
+    //     return {
+    //         error: error || false
+    //     };
 
-    };
+    // };
 
-    const removeFromCart = async (productId) => {
+    // const saveCartToLocalStorage = (items) => {
 
-        const temp = [...cart];
+    //     localStorage.setItem("cart", JSON.stringify(items));
 
-        const itemIndex = temp.findIndex(
-            (cartItem) => cartItem.productId === productId
-        );
+    //     const event = new Event("cartupdate");
+    //     window.dispatchEvent(event);
 
-        temp.splice(itemIndex, 1);
+    // };
 
-        if (user) {
+    // const getCartFromLocalStorage = () => {
 
-            const { error } = await updateCartInDb(temp);
-            if (error) console.log(error);
-            setCart(temp);
+    //     const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    //     setCart(savedCart);
 
-        } else {
+    // };
 
-            saveCartToLocalStorage(temp);
+    // const calculateTotal = () => {
 
-        };
+    //     const total = cart.reduce((accumulator, item) => {
+    //         return accumulator + (item.price * item.quantity);
+    //     }, 0);
+
+    //     setTotal(total);
+
+    // };
+
+    // const getCart = async (userId) => {
+
+    //     const { items } = await getCartFromDb(userId);
+    //     setCart(items || []);
+
+    // };
+
+    // const addToCart = async (item) => {
+
+    //     let temp = [...cart];
+
+    //     const existsIndex = getIndexOfItem(temp, item);
+
+    //     if (existsIndex !== -1) {
+
+    //         temp[existsIndex] = {
+    //             ...temp[existsIndex],
+    //             quantity: temp[existsIndex].quantity += 1
+    //         };
+
+    //     } else {
+
+    //         temp.push({ ...item, quantity: 1 });
+
+    //     };
+
+    //     if (user) {
+
+    //         const { error } = await updateCartInDb(temp);
+    //         if (error) console.log(error);
+    //         setCart(temp);
+
+    //     } else {
+
+    //         saveCartToLocalStorage(temp);
+
+    //     };
+
+    // };
+
+    // const removeFromCart = async (productId) => {
+
+    //     const temp = [...cart];
+
+    //     const itemIndex = temp.findIndex(
+    //         (cartItem) => cartItem.productId === productId
+    //     );
+
+    //     temp.splice(itemIndex, 1);
+
+    //     if (user) {
+
+    //         const { error } = await updateCartInDb(temp);
+    //         if (error) console.log(error);
+    //         setCart(temp);
+
+    //     } else {
+
+    //         saveCartToLocalStorage(temp);
+
+    //     };
 
 
-    };
+    // };
 
-    const editItemQuantity = async (productId, direction) => {
+    // const editItemQuantity = async (productId, direction) => {
 
-        const temp = [...cart];
+    //     const temp = [...cart];
 
-        const itemIndex = temp.findIndex(
-            (cartItem) => cartItem.productId === productId
-        );
+    //     const itemIndex = temp.findIndex(
+    //         (cartItem) => cartItem.productId === productId
+    //     );
 
-        direction == "up"
-            ? temp[itemIndex].quantity += 1
-            : temp[itemIndex].quantity -= 1;
+    //     direction == "up"
+    //         ? temp[itemIndex].quantity += 1
+    //         : temp[itemIndex].quantity -= 1;
 
-        setCart(temp);
+    //     setCart(temp);
 
-        if (user) {
+    //     if (user) {
 
-            const { error } = await updateCartInDb(temp);
-            if (error) console.log(error);
-            setCart(temp);
+    //         const { error } = await updateCartInDb(temp);
+    //         if (error) console.log(error);
+    //         setCart(temp);
 
-        } else {
+    //     } else {
 
-            saveCartToLocalStorage(temp);
+    //         saveCartToLocalStorage(temp);
 
-        };
+    //     };
 
-    };
+    // };
 
-    const cartLength = useMemo(() => cart ? cart.length : 0, [cart]);
+    // const cartLength = useMemo(() => cart ? cart.length : 0, [cart]);
 
     const contextValues = useMemo(() => ({
-        cart,
-        total,
-        cartLength,
-        addToCart,
-        removeFromCart,
-        editItemQuantity
-    }), [cart, total, cartLength])
+        // cart,
+        // total,
+        // cartLength,
+        // addToCart,
+        // removeFromCart,
+        // editItemQuantity
+    // }), [cart, total, cartLength])
+    }), [])
 
     return (
 

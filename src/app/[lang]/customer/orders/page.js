@@ -5,57 +5,57 @@ import getOrders from "@/lib/firestore/getOrders";
 export default async function Page() {
 
     const orders = await getOrders();
-    console.log(orders)
 
     return (
 
-        <div className={`w-full ${orders.length !== 0 ? 'h-auto' : 'flex-1'}`}>
+        <>
 
             {
                 orders.length === 0 ? (
 
-                    <div className="w-full h-full flex flex-col items-center justify-center space-y-4 pb-20">
+                    <div className="flex-1 w-full grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-2">
 
-                        <p>You don’t have any orders or returns. Discover our products or contact us if you need assistance.</p>
-                        <Hyperlink
-                            title='start shopping'
-                            size='w-96 h-10'
-                            to='/shop'
-                        />
+                        <div className="col-span-2 col-start-2 flex flex-col items-center justify-center pb-16">
+                            <p className="text-3xl">You don't have any orders</p>
+                        </div>
 
                     </div>
 
                 ) : (
 
-                    <section className="mt-16 space-y-4">
+                    <div className={`w-full h-auto`}>
 
-                        <p className="capitalize mx-2 my-1">your orders</p>
+                        <section className="mt-16 space-y-4">
 
-                        <div className="flex flex-col space-y-2">
+                            <p className="capitalize mx-2 my-1">your orders</p>
 
-                            <div className="md:grid hidden grid-cols-4 gap-2 children:text-xs children:px-2">
+                            <div className="flex flex-col space-y-2">
 
-                                <p>order ID</p>
-                                <p>order date</p>
-                                <p>total amout</p>
-                                <p>status</p>
+                                <div className="md:grid hidden grid-cols-4 gap-2 children:text-xs children:px-2">
+
+                                    <p>order ID</p>
+                                    <p>order date</p>
+                                    <p>total amout</p>
+                                    <p>status</p>
+
+                                </div>
+
+                                {
+                                    orders.map((order, index) => (
+                                        <OrderTableRow key={index} id={order.id} order={order.data()} />
+                                    ))
+                                }
 
                             </div>
 
-                            {
-                                orders.map((order, index) => (
-                                    <OrderTableRow key={index} id={order.id} order={order.data()} />
-                                ))
-                            }
+                        </section>
 
-                        </div>
-
-                    </section>
+                    </div>
 
                 )
             }
 
-        </div>
+        </>
 
     );
 

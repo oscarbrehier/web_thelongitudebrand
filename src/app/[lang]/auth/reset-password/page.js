@@ -7,7 +7,7 @@ import InputWithLabel from "@/app/components/ui/InputWithLabel";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import { sendPasswordResetEmail } from "firebase/auth";
-import { auth } from "@/lib/firebase/firebase";
+import { auth } from "@/lib/firebase/client";
 
 const formSchema = z.object({
     email: z.string()
@@ -47,7 +47,7 @@ export default function Page({ params: { lang } }) {
             const email = formData.get("email");
             formSchema.parse({ email });
 
-            // await sendPasswordResetEmail(auth, email);
+            await sendPasswordResetEmail(auth, email);
 
             setEmail(email);
             setStatus("success");

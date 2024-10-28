@@ -7,23 +7,31 @@ export default async function createCheckoutSession(items, cancelUrl) {
 
     try {
 
-        let { url, id } = await fetch(`${origin}/api/checkout-session`, {
+        let res = await fetch(`${origin}/api/checkout-session`, {
             method: 'POST',
             body: JSON.stringify({
                 cart: cart,
                 cancelUrl
             }),
-        }).then(res => res.json());
-    
-        return {
-            url,
-            id
+        });
+
+        if (res.ok) {
+
+            const { url, id } = await res.json();
+            return {
+                url,
+                id
+            };
+
+        } else {
+
+            throw new Error("Failed to create a checkout session");
+
         };
-    
+
     } catch (err) {
 
-        console.error("Error while creating checkout session:", err);
-        return null;
+        throw err;
 
     };
 

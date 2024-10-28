@@ -54,6 +54,7 @@ export default function Product({
             size: size,
             price: content.price,
             cover: content.cover,
+            image_ref: content.image_ref,
         }, user?.uid);
 
     };
@@ -141,7 +142,7 @@ export default function Product({
                             <div className="flex items-center justify-center uppercase text-sm border-[1px] border-neutral-900 px-2 py-4">
                                 <SanityImage
                                     source={content.image_ref}
-                                    alt=""
+                                    alt={content.title}
                                     quality={0}
                                 />
                             </div>
@@ -206,7 +207,7 @@ export default function Product({
                             source={content.image_ref}
                             objectFit={true}
                             quality={90}
-                            alt=""
+                            alt={content.title}
                         />
                     </div>
 
@@ -217,7 +218,7 @@ export default function Product({
                     <div className="md:w-[80%] sm:w-[90%] w-full">
                         <SanityImage
                             source={content.image_ref}
-                            alt=""
+                            alt={content.title}
                         />
                     </div>
 

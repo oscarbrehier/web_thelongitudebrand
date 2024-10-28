@@ -1,15 +1,16 @@
-import { adminFirestore } from "@/lib/firebase/firebaseAdmin";
+import { adminFirestore } from "@/lib/firebase/admin";
 import { getProductById } from "@/lib/sanity/getProduct";
 import { StoreItem } from "@/app/components/store/StoreItem";
 import { getCurrentUser } from "@/lib/authentication/sessionHelpers";
+import Hyperlink from "@/app/components/ui/Hyperlink";
 
 export default async function Page() {
-    
+
     let data = null;
 
     const user = await getCurrentUser();
     if (!user) return;
-    
+
     const ref = adminFirestore.collection("wishlists").doc(user.uid);
     const doc = await ref.get();
 
@@ -35,19 +36,44 @@ export default async function Page() {
 
     return (
 
-        <div className="mt-16">
+        <>
+            {
+                data ? (
 
-            <p className="capitalize mx-2 my-1">your wishlist</p>
+                    <div className="mt-16">
 
-            <div className="h-auto w-full grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-2">
+                        <p className="capitalize mx-2 my-1">your wishlist</p>
 
-                {data && data.map((item, index) => (
-                    <StoreItem key={index} data={item} />
-                ))}
+                        <div className="h-auto w-full grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-2">
 
-            </div>
+                            {data && data.map((item, index) => (
+                                <StoreItem key={index} data={item} />
+                            ))}
 
-        </div>
+                        </div>
+
+                    </div>
+
+                ) : (
+
+                    <div className="flex-1 w-full grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-2">
+
+                        <div className="col-span-2 col-start-2 flex flex-col items-center justify-center pb-16">
+                            <p className="text-3xl">You have no items in your wishlist</p>
+
+                            <Hyperlink
+                                title="continue shopping"
+                                to="/shop"
+                                size="w-2/3 h-10"
+                            />
+
+                        </div>
+
+                    </div>
+
+                )
+            }
+        </>
 
     );
 

@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect, createContext, useContext } from "react";
 import { onAuthStateChanged, getAuth } from "firebase/auth";
-import firebase_app from "../firebase/firebase";
+import firebase_app from "../firebase/client";
 import { useCartStore } from "../stores/useCartStore";
 
 const auth = getAuth(firebase_app);

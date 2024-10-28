@@ -1,8 +1,7 @@
-import { deleteCart } from "./cart";
 import { addDoc, collection, Timestamp } from "@firebase/firestore";
-import { database } from "./firebase/firebase";
+import { database } from "./firebase/client";
 import createCheckoutSession from "./stripe/createCheckoutSession";
-import generateOrderId from "./generateOrderId";
+import generateOrderId from "./utils/generateOrderId";
 
 export const checkout = async (userId, cart, total, cancelUrl) => {
 
@@ -23,14 +22,11 @@ export const checkout = async (userId, cart, total, cancelUrl) => {
             at: Timestamp.now(),
         });
 
-        // deleteCart();
-
         return { url };
 
     } catch (err) {
 
-        console.error(err);
-        return null;
+        throw err;
 
     };
 

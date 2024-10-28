@@ -1,5 +1,5 @@
 import { EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
-import { auth } from "../firebase/firebase";
+import { auth } from "../firebase/client";
 
 export default async function reauthenticateUser(password) {
 

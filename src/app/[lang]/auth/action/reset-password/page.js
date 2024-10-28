@@ -1,14 +1,14 @@
 "use client"
 import { PageContainer } from "@/app/components/container/PageContainer";
 import InputWithLabel from "@/app/components/ui/InputWithLabel";
-import getPasswordStrength from "@/lib/getPasswordStrength";
-import { useSearchParams } from "next/navigation";
+import getPasswordStrength from "@/lib/utils/getPasswordStrength";
+import { useRouter, useSearchParams } from "next/navigation";
 import Button from "@/app/components/ui/Button";
 import { Suspense, useEffect, useState } from "react";
 import { z } from "zod";
 import resetPassword from "@/lib/authentication/resetPassword";
 import { confirmPasswordReset, verifyPasswordResetCode } from "firebase/auth";
-import { auth } from "@/lib/firebase/firebase";
+import { auth } from "@/lib/firebase/client";
 
 const formSchema = z.object({
     password: z.string()
@@ -26,11 +26,14 @@ const formSchema = z.object({
 export default function Page({ params: { lang } }) {
 
     const params = useSearchParams();
+    const router = useRouter();
+
     const code = params.get("code");
 
-    const [inputErrors, setInputErrors] = useState({
+    const [form, setForm] = useState({
         password: null,
-        confirmPassword: null
+        confirmPassword: null,
+        error: null
     });
 
     const [error, setError] = useState(null);
@@ -50,6 +53,7 @@ export default function Page({ params: { lang } }) {
             formSchema.parse(data);
 
             await confirmPasswordReset(auth, code, data.password);
+            router.push("/auth/sign-in");
 
         } catch (error) {
 
@@ -64,7 +68,7 @@ export default function Page({ params: { lang } }) {
 
                 }, {});
 
-                setInputErrors(prev => ({
+                setForm(prev => ({
                     ...prev,
                     password: errors.password,
                     confirmPassword: errors.confirmPassword
@@ -74,7 +78,7 @@ export default function Page({ params: { lang } }) {
 
             };
 
-            setError("An error occured. Please try again or come back later.")
+            setForm(prev => ({ ...prev, error: "An error occured. Please try again or come back later." }));
 
         } finally {
 
@@ -94,14 +98,14 @@ export default function Page({ params: { lang } }) {
 
             } catch (err) {
 
-                switch (err.code) {
+                if (err.code && (err.code === "auth/invalid-action-code" || "auth/expired-action-code")) {
 
-                    case "auth/invalid-action-code":
-
-                        console.error("invalid action code")
-                        break;
+                    router.push("/auth/reset-password?error=true");
+                    return;
 
                 };
+
+                setError("An error occured. Please try again or come back later.")
 
             };
 
@@ -114,6 +118,7 @@ export default function Page({ params: { lang } }) {
     return (
 
         <Suspense>
+
             <PageContainer lang={lang}>
 
                 <div className="h-screen w-full mt-16 md:pt-16 pt-24 2md:grid grid-cols-4 gap-2">
@@ -122,43 +127,53 @@ export default function Page({ params: { lang } }) {
 
                         <p className="capitalize mx-2 my-1">reset your password</p>
 
-                        <form action={handleForm}>
+                        {error ? (
 
-                            <div className="space-y-2">
-
-                                <InputWithLabel
-                                    title='password'
-                                    type='password'
-                                    required={true}
-                                    error={inputErrors.password}
-                                />
-
-                                <InputWithLabel
-                                    title='confirm password'
-                                    type='password'
-                                    required={true}
-                                    error={inputErrors.confirmPassword}
-                                />
-
-                                {error !== "" && (
-                                    <p className="text-sm text-error-red">{error}</p>
-                                )}
-
+                            <div className="w-full">
+                                <p className="text-error-red">{error}</p>
                             </div>
 
+                        ) : (
 
-                            <div className="mt-4 space-y-2">
+                            <form action={handleForm}>
 
-                                <Button
-                                    title="reset password"
-                                    size="w-full h-14"
-                                    type="submit"
-                                    loading={loading}
-                                />
+                                <div className="space-y-2">
 
-                            </div>
+                                    <InputWithLabel
+                                        title='password'
+                                        type='password'
+                                        required={true}
+                                        error={form.password}
+                                    />
 
-                        </form>
+                                    <InputWithLabel
+                                        title='confirm password'
+                                        type='password'
+                                        required={true}
+                                        error={form.confirmPassword}
+                                    />
+
+                                    {form.error !== "" && (
+                                        <p className="text-sm text-error-red">{form.error}</p>
+                                    )}
+
+                                </div>
+
+
+                                <div className="mt-4 space-y-2">
+
+                                    <Button
+                                        title="reset password"
+                                        size="w-full h-14"
+                                        type="submit"
+                                        loading={loading}
+                                    />
+
+                                </div>
+
+                            </form>
+
+                        )}
 
                     </div>
 
@@ -166,8 +181,10 @@ export default function Page({ params: { lang } }) {
                 </div>
 
             </PageContainer>
+
         </Suspense>
 
     )
 
 }
+

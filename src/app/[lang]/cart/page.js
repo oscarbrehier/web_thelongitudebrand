@@ -1,52 +1,45 @@
-'use client'
-import { getCartItems, getCartPrice, stripeCartFormat, sanityCartFormat } from "@/lib/cart";
+"use client"
 import { useEffect, useState } from "react";
-import CartItem from "@/app/components/cart/cartItem";
+import CartItem from "./CartItem";
 import { useRouter, usePathname } from "next/navigation";
 import { checkout } from "@/lib/checkout";
 import { PageContainer } from "@/app/components/container/PageContainer";
 import Button from "@/app/components/ui/Button";
 import { useAuthContext } from "@/lib/context/AuthContext";
-import getCartFromDb from "@/lib/firestore/getCartFromDb";
-import { useCartContext } from "@/lib/context/CartContext";
 import { useCartStore } from "@/lib/stores/useCartStore";
+import Hyperlink from "@/app/components/ui/Hyperlink";
 
-export default function Page({ params: { lang }}) {
-
-    // const [cart, setCart] = useState({ content: [], price: 0 });
+export default function Page({ params: { lang } }) {
 
     const router = useRouter();
-
+    
     const { user } = useAuthContext();
-    // const { total } = useCartContext();
+
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+     
     const cart = useCartStore((state) => state.cart);
     const total = useCartStore((state) => state.total);
 
-    // useEffect(() => {
-
-    //     const setCartContent = () => {
-
-    //         setCartContent(cart);
-
-    //     };
-
-    //     setCartContent();
-
-    // }, []);
-    
-    // const getCartContent = async (trigger) => {
-
-    //     // setCart(previous => ({ ...previous, content: getCartItems() }));
-
-    //     const { items, total } = await getCartFromDb(user.uid);
-    //     setCart(previous => ({ ...previous, content: items, price: total }));
-    // };
-
     const getCheckout = async () => {
 
-        const { url } = await checkout(user.uid, cart, total);
+        setLoading(true);
+        setError(null);
 
-        if (url) router.push(url);
+        try {
+
+            const { url } = await checkout(user.uid, cart, total);
+            router.push(url);
+
+        } catch (err) {
+
+            setError("An error occured. Please try again or come back later");
+
+        } finally {
+
+            setLoading(false);
+
+        };
 
     };
 
@@ -67,13 +60,13 @@ export default function Page({ params: { lang }}) {
                 </div>
 
                 {
-                    cart !== null ? (
+                    cart && cart.length >= 1 ? (
 
                         <div className="w-full h-auto grid xl:grid-cols-4 2md:grid-cols-3 grid-cols-1 gap-2">
 
                             <div className="w-full h-full xl:col-span-3 2md:col-span-2 space-y-2">
                                 {cart.map((item, idx) => (
-                                    <CartItem key={idx} index={idx} item={item} updateCart={() => getCartContent('cart_item')} />
+                                    <CartItem key={idx} index={idx} item={item} />
                                 ))}
                             </div>
 
@@ -95,9 +88,18 @@ export default function Page({ params: { lang }}) {
 
                                 </div>
 
-                                <button onClick={getCheckout} className={`w-full h-10 bg-black hover:bg-neon-green text-white hover:text-black uppercase text-sm`}>
-                                    proceed to checkout
-                                </button>
+                                <div className="space-y-2">
+
+                                    <Button 
+                                        title="proceed to checkout"
+                                        onClick={getCheckout} 
+                                        size="w-full h-10"
+                                        loading={loading}
+                                    />
+
+                                    {error && <p className="text-error-red text-sm">{error}</p>}
+
+                                </div>
 
                                 {/* <div className="flex justify-between sm:children:h-5 grayscale children:select-none space-x-2">
                             <img src="/images/icons/banks/visa.svg" alt="" />
@@ -125,7 +127,8 @@ export default function Page({ params: { lang }}) {
                         <div className="flex-1 w-full flex flex-col items-center pt-32 space-y-4">
 
                             <p>Your shopping cart is empty</p>
-                            <Button
+                            <Hyperlink
+                                to="/shop"
                                 title="start shopping"
                                 size="w-96 h-10"
                             />

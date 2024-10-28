@@ -1,4 +1,4 @@
-import { database } from "@/lib/firebase/firebase";
+import { database } from "@/lib/firebase/client";
 import { arrayUnion, doc, getDoc, setDoc, Timestamp, updateDoc } from "@firebase/firestore";
 
 export default async function addToWishlist(productId, userId) {

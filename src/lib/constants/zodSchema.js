@@ -1,5 +1,5 @@
 import { z } from "zod";
-import getPasswordStrength from "./getPasswordStrength";
+import getPasswordStrength from "../utils/getPasswordStrength";
 
 const requiredError = (fieldName) => `${fieldName} is required`;
 
@@ -9,7 +9,7 @@ export const signUpSchema = z.object({
         .min(1, { message: requiredError("First name") }),
     lastName: z
         .string()
-        .min(1, { message: requiredError("Last name")}),
+        .min(1, { message: requiredError("Last name") }),
     email: z
         .string()
         .min(1, { message: requiredError("Email") })
@@ -41,4 +41,22 @@ export const signInSchema = z.object({
     password: z
         .string()
         .min(1, { message: requiredError("Password") })
+});
+
+export const newsletterSchema = z.object({
+    firstName: z
+        .string()
+        .min(1, { message: requiredError("First name") }),
+    lastName: z
+        .string()
+        .min(1, { message: requiredError("Last name") }),
+    email: z
+        .string()
+        .min(1, { message: requiredError("Email") })
+        .email("Please enter a valid email address"),
+    terms: z
+        .boolean()
+        .refine((val) => val === true, {
+            message: "You must accept the terms and conditions"
+        }),
 });

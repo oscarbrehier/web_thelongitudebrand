@@ -1,6 +1,6 @@
 "use server"
 
-import { adminFirestore } from "@/lib/firebase/firebaseAdmin"
+import { adminFirestore } from "@/lib/firebase/admin";
 import admin from "firebase-admin";
 
 export default async function updateCartInFirestore(items, userId) {

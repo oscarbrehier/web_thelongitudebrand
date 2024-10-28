@@ -1,5 +1,5 @@
 import { getCurrentUser } from "../authentication/sessionHelpers";
-import { adminFirestore } from "../firebase/firebaseAdmin";
+import { adminFirestore } from "../firebase/admin";
 
 export default async function getOrders() {
 

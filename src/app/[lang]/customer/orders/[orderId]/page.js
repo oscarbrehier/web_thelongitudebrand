@@ -1,6 +1,6 @@
 import formatTimestamp from "@/lib/firestore/formatTimestamp";
 import OrderView from "@/app/components/OrderView";
-import { adminFirestore } from "@/lib/firebase/firebaseAdmin";
+import { adminFirestore } from "@/lib/firebase/admin";
 import { headers } from "next/headers";
 
 const serializeOrderData = (orderData) => {

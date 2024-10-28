@@ -1,101 +1,112 @@
 "use client"
 import { useModalContext } from "@/lib/context/ModalContext";
 import Input from "../ui/Input";
-import { IoClose } from "react-icons/io5";
-import { useState, useEffect, useRef } from "react";
-import LoadingSpinner from "../ui/loadingSpinner";
+import { useState, useEffect } from "react";
 import { signUp } from "@/lib/authentication/service";
+import { signUpSchema } from "@/lib/constants/zodSchema";
+import Button from "../ui/Button";
+import handleFirebaseError from "@/lib/firebase/handleFirebaseError";
+import ModalContainer from "./ModalContainer";
+
+const FORM_DEFAULT = {
+    submit: false,
+    error: null,
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    newsletter: false,
+    terms: false,
+    termsError: "",
+}
 
 export default function SignUpModal() {
 
     const { activeModal, closeModal } = useModalContext();
 
-    const [resetInputs, setResetInputs] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [form, setForm] = useState({
-        submit: false,
-        error: '',
-        firstName: '',
-        lastName: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        newsletter: false,
-        terms: false,
-    });
-
-    const handleCloseModal = () => {
-
-        closeModal();
-        setResetInputs(true);
-
-    };
-
-    useEffect(() => {
-
-        if (resetInputs == true) setResetInputs(false);
-
-    }, [resetInputs])
+    const [form, setForm] = useState(FORM_DEFAULT);
 
     const handleFormSubmit = async (event) => {
 
         event.preventDefault();
         setLoading(true);
-        setForm(prev => ({ ...prev, error: '', submit: true }));
-
-        const { password, confirmPassword, terms } = form;
-
-        if (password !== confirmPassword) {
-            setForm(prev => ({ ...prev, error: "Your passwords don't match." }));
-            setLoading(false);
-            return;
-        };
-
-        if (!terms) {
-            setForm(prev => ({ ...prev, error: 'You must agree to the terms and conditions before proceeding.' }));
-            setLoading(false);
-            return;
-        };
+        setForm(prev => ({ ...prev, error: null, submit: true }));
 
         try {
-            
-            await signUp(form);
-            handleCloseModal();
+
+            const formData = new FormData(event.target);
+
+            const data = {
+                firstName: formData.get("firstName"),
+                lastName: formData.get("lastName"),
+                email: formData.get("email"),
+                password: formData.get("password"),
+                confirmPassword: formData.get("confirmPassword"),
+                newsletter: formData.get("newsletter"),
+                terms: formData.get("terms") !== null
+            };
+
+            signUpSchema.parse(data);
+
+            await signUp(data);
+            closeModal();
+            window.location.reload();
 
         } catch (error) {
 
-            const errorMessages = {
-                'auth/weak-password': 'Password should at least be 6 characters long.',
-                'auth/email-already-in-use': 'This email is already in use. Please try logging in or use a different email address.',
+            if (error.errors) {
+
+                const errors = error.errors.reduce((acc, curr) => {
+
+                    acc[curr.path[0]] = curr.message;
+                    return acc;
+
+                }, {});
+
+                setForm(prev => ({
+                    ...prev,
+                    firstName: errors.firstName || "",
+                    lastName: errors.lastName || "",
+                    email: errors.email || "",
+                    password: errors.password || "",
+                    confirmPassword: errors.confirmPassword || "",
+                    termsError: !!errors.terms ? true : false,
+                }));
+
+            } else if (error.code) {
+
+                const formatError = handleFirebaseError(error.code);
+                setForm(prev => ({ ...prev, error: formatError }));
+
+            } else {
+
+                setForm(prev => ({ ...prev, error: "An error occured. Please try again or come back later." }));
+
             };
 
-            const message = errorMessages[error.code] || "Oops! An unexpected error occurred. Please try again.";
-            setForm(prev => ({ ...prev, error: message }));
+        } finally {
+
+            setLoading(false);
+            setForm(prev => ({ ...prev, submit: false }));
 
         };
 
-        setLoading(false);
-        setForm(prev => ({ ...prev, submit: false }));
-
     };
+
+    useEffect(() => {
+
+        if (activeModal === "sign_up") setForm(FORM_DEFAULT);
+
+    }, [activeModal]);
 
     return (
 
-        <div className={`${activeModal !== 'sign_up' && 'hidden'} h-screen w-full fixed p-4 z-20 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 bg-black bg-opacity-20`}>
+        <ModalContainer title="sign up">
 
-            <div className="flex w-full h-full xl:col-start-4 lg:col-start-3 md:col-start-2 md:col-span-2 col-start-1 col-span-full items-start">
 
-                <div className="h-auto w-full bg-cream-100 p-4">
-
-                    <div className="w-full h-auto flex justify-between items-center">
-
-                        <p className="text-sm capitalize">sign up</p>
-
-                        <button onClick={handleCloseModal} className="h-full bg-neon-green p-1">
-                            <IoClose />
-                        </button>
-
-                    </div>
+                <form onSubmit={handleFormSubmit} className="mt-4 space-y-4">
 
                     <div className="space-y-2 mt-8">
 
@@ -104,17 +115,13 @@ export default function SignUpModal() {
                             <Input
                                 title='first name'
                                 type='text'
-                                reset={resetInputs}
-                                onChange={(value) => setForm(prev => ({ ...prev, firstName: value }))}
-                                validate={form.submit}
+                                error={form.firstName}
                             />
 
                             <Input
                                 title='last name'
                                 type='text'
-                                reset={resetInputs}
-                                onChange={(value) => setForm(prev => ({ ...prev, lastName: value }))}
-                                validate={form.submit}
+                                error={form.lastName}
                             />
 
                         </div>
@@ -122,26 +129,19 @@ export default function SignUpModal() {
                         <Input
                             title='email'
                             type='email'
-                            reset={resetInputs}
-                            onChange={(value) => setForm(prev => ({ ...prev, email: value }))}
-                            validate={form.submit}
+                            error={form.email}
                         />
 
                         <Input
                             title='password'
                             type='password'
-                            reset={resetInputs}
-                            onChange={(value) => setForm(prev => ({ ...prev, password: value }))}
-                            validate={form.submit}
+                            error={form.password}
                         />
 
                         <Input
                             title='confirm password'
                             type='password'
-                            reset={resetInputs}
-                            onChange={(value) => setForm(prev => ({ ...prev, confirmPassword: value }))}
-                            validate={form.submit}
-                            password={form.password}
+                            error={form.confirmPassword}
                         />
 
                     </div>
@@ -158,29 +158,31 @@ export default function SignUpModal() {
                         </div>
 
                         <div className="flex text-xs space-x-4">
+
                             <input
                                 type="checkbox"
+                                id="terms"
+                                name="terms"
                                 checked={form.terms}
                                 onChange={() => setForm(prev => ({ ...prev, terms: !prev.terms }))}
                             />
-                            <p>
+
+                            <p className={form.termsError && "text-error-red"}>
                                 By selecting "Sign Up", you are confirming that you have read and agree to thelongitudebrand's <span>Terms & Conditions</span>
                             </p>
+
                         </div>
 
                     </div>
 
                     <div className="mt-4 space-y-2 w-full">
 
-                        <div onClick={(event) => handleFormSubmit(event)} className="w-full h-10 bg-black flex items-center justify-center cursor-pointer">
-
-                            {
-                                loading
-                                    ? <LoadingSpinner />
-                                    : <p className="text-white text-sm capitalize">Sign Up</p>
-                            }
-
-                        </div>
+                        <Button
+                            title="sign up"
+                            type="submit"
+                            size="w-full h-10"
+                            loading={loading}
+                        />
 
                         <>
                             {
@@ -192,11 +194,9 @@ export default function SignUpModal() {
 
                     </div>
 
-                </div>
+                </form>
 
-            </div>
-
-        </div>
+        </ModalContainer>
 
     );
 
