@@ -18,13 +18,13 @@ export async function generateMetadata({ params: { item }}) {
             };
 
         };
-        
+
         const url = `https://thelongitudebrand.com/shop/${item}`;
 
         return {
             title: response.title,
             description: response.description || "description",
-            keywords: response?.keywords.join(", ") || "",
+            keywords: response.keywords ? response?.keywords.join(", ") : "",
             author: "Longitude",
             canonical: url,
             openGraph: {
