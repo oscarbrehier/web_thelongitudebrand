@@ -1,10 +1,10 @@
 'use client';
 import updatePassword from "@/lib/authentication/updatePassword";
 import InputWithLabel from "@/app/components/ui/InputWithLabel";
-import getPasswordStrength from "@/lib/getPasswordStrength";
+import getPasswordStrength from "@/lib/utils/getPasswordStrength";
 import Button from "@/app/components/ui/Button";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { z } from "zod";
 
 const passwordCriteria = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;

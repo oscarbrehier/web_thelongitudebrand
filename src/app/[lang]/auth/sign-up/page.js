@@ -7,7 +7,7 @@ import handleFirebaseError from "@/lib/firebase/handleFirebaseError";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { signUpSchema } from "@/lib/zodSchema";
+import { signUpSchema } from "@/lib/constants/zodSchema";
 import { signUp } from "@/lib/authentication/service";
 
 export default function Page({
