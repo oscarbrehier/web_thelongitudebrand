@@ -10,7 +10,7 @@ export async function generateMetadata({ params: { item }}) {
 
         const response = await getProductBySlug(item);
         
-        if (response?.length === 0) {
+        if (!response || response.length === 0) {
 
             return {
                 title: "Not found",
@@ -18,15 +18,40 @@ export async function generateMetadata({ params: { item }}) {
             };
 
         };
-
-        console.log(response)
+        
+        const url = `https://thelongitudebrand.com/shop/${item}`;
 
         return {
             title: response.title,
+            description: response.description || "description",
+            keywords: response?.keywords.join(", ") || "",
+            author: "Longitude",
+            canonical: url,
             openGraph: {
-                title: response?.title,
-                description: "default",
-                images: response?.cover
+                title: response.title,
+                description: response.description || "default",
+                url,
+                images: response.cover ? [{ url: response.cover }] : [],
+            },
+            twitter: {
+                card: "summary_large_image",
+                title: response.title,
+                description: response.description || "description",
+                images: response.cover || [],
+            },
+            structuredData: {
+                "@context": "https://schema.org",
+                "@type": "Product",
+                name: response.title,
+                description: response.description,
+                image: response.cover ? response.cover : "",
+                url,
+                brand: "Longitude",
+                offers: {
+                    "@type": "Offer",
+                    price: response.price,
+                    priceCurrency: "EUR",
+                },
             },
         };
 
