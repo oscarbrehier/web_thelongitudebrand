@@ -3,6 +3,7 @@ import { getProductBySlug } from "@/lib/sanity/getProduct";
 import Product from "@/app/components/Product";
 import getProductSlugs from "@/lib/sanity/getProductSlugs";
 import { languages } from "@/app/i18n/settings";
+import { notFound } from "next/navigation";
 
 export async function generateMetadata({ params: { item }}) {
 
@@ -26,9 +27,16 @@ export async function generateMetadata({ params: { item }}) {
             description: response.description || "description",
             keywords: response.keywords ? response?.keywords.join(", ") : "",
             author: "Longitude",
-            canonical: url,
+            alternates: {
+                canonical: url,
+                languages: {
+                    "en-EN": "/en",
+                    "fr-FR": "/fr"
+                }
+            },
             openGraph: {
                 title: response.title,
+                type: "website",
                 description: response.description || "default",
                 url,
                 images: response.cover ? [{ url: response.cover }] : [],
@@ -79,6 +87,8 @@ export async function generateStaticParams() {
 export default async function Page({ params: { item, lang } }) {
 
     const content = await getProductBySlug(item);
+
+    if (!content) notFound();
 
     return (
 

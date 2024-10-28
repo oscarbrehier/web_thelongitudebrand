@@ -1,4 +1,3 @@
-import Hyperlink from "@/app/components/ui/Hyperlink";
 import OrderTableRow from "@/app/components/OrderTableRow";
 import getOrders from "@/lib/firestore/getOrders";
 
