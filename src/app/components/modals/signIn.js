@@ -1,10 +1,8 @@
 "use client"
 import Input from "../ui/Input";
-import { IoClose } from "react-icons/io5";
 import { useEffect, useState } from "react";
 import { useModalContext } from "@/lib/context/ModalContext";
 import { signIn } from "@/lib/authentication/service";
-import * as navigation from "next/navigation";
 import { signInSchema } from "@/lib/constants/zodSchema";
 import Button from "../ui/Button";
 import handleFirebaseError from "@/lib/firebase/handleFirebaseError";

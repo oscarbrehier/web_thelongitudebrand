@@ -1,8 +1,6 @@
 "use client"
 import { useModalContext } from "@/lib/context/ModalContext";
-import { IoClose } from "react-icons/io5";
 import { useState, useEffect, useRef } from "react";
-import LoadingSpinner from "../ui/loadingSpinner";
 import Input from "../ui/Input";
 import Button from "../ui/Button";
 import { doc, setDoc, Timestamp } from "@firebase/firestore";
