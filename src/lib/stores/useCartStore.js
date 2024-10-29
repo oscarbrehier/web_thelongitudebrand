@@ -53,6 +53,7 @@ export const useCartStore = create(
                 };
 
                 set({ cart });
+                get().calculateTotal();
 
                 if (user) {
 
@@ -64,7 +65,6 @@ export const useCartStore = create(
 
                 };
 
-                get().calculateTotal();
 
             },
 
@@ -75,6 +75,7 @@ export const useCartStore = create(
                 );
 
                 set({ cart: updatedCart });
+                get().calculateTotal();
 
                 if (user) {
 
@@ -86,7 +87,6 @@ export const useCartStore = create(
 
                 };
 
-                get().calculateTotal();
 
             },
 
@@ -104,6 +104,7 @@ export const useCartStore = create(
                 };
                 
                 set({ cart });
+                get().calculateTotal();
 
                 if (user) {
 
@@ -115,7 +116,6 @@ export const useCartStore = create(
 
                 };
 
-                get().calculateTotal();
 
             },
 

@@ -93,7 +93,7 @@ const Input = forwardRef(({
             <div className="w-full h-full flex justify-between">
 
                 <input
-                    className={`w-full h-10 outline-none text-sm px-4 bg-transparent placeholder:capitalize placeholder-black ${errorMessage && 'border-l-2 border-error-red'}`}
+                    className={`w-full h-10 outline-none md:text-sm text-base px-4 bg-transparent placeholder:capitalize placeholder-black ${errorMessage && 'border-l-2 border-error-red'}`}
                     type={type === "password" && visible ? "text" : type}
                     name={camelize(title)}
                     id={titleValue}
