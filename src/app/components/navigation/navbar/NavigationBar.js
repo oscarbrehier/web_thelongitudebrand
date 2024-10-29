@@ -40,9 +40,27 @@ export default function NavigationBar({ lang }) {
 
     };
 
+    const authLinks = isAuth ? (
+
+        <>
+            <button
+                onClick={handleSignOut}
+                className="logout-button"
+                aria-label={t("logout")}
+            >
+                {t("logout")}
+            </button>
+            <Link href="/customer/wishlist">{t("wishlist")}</Link>
+            <Link href="/customer/personal-information">{t("account")}</Link>
+        </>
+
+    ) : (
+        <button onClick={() => openModal('sign_in')}>{t("account")}</button>
+    );
+
     return (
 
-        <div className="md:h-10 h-auto w-full md:grid lg:grid-cols-4 md:grid-cols-3 gap-2 flex flex-col items-center justify-between md:p-0 pt-2 bg-neon-green text-xs z-20 top-4">
+        <nav className="md:h-10 h-auto w-full md:grid lg:grid-cols-4 md:grid-cols-3 gap-2 flex flex-col items-center justify-between md:p-0 pt-2 bg-neon-green text-xs z-20 top-4">
 
             <div className="md:w-1/4 w-full md:block flex justify-center">
                 <Link href="/">the<span className="font-semibold">longitude</span>brand</Link>
@@ -60,27 +78,15 @@ export default function NavigationBar({ lang }) {
 
                 <div className="md:w-full w-full flex justify-end space-x-4 children:lowercase">
 
+                    {authLinks}
 
-                    {isAuth
-                        ? (
-                            <>
-                                <button onClick={handleSignOut} className="">logout</button>
-                                <Link className="" href="/customer/wishlist">{t("wishlist")}</Link>
-                                <Link className="" href="/customer/personal-information">{t("account")}</Link>
-                            </>
-                        )
-                        : <button onClick={() => openModal('sign_in')}>{t("account")}</button>
-                    }
-
-                    <Link className="" href="/cart">{t("cart")} (
-                        {cartLength}
-                    )</Link>
-
+                    <Link href="/cart" aria-label={t("view_cart")}>{t("cart")} ({cartLength})</Link>
+                    
                 </div>
 
             </div>
 
-        </div>
+        </nav>
 
     );
 

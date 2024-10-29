@@ -5,12 +5,12 @@ import getProductSlugs from "@/lib/sanity/getProductSlugs";
 import { languages } from "@/app/i18n/settings";
 import { notFound } from "next/navigation";
 
-export async function generateMetadata({ params: { item }}) {
+export async function generateMetadata({ params: { lang, item } }) {
 
     try {
 
         const response = await getProductBySlug(item);
-        
+
         if (!response || response.length === 0) {
 
             return {
@@ -20,7 +20,7 @@ export async function generateMetadata({ params: { item }}) {
 
         };
 
-        const url = `https://thelongitudebrand.com/shop/${item}`;
+        const url = `https://thelongitudebrand.com/${lang}/shop/${item}`;
 
         return {
             title: response.title,
@@ -46,20 +46,6 @@ export async function generateMetadata({ params: { item }}) {
                 title: response.title,
                 description: response.description || "description",
                 images: response.cover || [],
-            },
-            structuredData: {
-                "@context": "https://schema.org",
-                "@type": "Product",
-                name: response.title,
-                description: response.description,
-                image: response.cover ? response.cover : "",
-                url,
-                brand: "Longitude",
-                offers: {
-                    "@type": "Offer",
-                    price: response.price,
-                    priceCurrency: "EUR",
-                },
             },
         };
 
@@ -90,9 +76,39 @@ export default async function Page({ params: { item, lang } }) {
 
     if (!content) notFound();
 
+    const structuredData = JSON.stringify([
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "Longitude",
+            url: "https://thelongitudebrand.com",
+            logo: "https://thelongitudebrand.com/logo.png",
+        },  
+        {
+            "@context": "https://schema.org",
+            "@type": "Product",
+            name: content.title,
+            description: content.description,
+            image: Array.isArray(content.cover) ? content.cover : [content.cover],
+            url: `https://thelongitudebrand.com/${lang}/shop/${item}`,
+            brand: {
+                "@type": "Brand",
+                name: "Longitude",
+            },
+            offers: {
+                "@type": "Offer",
+                title: content.title,
+                price: content.price,
+                priceCurrency: "EUR",
+            },
+        }
+    ]);
+
     return (
 
         <PageContainer lang={lang}>
+
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: structuredData }} />
 
             <Product
                 lang={lang}

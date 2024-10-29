@@ -8,26 +8,21 @@ export const PageContainer = ({ children, className, lang }) => {
 
         <div className="h-auto w-full relative">
 
-            {/* <div className={`h-auto w-full absolute z-10 ${activeModal !== null && 'blur-md'}`}> */}
-
             <ClientModals>
 
                 <div className={`h-auto w-full absolute z-10`}>
 
-                    <div className={`z-20 px-4` + ' ' + className}>
-                        <div className="">
-                            {children}
-                        </div>
-
-                        <div>
-                            <Footer lang={lang} />
-                        </div>
-
-                    </div>
-
-                    <div className="z-10 h-auto w-full px-4 fixed top-4">
+                    <header className="z-10 h-auto w-full px-4 fixed top-4">
                         <NavigationBar lang={lang} />
-                    </div>
+                    </header>
+
+                    <main className={`z-20 px-4 ${" " + className}`}>
+                        {children}
+                    </main>
+
+                    <footer className="px-4">
+                        <Footer lang={lang} />
+                    </footer>
 
                 </div>
 

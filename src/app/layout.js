@@ -38,7 +38,7 @@ export const metadata = {
 			"fr-FR": "/fr"
 		}
 	}
-	
+
 };
 
 export async function generateStaticParams() {
@@ -47,7 +47,7 @@ export async function generateStaticParams() {
 
 };
 
-export default async function RootLayout({ 
+export default async function RootLayout({
 	children,
 }) {
 
@@ -58,9 +58,19 @@ export default async function RootLayout({
 
 	const user = await getCurrentUser();
 
+	const structuredData = JSON.stringify({
+		"@context": "https://schema.org",
+		"@type": "Organization",
+		name: "Longitude",
+		url: "https://thelongitudebrand.com",
+		logo: "https://thelongitudebrand.com/logo.png",
+	})
+
 	return (
 
 		<html lang={lang}>
+
+			<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: structuredData }} />
 
 			<AuthContextProvider>
 

@@ -10,7 +10,7 @@ export default function ClientModals({ children }) {
 
     return (
 
-        <div>
+        <>
 
             <div className={`h-auto w-full ${activeModal !== null ? 'blur-md' : ''}`}>
                 {children}
@@ -20,7 +20,7 @@ export default function ClientModals({ children }) {
             {activeModal === "sign_up" && (<SignUpModal />)}
             {activeModal === "newsletter" && (<NewsletterModal />)}
             
-        </div>
+        </>
 
     );
 

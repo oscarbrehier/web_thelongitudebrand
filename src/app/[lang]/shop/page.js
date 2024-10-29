@@ -22,7 +22,7 @@ export default async function Page({ params: { lang } }) {
 
 				<div className="h-full flex justify-start items-center col-start-2">
 					<div className="bg-neon-green">
-						<p className="capitalize font-playfair italic font-medium text-6xl">{t("shop")}</p>
+						<h1 className="capitalize font-playfair italic font-medium text-6xl">{t("shop")}</h1>
 					</div>
 				</div>
 
