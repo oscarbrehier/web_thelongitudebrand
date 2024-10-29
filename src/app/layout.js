@@ -9,6 +9,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from "@vercel/analytics/react";
 import { getCurrentUser } from "@/lib/authentication/sessionHelpers";
 import { headers } from "next/headers";
+import Head from "next/head";
 
 const baseUrl = "https://thelongitudebrand.com";
 
@@ -70,7 +71,10 @@ export default async function RootLayout({
 
 		<html lang={lang}>
 
-			<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: structuredData }} />
+			<Head>
+				<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: structuredData }} />
+			</Head>
+
 
 			<AuthContextProvider>
 

@@ -1,23 +1,23 @@
 "use client"
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CartItem from "./CartItem";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { checkout } from "@/lib/checkout";
-import { PageContainer } from "@/app/components/container/PageContainer";
 import Button from "@/app/components/ui/Button";
 import { useAuthContext } from "@/lib/context/AuthContext";
 import { useCartStore } from "@/lib/stores/useCartStore";
 import Hyperlink from "@/app/components/ui/Hyperlink";
+import LoadingSpinner from "@/app/components/ui/loadingSpinner";
 
-export default function Page({ params: { lang } }) {
+export default function Page() {
 
     const router = useRouter();
-    
+
     const { user } = useAuthContext();
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-     
+
     const cart = useCartStore((state) => state.cart);
     const total = useCartStore((state) => state.total);
 
@@ -45,63 +45,51 @@ export default function Page({ params: { lang } }) {
 
     return (
 
-        <PageContainer lang={lang}>
+        <>
 
-            <section className="w-full min-h-screen pt-12 flex flex-col">
+            {
+                cart && cart.length >= 1 ? (
 
-                <div className="h-40 w-full md:grid grid-cols-4 gap-4 flex flex-col justify-center md:items-end items-center space-y-3 my-10">
+                    <div className="w-full h-auto grid xl:grid-cols-4 2md:grid-cols-3 grid-cols-1 gap-2">
 
-                    <div className="h-full flex justify-start items-center col-start-2">
-                        <div className="bg-neon-green">
-                            <p className="capitalize font-playfair italic font-medium text-6xl">cart</p>
+                        <div className="w-full h-full xl:col-span-3 2md:col-span-2 space-y-2">
+                            {cart.map((item, idx) => (
+                                <CartItem key={idx} index={idx} item={item} />
+                            ))}
                         </div>
-                    </div>
 
-                </div>
 
-                {
-                    cart && cart.length >= 1 ? (
+                        <div className="w-full h-auto space-y-4 2md:static sticky bottom-0 2md:p-0 py-4 bg-cream-100">
 
-                        <div className="w-full h-auto grid xl:grid-cols-4 2md:grid-cols-3 grid-cols-1 gap-2">
+                            <div className="text-sm capitalize space-y-1">
 
-                            <div className="w-full h-full xl:col-span-3 2md:col-span-2 space-y-2">
-                                {cart.map((item, idx) => (
-                                    <CartItem key={idx} index={idx} item={item} />
-                                ))}
+                                <div className="w-full flex justify-between">
+                                    <p className="text-xs">shipping cost</p>
+                                    <p className="text-xs">calculated at checkout</p>
+                                </div>
+
+                                <div className="w-full flex justify-between">
+                                    <p className="text-sm">total</p>
+                                    {/* <p className="text-sm bg-neon-green">{cart.price} €</p> */}
+                                    <p className="text-sm bg-neon-green">{total} €</p>
+                                </div>
+
                             </div>
 
+                            <div className="space-y-2">
 
-                            <div className="w-full h-auto space-y-4 2md:static sticky bottom-0 2md:p-0 py-4 bg-cream-100">
+                                <Button
+                                    title="proceed to checkout"
+                                    onClick={getCheckout}
+                                    size="w-full h-10"
+                                    loading={loading}
+                                />
 
-                                <div className="text-sm capitalize space-y-1">
+                                {error && <p className="text-error-red text-sm">{error}</p>}
 
-                                    <div className="w-full flex justify-between">
-                                        <p className="text-xs">shipping cost</p>
-                                        <p className="text-xs">calculated at checkout</p>
-                                    </div>
+                            </div>
 
-                                    <div className="w-full flex justify-between">
-                                        <p className="text-sm">total</p>
-                                        {/* <p className="text-sm bg-neon-green">{cart.price} €</p> */}
-                                        <p className="text-sm bg-neon-green">{total} €</p>
-                                    </div>
-
-                                </div>
-
-                                <div className="space-y-2">
-
-                                    <Button 
-                                        title="proceed to checkout"
-                                        onClick={getCheckout} 
-                                        size="w-full h-10"
-                                        loading={loading}
-                                    />
-
-                                    {error && <p className="text-error-red text-sm">{error}</p>}
-
-                                </div>
-
-                                {/* <div className="flex justify-between sm:children:h-5 grayscale children:select-none space-x-2">
+                            {/* <div className="flex justify-between sm:children:h-5 grayscale children:select-none space-x-2">
                             <img src="/images/icons/banks/visa.svg" alt="" />
                             <img src="/images/icons/banks/mastercard.svg" alt="" />
                             <img src="/images/icons/banks/amex.svg" alt="" />
@@ -114,33 +102,31 @@ export default function Page({ params: { lang } }) {
                             <img src="/images/icons/banks/ideal.svg" alt="" />
                         </div> */}
 
-                                <Menu style='2md:block hidden' />
-
-                            </div>
-
-                            <Menu style='2md:hidden block' />
+                            <Menu style='2md:block hidden' />
 
                         </div>
 
-                    ) : (
+                        <Menu style='2md:hidden block' />
 
-                        <div className="flex-1 w-full flex flex-col items-center pt-32 space-y-4">
+                    </div>
 
-                            <p>Your shopping cart is empty</p>
-                            <Hyperlink
-                                to="/shop"
-                                title="start shopping"
-                                size="w-96 h-10"
-                            />
+                ) : (
 
-                        </div>
+                    <div className="flex-1 w-full flex flex-col items-center pt-32 space-y-4">
 
-                    )
-                }
+                        <p>Your shopping cart is empty</p>
+                        <Hyperlink
+                            to="/shop"
+                            title="start shopping"
+                            size="w-96 h-10"
+                        />
 
-            </section>
+                    </div>
 
-        </PageContainer>
+                )
+            }
+
+        </>
 
 
     );

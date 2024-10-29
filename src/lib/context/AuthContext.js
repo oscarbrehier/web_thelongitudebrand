@@ -13,6 +13,7 @@ export const AuthContextProvider = ({ children }) => {
 
     const [user, setUser] = useState(null);
     const [isAuth, setIsAuth] = useState(false);
+    const [loadingCart, setLoadingCart] = useState(true);
 
     const getCart = useCartStore((state) => state.getCart);
 
@@ -23,11 +24,9 @@ export const AuthContextProvider = ({ children }) => {
             setUser(user);
             setIsAuth(!!user);
             
-            if (user) {
-
-                await getCart(user.uid);
-
-            };
+            setLoadingCart(true);
+            await getCart(user?.uid);
+            setLoadingCart(false);
 
         });
 
@@ -39,7 +38,7 @@ export const AuthContextProvider = ({ children }) => {
 
     return (
 
-        <AuthContext.Provider value={{ user, isAuth }}>
+        <AuthContext.Provider value={{ user, isAuth, loadingCart }}>
             {children}
         </AuthContext.Provider>
 
