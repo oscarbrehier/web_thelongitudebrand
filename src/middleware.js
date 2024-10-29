@@ -29,6 +29,8 @@ export async function middleware(request) {
         return response;
     };
 
+    if (pathname.startsWith("/locked")) return NextResponse.redirect(new URL('/shop', request.url));
+ 
     if (cookieStore.has(cookieName)) {
         lng = acceptLanguage.get(cookieStore.get(cookieName).value);
     } else {

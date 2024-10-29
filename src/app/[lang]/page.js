@@ -1,22 +1,33 @@
-export default function Home() {
+import Link from "next/link";
+import { PageContainer } from "../components/container/PageContainer";
+import Button from "../components/ui/Button";
+
+export default function Page({ params: { lang } }) {
 
 	return (
 
-		<main className="h-screen w-full bg-black relative">
+		<PageContainer lang={lang}>
 
-			<div className="h-screen w-full absolute flex flex-col items-center justify-center space-y-4 md:px-0 px-10">
+			{/* <main className="h-screen w-full p-4"> */}
+			<main className="h-screen w-full md:pt-[4.5rem] pt-[6.5rem] pb-4">
 
-				<img className={`svg-blur md:w-[40rem]`} src="/images/landing/oval.png" alt="" />
+				<div className="size-full flex flex-col items-center justify-center bg-neon-green space-y-8">
 
+					<div className="h-auto w-auto md:p-0 sm:px-8 px-4">
 
-				<p className="font-chiquita text-white text-center text-8xl svg-blur neon leading-[3.4rem]">soon coming</p>
+						<img className={`svg-blur-white md:w-[40rem]`} src="/images/landing/oval-white.png" alt="" />
 
-			</div>
+					</div>
+					
+					<Link href="/shop" className="uppercase md:text-2xl text-xl font-medium font-space text-neutral-800">
+						shop now
+					</Link>
 
-			<div className='h-screen w-full bg-[url("/images/scan_lines.png")] absolute'></div>
+				</div>
 
+			</main>
 
-		</main>
+		</PageContainer>
 
 	);
 }

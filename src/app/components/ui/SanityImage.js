@@ -41,11 +41,12 @@ export default function SanityImage({
             //     height={height}
             // }
             {
-            ...(objectFit
-                ? { layout: "fill", objectFit: "contain" }
-                : { width, height }
-            )
+                ...(objectFit
+                    ? { fill: true }
+                    : { width, height }
+                )
             }
+            style={objectFit && { objectFit: "contain" }}
             {...props}
         />
 

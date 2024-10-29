@@ -29,7 +29,7 @@ export default function Layout({ children, params: { lang } }) {
 
                     </div>
 
-                    {children}
+                    {!loadingCart && children}
 
                 </section>
 
