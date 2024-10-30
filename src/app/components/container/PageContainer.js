@@ -20,7 +20,7 @@ export const PageContainer = ({ children, className, lang }) => {
                         {children}
                     </main>
 
-                    <footer className="px-4">
+                    <footer className="px-4 mt-10">
                         <Footer lang={lang} />
                     </footer>
 

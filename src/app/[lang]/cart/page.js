@@ -142,7 +142,7 @@ function Menu({ style }) {
 
     return (
 
-        <div className={`children:text-sm space-y-1 pt-2 ${style}`}>
+        <div className={`children:text-sm space-y-1 pt-2 ${style} bg-red-500`}>
 
             <button onClick={() => handleMenuToggle(1)} className="w-full flex justify-between">
                 <p>shipping methods</p>
