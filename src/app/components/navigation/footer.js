@@ -28,7 +28,7 @@ export default function Footer({ lang }) {
 
     return (
 
-        <div className="h-auto w-full mb-4 bg-green-400">
+        <div className="h-auto w-full mb-4">
 
             <Newsletter lang={lang} />
 

@@ -2,21 +2,16 @@
 import { useModalContext } from "@/lib/context/ModalContext";
 import { useAuthContext } from "@/lib/context/AuthContext";
 import { useCartStore } from "@/lib/stores/useCartStore";
-import { usePathname, useRouter } from "next/navigation";
-import { signOut } from "@/lib/authentication/service";
+import { usePathname } from "next/navigation";
 import { useTranslation } from "@/app/i18n/client";
-import { languages } from "@/app/i18n/settings";
-import { authRoutes } from "@/lib/constants/settings.config";
 import Link from "next/link";
-import { storageKeys } from "@/lib/constants/settings.config";
 import { useEffect, useRef, useState } from "react";
 import MobileMenu from "./MobileMenu";
-import { IoMenu, IoClose, IoBagOutline, IoMenuOutline, IoCloseOutline, IoPersonOutline } from "react-icons/io5";
+import { IoBagOutline, IoMenuOutline, IoCloseOutline } from "react-icons/io5";
 
 export default function NavigationBar({ lang }) {
 
     const pathname = usePathname();
-    const router = useRouter();
 
     const [menu, setMenu] = useState(false);
     const menuRef = useRef();
@@ -26,25 +21,6 @@ export default function NavigationBar({ lang }) {
     const cartLength = useCartStore((state) => state.cart.length);
 
     const { t } = useTranslation(lang, "navigation");
-
-    const { clearCart } = useCartStore((state) => ({
-        clearCart: state.clearCart
-    }));
-
-    const handleSignOut = async () => {
-
-        const languageRegex = new RegExp(`^/(${languages.join('|')})`);
-        const isAuthRoute = authRoutes.some((route) => pathname.replace(languageRegex, "").startsWith(route));
-
-        clearCart();
-        localStorage.removeItem(storageKeys.CART);
-
-        const res = await signOut();
-
-        if (!res) console.error("error signing out");
-        if (isAuthRoute) router.push("/shop");
-
-    };
 
     const handleOpenModal = (modal) => {
 
@@ -56,13 +32,6 @@ export default function NavigationBar({ lang }) {
     const authLinks = isAuth ? (
 
         <>
-            <button
-                onClick={handleSignOut}
-                className="logout-button"
-                aria-label={t("logout")}
-            >
-                {t("logout")}
-            </button>
             <Link href="/customer/wishlist">{t("wishlist")}</Link>
             <Link href="/customer/personal-information">{t("account")}</Link>
         </>

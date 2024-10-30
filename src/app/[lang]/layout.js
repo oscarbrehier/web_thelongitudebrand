@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import { PageContainer } from "../components/container/PageContainer";
 import { languages } from "../i18n/settings";
 
@@ -13,6 +14,9 @@ export default function Layout({
         lang
     }
 }) {
+
+    const pathname = headers().get("x-pathname");
+    if (pathname == "home") return children;
 
     return (
 

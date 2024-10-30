@@ -1,3 +1,4 @@
+"use client"
 import camelize from "@/lib/utils/camelize";
 import getPasswordStrength from "@/lib/utils/getPasswordStrength";
 import { useState, useEffect } from "react";

@@ -23,9 +23,6 @@ export default async function Page({ params: { orderId } }) {
         const host = headersList.get('X-Forwarded-Host');
         const proto = headersList.get('X-Forwarded-Proto');
 
-
-        console.log(proto);
-
         const res = await fetch(`${proto}://${host}/api/checkout-session`, {
             method: "GET",
             headers: {

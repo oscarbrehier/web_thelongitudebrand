@@ -21,7 +21,7 @@ export async function middleware(request) {
     const fullPathname = request.nextUrl.pathname;
     const pathname = request.nextUrl.pathname.replace(languageRegex, "");
 
-    response.headers.set('x-pathname', pathname);
+    response.headers.set('x-pathname', pathname || "home");
 
     const session = cookieStore.get(storageKeys.SESSION)?.value;
 

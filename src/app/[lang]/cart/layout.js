@@ -26,7 +26,13 @@ export default function Layout({ children, params: { lang } }) {
 
                 </section>
 
-                {loadingCart && <LoadingPanel/>}
+                {loadingCart && (
+
+                    <div className="size-full flex pt-16 absolute">
+                        <LoadingPanel/>
+                    </div>
+
+                )}
 
             </div>
 

@@ -1,10 +1,12 @@
-export default function LoadingPanel() {
+export default function LoadingPanel({
+    
+}) {
 
     return (
 
-        <div className="h-screen w-full md:pt-[4.5rem] pt-[6.5rem] pb-4 absolute">
+        <div className="flex-1 w-full flex pt-2 pb-4 z-20">
 
-            <div className="size-full bg-neon-green flex items-center justify-center text-lg">
+            <div className="flex-1 w-full bg-cream-100 flex items-center justify-center text-lg pb-16">
                 <p>the<span className="font-semibold">longitude</span>brand</p>
             </div>
 
