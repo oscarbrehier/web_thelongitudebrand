@@ -89,6 +89,12 @@ export default function NavigationBar({ lang }) {
 
     }, [menu]);
 
+    useEffect(() => {
+
+        if (menu) setMenu(false);
+
+    }, [pathname])
+
     return (
 
         <nav ref={menuRef} className={`${menu ? "h-auto" : "h-auto"} w-full flex flex-col`}>
@@ -107,7 +113,7 @@ export default function NavigationBar({ lang }) {
 
                     <div className={`sm:hidden flex items-center space-x-2`}>
 
-                        <div className="size-7 relative">
+                        <Link href="/cart" className="size-7 relative">
 
                             <div className="absolute size-full children:size-full">
                                 <IoBagOutline />
@@ -117,7 +123,7 @@ export default function NavigationBar({ lang }) {
                                 <p className={`text-white ${cartLength >= 10 ? "text-xs" : "text-sm"}`}>{cartLength}</p>
                             </div>
 
-                        </div>
+                        </Link>
 
                         <button onClick={() => setMenu(!menu)} className="size-7 children:size-full">
 
