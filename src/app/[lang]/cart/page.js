@@ -7,7 +7,6 @@ import Button from "@/app/components/ui/Button";
 import { useAuthContext } from "@/lib/context/AuthContext";
 import { useCartStore } from "@/lib/stores/useCartStore";
 import Hyperlink from "@/app/components/ui/Hyperlink";
-import LoadingSpinner from "@/app/components/ui/loadingSpinner";
 
 export default function Page() {
 

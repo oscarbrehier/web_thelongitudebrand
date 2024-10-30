@@ -1,5 +1,4 @@
 import { client } from "@/lib/sanity/client";
-import { PageContainer } from "@/app/components/container/PageContainer";
 import ProductsFilter from "@/app/components/ProductsFilter";
 import { useTranslation } from "@/app/i18n";
 
@@ -16,7 +15,7 @@ export default async function Page({ params: { lang } }) {
 
 	return (
 
-		<PageContainer lang={lang} className="pt-12 space-y-2">
+		<div className="pt-12 space-y-2">
 
 			<div className="h-40 w-full md:grid grid-cols-4 gap-4 flex flex-col justify-center md:items-end items-center space-y-3 my-10">
 
@@ -34,7 +33,7 @@ export default async function Page({ params: { lang } }) {
 				categories={categoryTitles}
 			/>
 
-		</PageContainer>
+		</div>
 
 	);
 

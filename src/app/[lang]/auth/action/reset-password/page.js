@@ -1,5 +1,4 @@
 "use client"
-import { PageContainer } from "@/app/components/container/PageContainer";
 import InputWithLabel from "@/app/components/ui/InputWithLabel";
 import getPasswordStrength from "@/lib/utils/getPasswordStrength";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -119,9 +118,7 @@ export default function Page({ params: { lang } }) {
 
         <Suspense>
 
-            <PageContainer lang={lang}>
-
-                <div className="h-screen w-full mt-16 md:pt-16 pt-24 2md:grid grid-cols-4 gap-2">
+                <div className="h-screen w-full mt-16 pt-16 2md:grid grid-cols-4 gap-2">
 
                     <div className="col-start-2 col-span-2 h-auto">
 
@@ -179,8 +176,6 @@ export default function Page({ params: { lang } }) {
 
 
                 </div>
-
-            </PageContainer>
 
         </Suspense>
 

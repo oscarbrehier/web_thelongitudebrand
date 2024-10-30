@@ -1,4 +1,3 @@
-import { PageContainer } from "@/app/components/container/PageContainer";
 import { getProductBySlug } from "@/lib/sanity/getProduct";
 import Product from "@/app/components/Product";
 import getProductSlugs from "@/lib/sanity/getProductSlugs";
@@ -106,7 +105,7 @@ export default async function Page({ params: { item, lang } }) {
 
     return (
 
-        <PageContainer lang={lang}>
+        <>
 
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: structuredData }} />
 
@@ -116,7 +115,7 @@ export default async function Page({ params: { item, lang } }) {
             />
 
 
-        </PageContainer>
+        </>
 
     );
 

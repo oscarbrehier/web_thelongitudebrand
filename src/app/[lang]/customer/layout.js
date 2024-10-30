@@ -1,6 +1,4 @@
 'use client'
-import { useState } from "react";
-import { PageContainer } from "@/app/components/container/PageContainer";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -17,9 +15,7 @@ export default function Layout({
 
     return (
 
-        <PageContainer lang={lang}>
-
-            <div className="min-h-screen w-full md:pt-16 pt-24 flex flex-col">
+            <div className="min-h-screen w-full pt-16 flex flex-col">
 
                 <div className="w-full flex-1 flex flex-col items-start">
 
@@ -45,8 +41,6 @@ export default function Layout({
 
             </div>
 
-        </PageContainer>
+    );
 
-    )
-
-}
+};

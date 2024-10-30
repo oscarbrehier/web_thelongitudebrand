@@ -83,7 +83,7 @@ export default function SignInModal() {
 
         if (activeModal === "sign_in") setForm(FORM_DEFAULT);
 
-    }, activeModal);
+    }, [activeModal]);
 
     return (
 

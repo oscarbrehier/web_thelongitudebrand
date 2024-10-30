@@ -1,7 +1,3 @@
-import Link from "next/link";
-import { PageContainer } from "../components/container/PageContainer";
-import Button from "../components/ui/Button";
-
 export default function Page({ params: { lang } }) {
 
 	return (

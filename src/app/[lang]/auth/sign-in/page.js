@@ -1,5 +1,4 @@
 "use client"
-import { PageContainer } from "@/app/components/container/PageContainer";
 import Button from "@/app/components/ui/Button";
 import InputWithLabel from "@/app/components/ui/InputWithLabel";
 import { signIn } from "@/lib/authentication/service";
@@ -87,9 +86,7 @@ export default function Page({
 
     return (
 
-        <PageContainer lang={lang}>
-
-            <div className="h-screen w-full mt-16 md:pt-16 pt-24 2md:grid grid-cols-4 gap-2">
+            <div className="h-screen w-full mt-16 pt-16 2md:grid grid-cols-4 gap-2">
 
                 <div className="col-start-2 col-span-2 h-auto">
 
@@ -153,8 +150,6 @@ export default function Page({
 
             </div>
 
-        </PageContainer>
+    );
 
-    )
-
-}
+};
