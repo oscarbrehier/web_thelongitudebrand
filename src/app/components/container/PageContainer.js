@@ -9,61 +9,46 @@ export const PageContainer = ({ children, className, lang }) => {
         <div className="h-auto w-full relative">
 
             <ClientModals>
+                
+                <header className="z-10 h-auto w-full px-4 fixed top-4">
+                    <NavigationBar lang={lang} />
+                </header>
 
-                <div className={`h-auto w-full absolute z-10`}>
+                <main className={`z-20 px-4 ${className}`}>
+                    {children}
+                </main>
 
-                    <header className="z-10 h-auto w-full px-4 fixed top-4">
-                        <NavigationBar lang={lang} />
-                    </header>
-
-                    <main className={`z-20 px-4 ${" " + className}`}>
-                        {children}
-                    </main>
-
-                    <footer className="px-4 mt-10">
-                        <Footer lang={lang} />
-                    </footer>
-
-                </div>
-
-                <div className="hidden bg-black h-auto w-96 fixed z-20 top-16 right-4 p-2 space-y-4">
-
-                    <div className="w-full flex justify-between">
-
-                        <p className="text-white capitalize font-playfair italic text-3xl">added</p>
-
-                        <button className="px-2 text-white text-2xl">
-                            -
-                        </button>
-
-                    </div>
-
-                    <div className="">
-                        <p className="text-white text-sm">tank-1</p>
-
-                        <div className="flex justify-between children:text-white children:text-sm">
-                            <p>black / s</p>
-                            <p>50€</p>
-                        </div>
-                    </div>
-
-                    <div className="space-y-2">
-
-                        <button className="h-10 w-full border-[1px] border-white text-white uppercase text-sm">
-                            view bag
-                        </button>
-
-                        <button className="h-10 w-full bg-white uppercase text-sm">
-                            checkout
-                        </button>
-
-                    </div>
-
-                </div>
+                <footer className="px-4 mt-10">
+                    <Footer lang={lang} />
+                </footer>
 
             </ClientModals>
 
         </div>
+
+        // <div className="h-auto w-full relative">
+
+        //     <ClientModals>
+
+        //         <div className={`h-auto w-full z-10`}>
+
+        //             <header className="z-10 h-auto w-full px-4 fixed top-4">
+        //                 <NavigationBar lang={lang} />
+        //             </header>
+
+        //             <main className={`z-20 px-4 ${" " + className}`}>
+        //                 {children}
+        //             </main>
+
+        //             <footer className="px-4 mt-10">
+        //                 <Footer lang={lang} />
+        //             </footer>
+
+        //         </div>
+
+        //     </ClientModals>
+
+        // </div>
 
     );
 

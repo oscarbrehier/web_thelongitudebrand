@@ -4,7 +4,7 @@ import Link from "next/link";
 import { DIRECTION, MIN_QUANTITY, MAX_QUANTITY } from "@/lib/constants/cart.config";
 import SanityImage from "@/app/components/ui/SanityImage";
 
-export default function CartItem({ index, item }) {
+export default function CartItemBig({ index, item }) {
 
     const { productId, name, cover, size, quantity, price, image_ref } = item;
 
@@ -13,7 +13,7 @@ export default function CartItem({ index, item }) {
 
     const { user } = useAuthContext();
 
-    async function handleItemUpdate(event, direction) {
+    function handleItemUpdate(event, direction) {
 
         event.preventDefault();
 
@@ -33,9 +33,9 @@ export default function CartItem({ index, item }) {
 
     };
 
-    const handleRemoveItem = () => {
+    const handleRemoveItem = async () => {
 
-        removeFromCart(productId, user);
+        await removeFromCart(productId, user);
 
     };
 
@@ -66,7 +66,7 @@ export default function CartItem({ index, item }) {
 
                         <div className="h-2 w-full"></div>
 
-                        <p className="text-sm">Size: {['XS', 'S', 'M', 'L'].filter((size, index) => index == size)}</p>
+                        <p className="text-sm">Size: {['XS', 'S', 'M', 'L'].filter((s, index) => index == size)}</p>
 
                         <div className="flex 2md:items-start items-center text-sm space-x-2">
 

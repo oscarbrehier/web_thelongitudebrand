@@ -1,26 +1,64 @@
 "use client"
-import SignInModal from "./SignIn";
-import SignUpModal from "./SignUp";
-import NewsletterModal from "./Newsletter";
 import { useModalContext } from "@/lib/context/ModalContext";
+import { useMemo } from "react";
+import dynamic from "next/dynamic";
+
+const modals = {
+    sign_in: dynamic(() => import("./SignIn")),
+    sign_up: dynamic(() => import("./SignUp")),
+    newsletter: dynamic(() => import("./Newsletter")),
+    added_cart: dynamic(() => import("./AddedToCart")),
+};
 
 export default function ClientModals({ children }) {
 
     const { activeModal } = useModalContext();
 
+    //     switch (activeModal) {
+
+    //         case "sign_in":
+    //             return <SignInModal />;
+
+    //         case "sign_up":
+    //             return <SignUpModal />;
+
+    //         case "newsletter":
+    //             return <NewsletterModal />;
+
+    //         case "added_cart":
+    //             return <AddedToCart />;
+
+    //         default:
+    //             return null;
+
+    //     };
+
+    // };
+
+    const isContentBlurred = activeModal && activeModal !== "added_cart";
+
+    const ActiveModalComponent = useMemo(() => {
+
+        if (!activeModal) return null;
+        return modals[activeModal];
+
+    }, [activeModal]);
+
     return (
 
-        <>
+        <div className="grid">
 
-            <div className={`h-auto w-full ${activeModal !== null ? 'blur-md' : ''}`}>
+            <div className="col-start-1 row-start-1">
+                {activeModal === "added_cart" && <ActiveModalComponent />}
+            </div>
+
+            <div className={`h-auto w-full col-start-1 row-start-1 ${isContentBlurred && 'blur-md'}`}>
                 {children}
             </div>
 
-            {activeModal === "sign_in" && (<SignInModal />)}
-            {activeModal === "sign_up" && (<SignUpModal />)}
-            {activeModal === "newsletter" && (<NewsletterModal />)}
-            
-        </>
+            {activeModal && activeModal !== "added_cart" && <ActiveModalComponent />}
+
+        </div>
 
     );
 

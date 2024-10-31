@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react";
-import CartItem from "./CartItem";
+import CartItemBig from "@/app/components/CartItemBig";
 import { useRouter } from "next/navigation";
 import { checkout } from "@/lib/checkout";
 import Button from "@/app/components/ui/Button";
@@ -53,7 +53,7 @@ export default function Page() {
 
                         <div className="w-full h-full xl:col-span-3 2md:col-span-2 space-y-2">
                             {cart.map((item, idx) => (
-                                <CartItem key={idx} index={idx} item={item} />
+                                <CartItemBig key={idx} index={idx} item={item} />
                             ))}
                         </div>
 

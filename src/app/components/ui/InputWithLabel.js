@@ -107,7 +107,7 @@ export default function InputWithLabel({
                 </label>
 
                 <input
-                    className={`w-full h-full outline-none bg-transparent text-sm px-4 pt-4 pb-1 ${disabled ? "text-neutral-600" : ""} `}
+                    className={`w-full h-full outline-none bg-transparent md:text-sm text-base px-4 pt-4 pb-1 ${disabled ? "text-neutral-600" : ""} `}
                     type={type === "password" && visible ? "text" : type}
                     name={camelize(title)}
                     value={inputValue} // Bind the controlled input to inputValue

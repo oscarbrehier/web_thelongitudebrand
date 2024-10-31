@@ -44,7 +44,7 @@ export default function Newsletter({ lang }) {
                     <div className="flex-1 h-full">
 
                         <input
-                            className="w-full h-full outline-none bg-transparent text-sm placeholder:text-neutral-900 placeholder:capitalize px-2"
+                            className="w-full h-full outline-none bg-transparent md:text-sm text-base placeholder:text-neutral-900 placeholder:capitalize px-2"
                             type="email"
                             value={inputValue}
                             onChange={(e) => setInputValue(e.target.value)}

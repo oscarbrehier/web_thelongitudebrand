@@ -1,5 +1,5 @@
 'use client'
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useAuthContext } from "@/lib/context/AuthContext";
 import { useModalContext } from "@/lib/context/ModalContext";
 import addToWishlist from "@/lib/firestore/wishlist/add";
@@ -18,6 +18,7 @@ export default function Product({
     const [size, setSize] = useState(4);
     const [wishlist, setWishlist] = useState(false);
     const [pendingWishlistAction, setPendingWishlistAction] = useState(false);
+    const [showFixedButton, setShowFixedButton] = useState(true);
     const [labels, setLabels] = useState({
         size: {
             text: 'sizes',
@@ -26,10 +27,11 @@ export default function Product({
         },
     });
 
-    const { openModal } = useModalContext();
-    // const { addToCart } = useCartContext();
-    const { user, isAuth } = useAuthContext();
+    const addToCartRefBtn = useRef(null);
+    const sizeMenuRef = useRef(null);
 
+    const { openModal } = useModalContext();
+    const { user, isAuth } = useAuthContext();
     const { addToCart } = useCartStore();
 
     const setSizeError = (errorState) => {
@@ -46,7 +48,15 @@ export default function Product({
 
     const addItemToCart = async () => {
 
-        if (size == 4) return setSizeError(true);
+
+        if (size == 4) {
+
+            if (showFixedButton) sizeMenuRef.current.scrollIntoView({ behavior: "smooth" });
+            return setSizeError(true);
+
+        };
+
+        openModal("added_cart");
 
         addToCart({
             productId: `${content._id}&size=${size}`,
@@ -114,10 +124,38 @@ export default function Product({
 
     }, [executePendingWishlistAction]);
 
+    useEffect(() => {
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                setShowFixedButton(!entry.isIntersecting);
+            },
+            { root: null, threshold: 0.1 }
+        );
+
+        if (addToCartRefBtn.current) observer.observe(addToCartRefBtn.current);
+
+        return () => {
+            if (addToCartRefBtn.current) observer.unobserve(addToCartRefBtn.current);
+        };
+
+    }, []);
+
     return content && (
 
         <section className="lg:h-screen h-auto w-full lg:pb-0 pb-10 lg:grid lg:grid-cols-3 grid-cols-2 flex flex-col-reverse">
 
+            {showFixedButton && (
+
+                <div className="lg:hidden fixed left-0 bottom-0 h-auto w-full p-4 bg-cream-100">
+
+                    <button onClick={addItemToCart} className={`w-full h-10 text-sm uppercase bg-black text-white sticky bottom-0`}>
+                        add to cart
+                    </button>
+
+                </div>
+
+            )}
 
             <div className="h-full w-full flex flex-col items-center lg:pt-14">
 
@@ -152,7 +190,7 @@ export default function Product({
 
                     </div>
 
-                    <div className="space-y-2">
+                    <div className="space-y-2" ref={sizeMenuRef}>
 
                         <p className={`text-xs capitalize ${labels.size.error && 'text-red-600'}`}>{labels.size.error ? labels.size.errorMessage : labels.size.text}</p>
 
@@ -174,7 +212,7 @@ export default function Product({
 
                     <div className="flex flex-col space-y-2">
 
-                        <button onClick={addItemToCart} className={`w-full h-10 text-sm uppercase bg-black text-white`}>
+                        <button ref={addToCartRefBtn} onClick={addItemToCart} className={`w-full h-10 text-sm uppercase bg-black text-white sticky bottom-0`}>
                             add to cart
                         </button>
 
@@ -198,7 +236,7 @@ export default function Product({
 
             </div>
 
-            <div className="lg:h-screen w-full lg:col-span-2 lg:py-0 pt-36 pb-10">
+            <div className="h-screen w-full lg:col-span-2 lg:py-0 pt-36 pb-10">
 
                 <div className="h-full w-full lg:flex hidden items-center justify-center pt-12 px-4">
 
