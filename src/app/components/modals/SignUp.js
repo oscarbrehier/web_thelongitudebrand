@@ -7,6 +7,8 @@ import { signUpSchema } from "@/lib/constants/zodSchema";
 import Button from "../ui/Button";
 import handleFirebaseError from "@/lib/firebase/handleFirebaseError";
 import ModalContainer from "./ModalContainer";
+import Link from "next/link";
+import Checkbox from "../ui/Checkbox";
 
 const FORM_DEFAULT = {
     submit: false,
@@ -105,96 +107,101 @@ export default function SignUpModal() {
 
         <ModalContainer title="sign up">
 
+            <form onSubmit={handleFormSubmit} className="mt-4 space-y-4">
 
-                <form onSubmit={handleFormSubmit} className="mt-4 space-y-4">
+                <div className="space-y-2 mt-8">
 
-                    <div className="space-y-2 mt-8">
-
-                        <div className="grid grid-cols-2 gap-2">
-
-                            <Input
-                                title='first name'
-                                type='text'
-                                error={form.firstName}
-                            />
-
-                            <Input
-                                title='last name'
-                                type='text'
-                                error={form.lastName}
-                            />
-
-                        </div>
+                    <div className="grid grid-cols-2 gap-2">
 
                         <Input
-                            title='email'
-                            type='email'
-                            error={form.email}
+                            title='first name'
+                            type='text'
+                            error={form.firstName}
                         />
 
                         <Input
-                            title='password'
-                            type='password'
-                            error={form.password}
-                        />
-
-                        <Input
-                            title='confirm password'
-                            type='password'
-                            error={form.confirmPassword}
+                            title='last name'
+                            type='text'
+                            error={form.lastName}
                         />
 
                     </div>
 
-                    <div className="mt-4 space-y-2">
+                    <Input
+                        title='email'
+                        type='email'
+                        error={form.email}
+                    />
 
-                        <div className="flex text-xs space-x-4">
-                            <input
-                                type="checkbox"
-                                checked={form.newsletter}
-                                onChange={() => setForm(prev => ({ ...prev, newsletter: !prev.newsletter }))}
-                            />
-                            <p>Subscribe to our newsletter</p>
-                        </div>
+                    <Input
+                        title='password'
+                        type='password'
+                        error={form.password}
+                    />
 
-                        <div className="flex text-xs space-x-4">
+                    <Input
+                        title='confirm password'
+                        type='password'
+                        error={form.confirmPassword}
+                    />
 
-                            <input
-                                type="checkbox"
-                                id="terms"
-                                name="terms"
-                                checked={form.terms}
-                                onChange={() => setForm(prev => ({ ...prev, terms: !prev.terms }))}
-                            />
+                </div>
 
-                            <p className={form.termsError && "text-error-red"}>
-                                By selecting "Sign Up", you are confirming that you have read and agree to thelongitudebrand's <span>Terms & Conditions</span>
-                            </p>
+                <div className="mt-4 space-y-2">
 
-                        </div>
+                    <div className="flex items-center text-xs space-x-3">
 
-                    </div>
-
-                    <div className="mt-4 space-y-2 w-full">
-
-                        <Button
-                            title="sign up"
-                            type="submit"
-                            size="w-full h-10"
-                            loading={loading}
+                        <Checkbox
+                            name="newsletter"
+                            id="newsletter"
+                            size="4"
+                            checked={form.newsletter}
+                            onChange={() => setForm(prev => ({ ...prev, newsletter: !prev.newsletter }))}
                         />
 
-                        <>
-                            {
-                                form.error && (
-                                    <p className="text-sm text-error-red w-full">{form.error}</p>
-                                )
-                            }
-                        </>
+                        <p>Subscribe to our newsletter</p>
 
                     </div>
 
-                </form>
+                    <div className="flex items-center text-xs space-x-3">
+
+                        <Checkbox
+                            name="terms"
+                            id="terms"
+                            checked={form.terms}
+                            size="4"
+                            onChange={() => setForm(prev => ({ ...prev, terms: !prev.terms }))}
+                        />
+
+                        <p className={form.termsError && "text-error-red"}>
+                            By selecting "Sign Up", you are confirming that you have read and agree to thelongitudebrand's &nbsp;
+                            <Link className="underline" href="/legal/terms-conditions">Terms & Conditions</Link>
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div className="mt-4 space-y-2 w-full">
+
+                    <Button
+                        title="sign up"
+                        type="submit"
+                        size="w-full h-10"
+                        loading={loading}
+                    />
+
+                    <>
+                        {
+                            form.error && (
+                                <p className="text-sm text-error-red w-full">{form.error}</p>
+                            )
+                        }
+                    </>
+
+                </div>
+
+            </form>
 
         </ModalContainer>
 

@@ -5,6 +5,7 @@ export default function Hyperlink({
     title,
     size,
     border = false,
+    margin = true,
     ...props
 }) {
 
@@ -17,7 +18,7 @@ export default function Hyperlink({
                     : 'bg-black text-white hover:bg-neon-green hover:text-black'
                 }
                 flex items-center justify-center
-                capitalize mt-4 text-sm transition-all duration-300 ease-in-out` + ' ' + size}
+                capitalize text-sm transition-all duration-300 ease-in-out ${margin && "mt-4"}` + ' ' + size}
             href={to}
             {...props}
         >

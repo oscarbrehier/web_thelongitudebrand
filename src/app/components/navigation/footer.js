@@ -32,28 +32,33 @@ export default function Footer({ lang }) {
 
             <Newsletter lang={lang} />
 
-            <section className="sm:h-10 w-full bg-neon-green flex sm:flex-row flex-col items-center justify-between children:text-xs children:sm:space-x-4 sm:py-0 py-2">
+            <section className="sm:h-10 w-full bg-neon-green flex sm:flex-row flex-col items-center justify-between children:text-xs children:sm:space-x-4 sm:py-0">
 
-                <button onClick={() => handleMenuToggle(1)} className="sm:hidden flex items-center justify-between w-full">
-                    <h2>{t("help_and_assistance")}</h2>
+                <button onClick={() => handleMenuToggle(1)} className="sm:hidden h-10 flex items-center justify-between w-full">
+                    <h2 className="">{t("help_and_assistance")}</h2>
                     <p className="text-base pt-1">{activeMenu === 1 ? '-' : '+'}</p>
                 </button>
 
-                <div className={`sm:flex ${activeMenu === 1 ? 'w-full flex flex-col px-4 space-y-1' : 'hidden'}`}>
-                    <h2>{t("shipping")}</h2>
-                    <h2>{t("billing")}</h2>
-                    <h2>{t("customer_service")}</h2>
-                    <h2>{t("contact_us")}</h2>
+                <div className={`sm:flex ${activeMenu === 1 ? 'w-full flex flex-col bg-cream-200 space-y-4 py-4' : 'hidden'}`}>
+
+                    <a href="/legal/contact-us"><h2>{t("contact_us")}</h2></a>
+                    <a href="/legal/terms-conditions"><h2>terms & condition</h2></a>
+                    <a href="/legal/customer-service"><h2>customer service</h2></a>
+                    <a href="/legal/privacy-policy"><h2>privacy policy</h2></a>
+                    <a href="/legal/cookie-policy"><h2>cookie policy</h2></a>
+
                 </div>
 
-                <button onClick={() => handleMenuToggle(2)} className="sm:hidden flex items-center justify-between w-full">
-                    <h2>{t("follow_us")}</h2>
+                <button onClick={() => handleMenuToggle(2)} className="sm:hidden h-10 flex items-center justify-between w-full">
+                    <h2 className="">{t("follow_us")}</h2>
                     <p className="text-base pt-1">{activeMenu === 2 ? '-' : '+'}</p>
                 </button>
 
-                <div className={`sm:flex ${activeMenu === 2 ? 'w-full h flex flex-col px-4 space-y-1' : 'hidden'}`}>
+                <div className={`sm:flex ${activeMenu === 2 ? 'w-full flex flex-col bg-cream-200 space-y-4 py-4' : 'hidden'}`}>
+
                     <a href="https://x.com/longitude_store" target="_blank" rel="nofollow noopener">x</a>
                     <a href="https://www.instagram.com/thelongitudebrand/" target="_blank" rel="nofollow noopener">instagram</a>
+
                 </div>
 
             </section>

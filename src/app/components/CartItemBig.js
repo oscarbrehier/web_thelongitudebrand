@@ -66,7 +66,7 @@ export default function CartItemBig({ index, item }) {
 
                         <div className="h-2 w-full"></div>
 
-                        <p className="text-sm">Size: {['XS', 'S', 'M', 'L'].filter((s, index) => index == size)}</p>
+                        <p className="text-sm">Size: {size}</p>
 
                         <div className="flex 2md:items-start items-center text-sm space-x-2">
 

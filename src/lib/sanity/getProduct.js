@@ -16,7 +16,7 @@ async function getProduct(query) {
 
 async function getProductBySlug(slug) {
 
-    const PRODUCT_QUERY = `*[_type == "product" && slug.current == "${slug}"]`;
+    const PRODUCT_QUERY = `*[_type == "product" && slug.current == "${slug}"] { ..., available_sizes[] -> { size } }`;
 
     const res = await getProduct(PRODUCT_QUERY);
     return res;
@@ -25,7 +25,7 @@ async function getProductBySlug(slug) {
 
 async function getProductById(id) {
 
-    const PRODUCT_QUERY = `*[_type == "product" && _id == "${id}"]`;
+    const PRODUCT_QUERY = `*[_type == "product" && _id == "${id}"] { ..., available_sizes[] -> { size } }`;
 
     const res = await getProduct(PRODUCT_QUERY);
     return res;

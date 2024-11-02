@@ -3,20 +3,21 @@ import SanityImage from "./ui/SanityImage";
 import { useCartStore } from "@/lib/stores/useCartStore";
 import { useAuthContext } from "@/lib/context/AuthContext";
 import { useModalContext } from "@/lib/context/ModalContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LoadingSpinner from "./ui/loadingSpinner";
 import delay from "@/lib/utils/delay";
 
 export default function CartItemSmall({
     content,
     single = false,
-}) {    
+}) {
 
     if (!content) return null;
 
-    const { productId, name, cover, size, quantity, price, image_ref } = content;
+    const { productId, name, size, quantity, price, image_ref } = content;
 
     const [loading, setLoading] = useState(false);
+    const [timeoutId, setTimeoutId] = useState(false);
 
     const { editItemQuantity, removeFromCart } = useCartStore(state => ({
         editItemQuantity: state.editItemQuantity,
@@ -26,12 +27,21 @@ export default function CartItemSmall({
     const { user } = useAuthContext();
     const { closeModal } = useModalContext();
 
+    const resetModalTimeout = () => {
+
+        if (timeoutId) clearTimeout(timeoutId);
+        const id = setTimeout(() => closeModal(), 5000);
+        setTimeoutId(id);
+
+    };
+
     function handleItemUpdate(event, direction) {
 
         event.preventDefault();
 
         if (direction == DIRECTION.DOWN && quantity === MIN_QUANTITY) {
 
+            resetModalTimeout();
             handleRemoveItem();
 
         } else if (direction === DIRECTION.UP && quantity === MAX_QUANTITY) {
@@ -40,6 +50,7 @@ export default function CartItemSmall({
 
         } else {
 
+            resetModalTimeout();
             editItemQuantity(productId, direction, user);
 
         };
@@ -47,19 +58,33 @@ export default function CartItemSmall({
     };
 
     const handleRemoveItem = async () => {
-        
+
         if (single) {
-            
+
             setLoading(true);
             await delay(1000);
             setLoading(false);
             closeModal();
-            
+
         };
-        
+
         await removeFromCart(productId, user);
 
     };
+
+
+    useEffect(() => {
+
+        const handleCloseModal = () => {
+            closeModal();
+        };
+
+        const id = setTimeout(handleCloseModal, 5000);
+        setTimeoutId(id);
+
+        return () => clearTimeout(id);
+
+    }, [closeModal]);
 
     return (
 
@@ -75,9 +100,9 @@ export default function CartItemSmall({
                 ) : (
 
 
-                    <div className="h-32 w-full flex space-x-2 pr-4">
+                    <div className="h-32 w-full flex space-x-2">
 
-                        <div className="h-full flex items-center bg-cream-200 p-2">
+                        <div className="h-full flex items-center bg-cream-100 p-2">
                             <SanityImage
                                 className="xl:w-20 w-16"
                                 source={image_ref}
@@ -94,7 +119,7 @@ export default function CartItemSmall({
 
                             <div>
 
-                                <p>Size: {['XS', 'S', 'M', 'L'].filter((s, i) => i == size)}</p>
+                                <p>Size: {size}</p>
 
                                 <div className="flex 2md:items-start items-center text-sm space-x-2">
 

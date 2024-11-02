@@ -23,7 +23,7 @@ export default async function Page({
 
             <div className="col-start-2 col-span-2 h-auto">
 
-                <p className="capitalize mx-2 my-1">personal information</p>
+                <h1 className="capitalize mx-2 my-1 text-lg">personal information</h1>
 
                 <Content content={content} lang={lang} />
 

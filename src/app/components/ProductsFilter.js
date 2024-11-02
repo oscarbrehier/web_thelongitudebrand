@@ -1,14 +1,17 @@
 'use client'
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "@/app/i18n/client";
 import { StoreItem } from "@/app/components/store/StoreItem";
+import { useSearchParams } from "next/navigation";
 
 export default function ProductsFilter({ lang, products, categories }) {
 
-    const [filter, setFilter] = useState('view_all');
+    const query = useSearchParams()?.get('category');
+
+    const [filter, setFilter] = useState('view-all');
     const { t } = useTranslation(lang, "shop");
 
-    const filteredProducts = filter === 'view_all'
+    const filteredProducts = filter === 'view-all'
         ? products
         : products.filter(product => product.category.title === filter);
 
@@ -32,6 +35,14 @@ export default function ProductsFilter({ lang, products, categories }) {
             ],
         },
     ]);
+
+    useEffect(() => {
+
+        console.log(products)
+        console.log(query)
+        if (query && categories.includes(query)) setFilter(query);
+
+    }, [query]);
 
     return (
 

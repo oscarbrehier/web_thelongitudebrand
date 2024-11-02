@@ -1,6 +1,7 @@
 import Hyperlink from "@/app/components/ui/Hyperlink";
 import getOrderByCheckoutId from "@/lib/firestore/getOrderByCheckoutId";
 import getCheckoutData from "@/lib/stripe/getCheckoutData";
+import { notFound } from "next/navigation";
 
 export default async function Page({
     params: {
@@ -10,6 +11,8 @@ export default async function Page({
 }) {
 
     const checkout = await getOrderByCheckoutId(id);
+    if (!checkout.id) return notFound();
+
     const orderId = checkout?.id;
 
     return (

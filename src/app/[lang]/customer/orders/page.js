@@ -26,7 +26,7 @@ export default async function Page() {
 
                         <section className="mt-16 space-y-4">
 
-                            <p className="capitalize mx-2 my-1">your orders</p>
+                            <h1 className="capitalize mx-2 my-1 text-lg">your orders</h1>
 
                             <div className="flex flex-col space-y-2">
 

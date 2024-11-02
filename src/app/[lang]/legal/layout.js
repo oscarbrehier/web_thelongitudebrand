@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import LoadingPanel from "@/app/components/LoadingPanel";
 import SubMenu from "@/app/components/navigation/SubMenu";
-import SignOutButton from "./SignOutButton";
 
 export default function Layout({
     children,
@@ -10,28 +9,32 @@ export default function Layout({
     }
 }) {
 
-    const categories = ["personal-information", "orders", "wishlist"];
+    "customer-service", "privacy-policy", "cookie-policy"
+
+    const categories = [
+        "contact-us", 
+        {
+            title: "terms-&-conditions",
+            route: "terms-conditions"
+        }, 
+        "customer-service",
+        "privacy-policy",
+        "cookie-policy",
+    ];
 
     return (
 
         <div className="min-h-screen w-full pt-16 flex flex-col">
 
-            <Suspense fallback={<LoadingPanel />}>
+            <Suspense fallback={<LoadingPanel/>}>
 
                 <div className="w-full flex-1 flex flex-col items-start">
 
                     <SubMenu
-                        baseRoute="/customer"
+                        baseRoute="/legal"
                         items={categories}
                         lang={lang}
-                    >
-                        
-                        <SignOutButton
-                            title="sign out"
-                            className="text-sm hover:bg-neon-green"
-                        />
-
-                    </SubMenu>
+                    />
 
                     {children}
 

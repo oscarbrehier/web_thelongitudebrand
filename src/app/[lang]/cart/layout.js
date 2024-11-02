@@ -8,11 +8,11 @@ export default function Layout({ children, params: { lang } }) {
 
     return (
 
-            <div className={`min-h-screen w-full ${loadingCart && "relative"}`}>
+            <div className={`min-h-screen w-full ${loadingCart && "grid"}`}>
 
-                <section className={`w-full min-h-screen flex flex-col pt-12 ${loadingCart && "absolute"}`}>
+                <section className={`w-full min-h-screen flex flex-col pt-12 ${loadingCart && "col-start-1 row-start-1"}`}>
 
-                    <div className="h-40 w-full md:grid grid-cols-4 gap-4 flex flex-col justify-center md:items-end items-center space-y-3 my-10">
+                    {/* <div className="h-40 w-full md:grid grid-cols-4 gap-4 flex flex-col justify-center md:items-end items-center space-y-3 my-10">
 
                         <div className="h-full flex justify-start items-center col-start-2">
                             <div className="bg-neon-green">
@@ -20,7 +20,7 @@ export default function Layout({ children, params: { lang } }) {
                             </div>
                         </div>
 
-                    </div>
+                    </div> */}
 
                     {!loadingCart && children}
 
@@ -28,7 +28,7 @@ export default function Layout({ children, params: { lang } }) {
 
                 {loadingCart && (
 
-                    <div className="size-full flex pt-16 absolute">
+                    <div className="size-full flex pt-16 col-start-1 row-start-1 z-10">
                         <LoadingPanel/>
                     </div>
 

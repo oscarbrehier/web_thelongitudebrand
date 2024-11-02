@@ -42,7 +42,7 @@ export default async function Page() {
 
                     <div className="mt-16">
 
-                        <p className="capitalize mx-2 my-1">your wishlist</p>
+                        <h1 className="capitalize mx-2 my-1 text-lg">your wishlist</h1>
 
                         <div className="h-auto w-full grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-2">
 

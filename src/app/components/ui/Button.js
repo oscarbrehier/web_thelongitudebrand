@@ -1,51 +1,48 @@
 "use client"
 import { useEffect, useState } from "react"
+import LoadingSpinner from "./loadingSpinner";
 
 export default function Button({
     title,
     size,
     border = false,
     loading,
+    onClick,
+    style = null,
+    text = "capitalize",
     ...props
 }) {
 
     const [status, setStatus] = useState(loading);
     useEffect(() => {
         setStatus(loading)
-    }, [loading])
+    }, [loading]);
+
+    const buttonClasses = `
+        ${border ? "bg-transparent border-[1px] border-black" : "bg-black"}
+        ${!loading && "hover:bg-neon-green"}
+        ${loading ? "cursor-not-allowed" : ""}
+        select-none flex items-center justify-center text-sm transition-all duration-300 ease-in-out
+        ${size} ${style} ${text}
+    `;
 
     return (
 
         <button
-            className={`
-                ${border
-                    ? `bg-transparent border-[1px] border-black ${!loading && "hover:bg-neon-green"}`
-                    : `bg-black ${!loading && "hover:bg-neon-green"}`
-                }
-                ${loading && "cursor-not-allowed"}
-                select-none
-                flex items-center justify-center
-                capitalize text-sm transition-all duration-300 ease-in-out`
-                + ' ' + size
-            }
+            className={buttonClasses}
+            onClick={onClick}
             {...props}
         >
 
             {
                 status ? (
 
-                    <div
-                        className="inline-block size-6 animate-spin rounded-full border-2 border-solid border-current border-e-neutral-700 align-[-0.125em] text-neon-green motion-reduce:animate-[spin_1.5s_linear_infinite]"
-                        role="status">
-                        <span
-                            className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
-                        >Loading...</span>
-                    </div>
+                    <LoadingSpinner />
 
                 ) : (
 
-                   <p className={border ? "hover:text-black" : "text-white"}>{title}</p>
-                
+                    <p className={border ? "hover:text-black" : "text-white"}>{title}</p>
+
                 )
             }
 

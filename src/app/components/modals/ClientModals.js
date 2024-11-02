@@ -1,7 +1,8 @@
 "use client"
 import { useModalContext } from "@/lib/context/ModalContext";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import dynamic from "next/dynamic";
+import { usePathname } from "next/navigation";
 
 const modals = {
     sign_in: dynamic(() => import("./SignIn")),
@@ -11,29 +12,11 @@ const modals = {
 };
 
 export default function ClientModals({ children }) {
+    
+    const pathname = usePathname();
+
 
     const { activeModal } = useModalContext();
-
-    //     switch (activeModal) {
-
-    //         case "sign_in":
-    //             return <SignInModal />;
-
-    //         case "sign_up":
-    //             return <SignUpModal />;
-
-    //         case "newsletter":
-    //             return <NewsletterModal />;
-
-    //         case "added_cart":
-    //             return <AddedToCart />;
-
-    //         default:
-    //             return null;
-
-    //     };
-
-    // };
 
     const isContentBlurred = activeModal && activeModal !== "added_cart";
 
@@ -44,12 +27,22 @@ export default function ClientModals({ children }) {
 
     }, [activeModal]);
 
+    useEffect(() => {
+
+        
+
+    }, [pathname]);
+
     return (
 
         <div className="grid">
 
             <div className="col-start-1 row-start-1">
-                {activeModal === "added_cart" && <ActiveModalComponent />}
+                {activeModal === "added_cart" && (
+                    
+                    <ActiveModalComponent />
+
+                )}
             </div>
 
             <div className={`h-auto w-full col-start-1 row-start-1 ${isContentBlurred && 'blur-md'}`}>

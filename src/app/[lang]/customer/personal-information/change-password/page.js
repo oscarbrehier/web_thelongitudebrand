@@ -160,7 +160,7 @@ export default function Page({ params: { lang } }) {
 
                 <form action={handleSubmitForm}>
 
-                    <p className="capitalize mx-2 my-1">change password</p>
+                    <h1 className="capitalize mx-2 my-1 text-lg">change password</h1>
 
                     <div className="space-y-2">
 

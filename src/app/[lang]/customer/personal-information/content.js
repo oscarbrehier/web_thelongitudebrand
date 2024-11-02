@@ -6,6 +6,7 @@ import { IoCheckmark } from "react-icons/io5";
 import { useAuthContext } from "@/lib/context/AuthContext";
 import updateUserProfile from "@/lib/authentication/updateUserProfile";
 import Hyperlink from '@/app/components/ui/Hyperlink';
+import Checkbox from "@/app/components/ui/Checkbox";
 
 export default function Content({ content, lang }) {
 
@@ -134,31 +135,23 @@ export default function Content({ content, lang }) {
 
             <div className="space-y-4 mt-20">
 
-                <p className="capitalize mx-2 my-1">Your preferences</p>
+                {/* <p className="capitalize mx-2 my-1 text-lg">preferences</p> */}
 
-                <div className="space-y-4">
+                <div className="space-y-1">
+                    
+                    <h2 className="">Communication Preferences</h2>
 
-                    <div className="flex space-x-4">
+                    <div className="flex space-x-2 h-auto items-center">
 
-                        <div className="relative flex items-center justify-center">
-
-                            <input
-                                className="appearance-none size-6 border-[1px] border-black bg-cream-50 peer"
-                                type="checkbox"
-                                onChange={(e) => handleSubscribeCheckbox(e)}
-                                name="newsletterSubscriber"
-                                checked={formValues.newsletterSubscriber}
-                            />
-
-                            <div className="absolute hidden peer-checked:block pointer-events-none text-xl">
-                                <IoCheckmark />
-                            </div>
-
-                        </div>
+                        <Checkbox
+                            name="newsletterSubscriber"
+                            onChange={(e) => handleSubscribeCheckbox(e)}
+                            size="6"
+                            checked={formValues.newsletterSubscriber}
+                        />
 
                         <div className="text-xs">
 
-                            <p>Subscriber</p>
                             <p className="text-neutral-600">
                                 Be the first to receive Longitude news, including new collections, launches and sales. Sent twice a week.
                             </p>
@@ -168,6 +161,7 @@ export default function Content({ content, lang }) {
                     </div>
 
                 </div>
+
             </div>
 
         </>

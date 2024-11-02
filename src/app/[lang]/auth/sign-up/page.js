@@ -8,6 +8,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { signUpSchema } from "@/lib/constants/zodSchema";
 import { signUp } from "@/lib/authentication/service";
+import Checkbox from "@/app/components/ui/Checkbox";
 
 export default function Page({
     params: {
@@ -158,23 +159,32 @@ export default function Page({
 
                         <div className="mt-4 space-y-2">
 
-                            <div className="flex text-sm space-x-4">
-                                <input
+                            <div className="flex text-sm space-x-3">
+
+                                <Checkbox
                                     type="checkbox"
                                     name="newsletter"
+                                    size="4"
                                 />
+
                                 <p>Subscribe to our newsletter</p>
+
                             </div>
 
-                            <div className="flex text-sm space-x-4">
-                                <input
+                            <div className="flex text-sm space-x-3">
+
+                                <Checkbox
                                     type="checkbox"
                                     id="terms"
                                     name="terms"
+                                    size="4"
                                 />
+
                                 <p className={inputErrors.terms && "text-error-red"}>
-                                    By selecting "Sign Up", you are confirming that you have read and agree to thelongitudebrand's <span>Terms & Conditions</span>
+                                    By selecting "Sign Up", you are confirming that you have read and agree to thelongitudebrand's &nbsp;
+                                    <Link className="underline" href="/legal/terms-conditions">Terms & Conditions</Link>
                                 </p>
+
                             </div>
 
 
