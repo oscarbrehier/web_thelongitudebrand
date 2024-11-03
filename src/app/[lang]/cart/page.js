@@ -59,7 +59,7 @@ export default function Page({
 
                     <>
 
-                        <div className="h-auto w-full md:grid grid-cols-4 gap-4 pt-24 pb-10">
+                        <div className="h-auto w-full lg:grid grid-cols-4 gap-4 pt-24 pb-10">
 
                             <div className="col-start-2 col-span-2 h-full flex flex-col space-y-4">
 
@@ -127,8 +127,9 @@ export default function Page({
                                     <Button
                                         title="proceed to checkout"
                                         onClick={getCheckout}
-                                        size="w-full h-14"
+                                        size="w-full lg:h-14 h-10"
                                         loading={loading}
+                                        text="uppercase"
                                     />
 
                                     {error && <p className="text-error-red text-sm">{error}</p>}
