@@ -7,6 +7,7 @@ import { signInSchema } from "@/lib/constants/zodSchema";
 import Button from "../ui/Button";
 import handleFirebaseError from "@/lib/firebase/handleFirebaseError";
 import ModalContainer from "./ModalContainer";
+import Link from "next/link";
 
 const FORM_DEFAULT = {
     submit: false,
@@ -129,7 +130,7 @@ export default function SignInModal() {
 
                 <div className="text-sm mt-6 space-y-2">
 
-                    <p>Forgot your password?</p>
+                    <Link href="/auth/reset-password">Forgot your password?</Link>
                     <div className="flex">
                         <p className="text-neutral-500">Don't have an account? &nbsp;</p>
                         <p className="cursor-pointer capitalize" onClick={() => openModal('sign_up')}>sign up</p>

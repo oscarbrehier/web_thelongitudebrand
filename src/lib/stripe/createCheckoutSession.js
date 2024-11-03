@@ -11,7 +11,8 @@ export default async function createCheckoutSession(items, cancelUrl) {
             method: 'POST',
             body: JSON.stringify({
                 cart: cart,
-                cancelUrl
+                success_url: `${origin}/checkout/success/{CHECKOUT_SESSION_ID}`,
+                cancel_url: `${origin}/cart`
             }),
         });
 

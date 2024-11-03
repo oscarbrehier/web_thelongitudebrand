@@ -70,12 +70,12 @@ export async function middleware(request) {
     if (session) {
 
         try {
-
+            
             await verifyFirebaseSessionJwt(session);
             isAuth = true;
-
+            
         } catch (err) {
-
+            
             if (session && !pathname.includes("/auth/sign-out")) {
                 return NextResponse.redirect(new URL("/auth/sign-out", request.url));
             };

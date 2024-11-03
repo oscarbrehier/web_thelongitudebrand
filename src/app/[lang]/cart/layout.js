@@ -10,7 +10,7 @@ export default function Layout({ children, params: { lang } }) {
 
             <div className={`min-h-screen w-full ${loadingCart && "grid"}`}>
 
-                <section className={`w-full min-h-screen flex flex-col pt-12 ${loadingCart && "col-start-1 row-start-1"}`}>
+                <section className={`w-full min-h-screen flex flex-col ${loadingCart && "col-start-1 row-start-1"}`}>
 
                     {/* <div className="h-40 w-full md:grid grid-cols-4 gap-4 flex flex-col justify-center md:items-end items-center space-y-3 my-10">
 

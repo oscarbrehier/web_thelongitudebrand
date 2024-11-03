@@ -66,6 +66,11 @@ const verifyFirebaseSessionJwt = async (session) => {
     if (payload.iss !== `https://session.firebase.google.com/${firebaseProjectId}`) throw new Error("Invalid issuer");
     if (!payload.sub || typeof payload.sub !== 'string') throw new Error("Invalid subject");
 
+    // const currentTime = Math.floor(Date.now() / 1000);
+    // if (payload.exp < currentTime) throw new Error("Session has expired");
+    // if (payload.iat > currentTime) throw new Error("Issued-at time is in the future");
+    // if (payload.auth_time > currentTime) throw new Error("Authentication time is in the future");
+
     return payload.sub;
 
 };

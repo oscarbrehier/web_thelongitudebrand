@@ -1,19 +1,26 @@
 "use client"
 import { useState } from "react";
-import CartItemBig from "@/app/components/CartItemBig";
 import { useRouter } from "next/navigation";
 import { checkout } from "@/lib/checkout";
 import Button from "@/app/components/ui/Button";
 import { useAuthContext } from "@/lib/context/AuthContext";
 import { useCartStore } from "@/lib/stores/useCartStore";
 import Hyperlink from "@/app/components/ui/Hyperlink";
-import Link from "next/link";
+import { useModalContext } from "@/lib/context/ModalContext";
+import dynamic from "next/dynamic";
 
-export default function Page() {
+const CartItemSmall = dynamic(() => import("@/app/components/CartItemSmall"));
+
+export default function Page({
+    params: {
+        lang
+    }
+}) {
 
     const router = useRouter();
 
     const { user } = useAuthContext();
+    const { openModal } = useModalContext();
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -52,26 +59,53 @@ export default function Page() {
 
                     <>
 
-                        <div className="h-40 w-full md:grid grid-cols-4 gap-4 flex flex-col justify-center md:items-end items-center space-y-3 my-10">
+                        <div className="h-auto w-full md:grid grid-cols-4 gap-4 pt-24 pb-10">
 
-                            <div className="h-full flex justify-start items-center col-start-2">
-                                <div className="bg-neon-green">
-                                    <h1 className="capitalize font-playfair italic font-medium text-6xl">cart</h1>
+                            <div className="col-start-2 col-span-2 h-full flex flex-col space-y-4">
+
+                                <div>
+
+                                    <h1 className="text-lg capitalize mx-2">cart ({cart?.length} items)</h1>
+
+                                    {
+                                        user == null && (
+
+                                            <p className="mt-1 text-sm">
+                                                For your cart to be saved, either&nbsp;
+                                                <span onClick={() => openModal("sign_in")} className="underline cursor-pointer">sign in</span>
+                                                &nbsp;or&nbsp;
+                                                <span onClick={() => openModal("sign_up")} className="underline cursor-pointer">create an account</span>
+                                            </p>
+
+                                        )
+                                    }
+
                                 </div>
+
+                                <div className="h-full w-full space-y-2">
+
+                                    {
+                                        cart?.map((item, index) => (
+
+                                            <CartItemSmall
+                                                lang={lang}
+                                                content={item}
+                                                clickable={true}
+                                                backgroundColor={{
+                                                    card: "cream-300",
+                                                    image: "cream-200"
+                                                }}
+                                            />
+
+                                        ))
+                                    }
+
+                                </div>
+
+
                             </div>
 
-                        </div>
-
-                        <div className="w-full h-auto grid xl:grid-cols-4 2md:grid-cols-3 grid-cols-1 gap-2">
-
-                            <div className="w-full h-full xl:col-span-3 2md:col-span-2 space-y-2">
-                                {cart.map((item, idx) => (
-                                    <CartItemBig key={idx} index={idx} item={item} />
-                                ))}
-                            </div>
-
-
-                            <div className="w-full h-auto space-y-4 2md:static sticky bottom-0 2md:p-0 py-4 bg-cream-100">
+                            <div className="h-auto bg-cream-100 sticky col-start-2 col-span-2 left-0 bottom-0 py-4 space-y-4">
 
                                 <div className="text-sm capitalize space-y-1">
 
@@ -93,7 +127,7 @@ export default function Page() {
                                     <Button
                                         title="proceed to checkout"
                                         onClick={getCheckout}
-                                        size="w-full h-10"
+                                        size="w-full h-14"
                                         loading={loading}
                                     />
 
@@ -101,24 +135,12 @@ export default function Page() {
 
                                 </div>
 
-                                {/* <div className="flex justify-between sm:children:h-5 grayscale children:select-none space-x-2">
-    <img src="/images/icons/banks/visa.svg" alt="" />
-    <img src="/images/icons/banks/mastercard.svg" alt="" />
-    <img src="/images/icons/banks/amex.svg" alt="" />
-    <img src="/images/icons/banks/diners.svg" alt="" />
-    <img src="/images/icons/banks/unionpay.svg" alt="" />
-    <img src="/images/icons/banks/discover.svg" alt="" />
-    <img src="/images/icons/banks/bancontact.svg" alt="" />
-    <img src="/images/icons/banks/eps.svg" alt="" />
-    <img src="/images/icons/banks/giropay.svg" alt="" />
-    <img src="/images/icons/banks/ideal.svg" alt="" />
-</div> */}
-
-                                <Menu style='2md:block hidden' />
 
                             </div>
 
-                            <Menu style='2md:hidden block' />
+                            <div className="col-start-2 col-span-2">
+                                <Menu />
+                            </div>
 
                         </div>
 
@@ -167,7 +189,7 @@ function Menu({ style }) {
 
     return (
 
-        <div className={`children:text-sm space-y-1 pt-2 ${style}`}>
+        <div className={`children:text-sm space-y-1 ${style}`}>
 
             <button onClick={() => handleMenuToggle(1)} className="w-full flex justify-between">
                 <p>shipping methods</p>

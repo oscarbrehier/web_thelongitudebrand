@@ -22,7 +22,7 @@ export default function Button({
         ${border ? "bg-transparent border-[1px] border-black" : "bg-black"}
         ${!loading && "hover:bg-neon-green"}
         ${loading ? "cursor-not-allowed" : ""}
-        select-none flex items-center justify-center text-sm transition-all duration-300 ease-in-out
+        select-none flex items-center justify-center text-sm transition-all duration-300 ease-in-out box-border	
         ${size} ${style} ${text}
     `;
 

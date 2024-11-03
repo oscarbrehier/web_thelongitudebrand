@@ -3,24 +3,30 @@ import { database } from "./firebase/client";
 import createCheckoutSession from "./stripe/createCheckoutSession";
 import generateOrderId from "./utils/generateOrderId";
 
-export const checkout = async (userId, cart, total, cancelUrl) => {
+export const checkout = async (data) => {
+
+    const { userId, cart, total, cancelUrl } = data;
 
     try {
 
         const { url, id } = await createCheckoutSession(cart, cancelUrl);
 
-        const cartRef = collection(database, "orders");
+        if (userId) {
 
-        const orderId = generateOrderId(userId);
+            const cartRef = collection(database, "orders");
 
-        await addDoc(cartRef, {
-            userId,
-            items: cart,
-            total,
-            orderId,
-            checkoutId: id,
-            at: Timestamp.now(),
-        });
+            const orderId = generateOrderId(userId);
+
+            await addDoc(cartRef, {
+                userId,
+                items: cart,
+                total,
+                orderId,
+                checkoutId: id,
+                at: Timestamp.now(),
+            });
+
+        };
 
         return { url };
 

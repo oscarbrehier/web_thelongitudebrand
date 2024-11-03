@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { signUpSchema } from "@/lib/constants/zodSchema";
 import { signUp } from "@/lib/authentication/service";
 import Checkbox from "@/app/components/ui/Checkbox";
+import SignUpForm from "@/app/components/forms/SignUpForm";
 
 export default function Page({
     params: {
@@ -109,109 +110,21 @@ export default function Page({
 
                     </div>
 
-                    <form onSubmit={handleForm}>
-
-                        <div className="space-y-2">
-
-                            <div className="grid grid-cols-2 gap-2">
-
-                                <InputWithLabel
-                                    title="first name"
-                                    required={true}
-                                    error={inputErrors.firstName}
-                                />
-
-                                <InputWithLabel
-                                    title="last name"
-                                    required={true}
-                                    error={inputErrors.lastName}
-                                />
-
-                            </div>
-
-                            <InputWithLabel
-                                title="email"
-                                type="email"
-                                required={true}
-                                value={query.get("email") || null}
-                                error={inputErrors.email}
-                            />
-
-                            <InputWithLabel
-                                title="password"
-                                type="password"
-                                required={true}
-                                error={inputErrors.password}
-                            />
-
-                            <InputWithLabel
-                                title="confirm password"
-                                type="password"
-                                required={true}
-                                error={inputErrors.confirmPassword}
-                            />
-
-                            {
-                                form.error && <p className="text-error-red text-sm">{form.error}</p>
-                            }
-
-                        </div>
-
-                        <div className="mt-4 space-y-2">
-
-                            <div className="flex text-sm space-x-3">
-
-                                <Checkbox
-                                    type="checkbox"
-                                    name="newsletter"
-                                    size="4"
-                                />
-
-                                <p>Subscribe to our newsletter</p>
-
-                            </div>
-
-                            <div className="flex text-sm space-x-3">
-
-                                <Checkbox
-                                    type="checkbox"
-                                    id="terms"
-                                    name="terms"
-                                    size="4"
-                                />
-
-                                <p className={inputErrors.terms && "text-error-red"}>
-                                    By selecting "Sign Up", you are confirming that you have read and agree to thelongitudebrand's &nbsp;
-                                    <Link className="underline" href="/legal/terms-conditions">Terms & Conditions</Link>
-                                </p>
-
-                            </div>
-
-
-                        </div>
-
-                        <div className="mt-4 space-y-2">
-
-                            <Button
-                                title="sign up"
-                                size="w-full h-14"
-                                type="submit"
-                                loading={loading}
-                            />
-
-                            <div className="text-sm flex">
-
-                                <p>
-                                    Already have an account? &nbsp;
-                                </p>
-
-                                <Link href="/auth/sign-in" className="underline capitalize">sign in</Link>
-
-                            </div>
-
-                        </div>
-
-                    </form>
+                    <SignUpForm
+                        lang={lang}
+                        handleForm={handleForm}
+                        errors={{
+                            form: form.error,
+                            firstName: inputErrors.firstName,
+                            lastName: inputErrors.lastName,
+                            email: inputErrors.email,
+                            password: inputErrors.password,
+                            confirmPassword: inputErrors.confirmPassword,
+                            terms: inputErrors.terms
+                        }}
+                        loading={loading}
+                        email={query.get('email') || null}
+                    />
 
                 </div>
 

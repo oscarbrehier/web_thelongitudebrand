@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { signInSchema } from "@/lib/constants/zodSchema";
+import SignInForm from "@/app/components/forms/SignInForm";
 
 export default function Page({
     params: {
@@ -63,8 +64,8 @@ export default function Page({
 
                 setInputErrors(prev => ({
                     ...prev,
-                    email: errors.email,
-                    password: errors.password,
+                    email: errors.email || "",
+                    password: errors.password || "",
                 }));
 
             } else if (error.code) {
@@ -96,7 +97,7 @@ export default function Page({
 
                     </div>
 
-                    <form onSubmit={handleForm}>
+                    {/* <form onSubmit={handleForm}>
 
                         <div className="space-y-2">
 
@@ -143,7 +144,19 @@ export default function Page({
 
                         </div>
 
-                    </form>
+                    </form> */}
+
+                    <SignInForm
+                        lang={lang}
+                        handleForm={handleForm}
+                        errors={{
+                            email: inputErrors.email,
+                            password: inputErrors.password,
+                            form: form.error
+                        }}
+                        status={status}
+                        email={query.get("email") || null}
+                    />
 
                 </div>
 

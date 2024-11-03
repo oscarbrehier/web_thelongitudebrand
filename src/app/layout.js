@@ -4,12 +4,11 @@ import { AuthContextProvider } from "@/lib/context/AuthContext";
 import ModalProvider from "@/lib/context/ModalContext";
 import { CartProvider } from "@/lib/context/CartContext";
 import { languages, fallbackLng } from "./i18n/settings";
-import { useTranslation } from "./i18n";
-import { SpeedInsights } from '@vercel/speed-insights/next';
-import { Analytics } from "@vercel/analytics/react";
 import { getCurrentUser } from "@/lib/authentication/sessionHelpers";
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import Head from "next/head";
+import { storageKeys } from "@/lib/constants/settings.config";
+import { deleteAuthCookie } from "@/actions/handleAuthCookie";
 
 const baseUrl = "https://thelongitudebrand.com";
 
@@ -55,6 +54,7 @@ export default async function RootLayout({
 	let lang;
 
 	const headersList = headers();
+
 	lang = headersList.has("x-language") ? headersList.get("x-languge") : fallbackLng;
 
 	const user = await getCurrentUser();

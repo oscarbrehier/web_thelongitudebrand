@@ -5,13 +5,13 @@ import { headers } from "next/headers";
 
 export async function POST(request, response) {
 
-	let { cart, cancel_url } = await request.json();
+	let { cart, success_url, cancel_url } = await request.json();
 
 	try {
 
 		const session = await stripe.checkout.sessions.create({
-			success_url: `http://localhost:3000/user/checkout-session/{CHECKOUT_SESSION_ID}`,
-			cancel_url: cancel_url ? `http://localhost:3000${cancel_url}` : 'http://localhost:3000/cart',
+			success_url,
+			cancel_url,
 			line_items: cart,
 			mode: 'payment',
 			allow_promotion_codes: true,

@@ -6,10 +6,18 @@ import { useModalContext } from "@/lib/context/ModalContext";
 import { useEffect, useState } from "react";
 import LoadingSpinner from "./ui/loadingSpinner";
 import delay from "@/lib/utils/delay";
+import Link from "next/link";
 
 export default function CartItemSmall({
+    lang,
     content,
     single = false,
+    allowModifications = true,
+    clickable = false,
+    backgroundColor = {
+        card: "transparent",
+        image: "cream-100"
+    }
 }) {
 
     if (!content) return null;
@@ -100,15 +108,32 @@ export default function CartItemSmall({
                 ) : (
 
 
-                    <div className="h-32 w-full flex space-x-2">
+                    <div className={`h-32 w-full flex space-x-2 ${"bg-" + backgroundColor.card}`}>
 
-                        <div className="h-full flex items-center bg-cream-100 p-2">
-                            <SanityImage
-                                className="xl:w-20 w-16"
-                                source={image_ref}
-                                quality={0}
-                                alt={name} />
-                        </div>
+                        {
+                            clickable ?
+                                (
+
+                                    <Link href={`/shop/${name}`} className={`h-full flex items-center p-2 ${"bg-" + backgroundColor.image}`}>
+                                        <SanityImage
+                                            className="xl:w-20 w-16"
+                                            source={image_ref}
+                                            quality={0}
+                                            alt={name} />
+                                    </Link>
+
+                                ) : (
+
+                                    <div className={`h-full flex items-center p-2 ${"bg-" + backgroundColor.image}`}>
+                                        <SanityImage
+                                            className="xl:w-20 w-16"
+                                            source={image_ref}
+                                            quality={0}
+                                            alt={name} />
+                                    </div>
+
+                                )
+                        }
 
                         <div className="flex-1 h-full flex flex-col justify-between children:text-sm">
 
@@ -125,23 +150,35 @@ export default function CartItemSmall({
 
                                     <p>Quantity:</p>
 
-                                    <button
-                                        className="2md:bg-transparent bg-cream-400 2md:size-auto size-6 2md:block flex items-center justify-center"
-                                        onClick={(event) => handleItemUpdate(event, DIRECTION.DOWN)}>-</button>
+                                    {
+                                        allowModifications && (
+                                            <button
+                                                className="2md:bg-transparent bg-cream-400 2md:size-auto size-6 2md:block flex items-center justify-center"
+                                                onClick={(event) => handleItemUpdate(event, DIRECTION.DOWN)}>-</button>
+                                        )
+                                    }
 
                                     <button>{quantity}</button>
 
-                                    <button
-                                        className="2md:bg-transparent bg-cream-400 2md:size-auto size-6 2md:block flex items-center justify-center"
-                                        onClick={(event) => handleItemUpdate(event, DIRECTION.UP)}>+</button>
+                                    {
+                                        allowModifications && (
+                                            <button
+                                                className="2md:bg-transparent bg-cream-400 2md:size-auto size-6 2md:block flex items-center justify-center"
+                                                onClick={(event) => handleItemUpdate(event, DIRECTION.UP)}>+</button>
+                                        )
+                                    }
 
                                 </div>
 
                             </div>
 
-                            <div>
-                                <button onClick={handleRemoveItem} className="text-[10px] underline capitalize">remove</button>
-                            </div>
+                            {allowModifications ? (
+                                <div>
+                                    <button onClick={handleRemoveItem} className="text-[10px] underline capitalize">remove</button>
+                                </div>
+                            ) : (
+                                <div></div>
+                            )}
 
                         </div>
 
