@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { signUpSchema } from "@/lib/constants/zodSchema";
-import { signUp } from "@/lib/authentication/service";
+import signUp from "@/lib/authentication/signUp";
 import Checkbox from "@/app/components/ui/Checkbox";
 import SignUpForm from "@/app/components/forms/SignUpForm";
 
@@ -54,9 +54,10 @@ export default function Page({
             };
 
             signUpSchema.parse(data);
-
             await signUp(data);
-            router.push("/shop");
+
+            router.push("/customer/personal-information");
+        
 
         } catch (error) {
                 

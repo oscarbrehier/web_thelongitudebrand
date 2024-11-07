@@ -1,3 +1,5 @@
+const isDev = process.env.NODE_ENV === "development" || !process.env.NODE_ENV;
+
 export const authRoutes = [
     "/customer",
 ];
@@ -15,3 +17,7 @@ export const guestRoutes = [
     "/auth/sign-in",
     "/auth/sign-up",
 ];
+
+export const origin = isDev
+    ? "http://localhost:3000"
+    : "https://thelongitudebrand.com";

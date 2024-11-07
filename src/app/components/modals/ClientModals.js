@@ -14,8 +14,6 @@ const modals = {
 export default function ClientModals({ children }) {
     
     const pathname = usePathname();
-
-
     const { activeModal } = useModalContext();
 
     const isContentBlurred = activeModal && activeModal !== "added_cart";
@@ -27,18 +25,12 @@ export default function ClientModals({ children }) {
 
     }, [activeModal]);
 
-    useEffect(() => {
-
-        
-
-    }, [pathname]);
-
     return (
 
         <div className="grid">
 
             <div className="col-start-1 row-start-1">
-                {activeModal === "added_cart" && (
+                {(activeModal === "added_cart" && pathname.includes("/shop/")) && (
                     
                     <ActiveModalComponent />
 

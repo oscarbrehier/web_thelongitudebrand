@@ -1,18 +1,11 @@
 "use client"
-
 import { useSearchParams } from "next/navigation";
 import Button from "@/app/components/ui/Button";
 import InputWithLabel from "@/app/components/ui/InputWithLabel";
 import { useEffect, useState } from "react";
-import { z } from "zod";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "@/lib/firebase/client";
-
-const formSchema = z.object({
-    email: z.string()
-        .min(1, { message: "Email is required" })
-        .email("Please enter a valid email address")
-});
+import { resetPasswordSchema } from "@/lib/constants/zodSchema";
 
 export default function Page({ params: { lang } }) {
 
@@ -44,7 +37,7 @@ export default function Page({ params: { lang } }) {
         try {
 
             const email = formData.get("email");
-            formSchema.parse({ email });
+            resetPasswordSchema.parse({ email });
 
             await sendPasswordResetEmail(auth, email);
 

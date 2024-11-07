@@ -1,13 +1,15 @@
 "use client"
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { checkout } from "@/lib/checkout";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import checkout from "@/lib/checkout";
 import Button from "@/app/components/ui/Button";
 import { useAuthContext } from "@/lib/context/AuthContext";
 import { useCartStore } from "@/lib/stores/useCartStore";
 import Hyperlink from "@/app/components/ui/Hyperlink";
 import { useModalContext } from "@/lib/context/ModalContext";
 import dynamic from "next/dynamic";
+import deleteOrder from "@/lib/firestore/deleteOrder";
+import NoContentLayout from "@/app/components/NoContentLayout";
 
 const CartItemSmall = dynamic(() => import("@/app/components/CartItemSmall"));
 
@@ -18,6 +20,7 @@ export default function Page({
 }) {
 
     const router = useRouter();
+    const params = useSearchParams();
 
     const { user } = useAuthContext();
     const { openModal } = useModalContext();
@@ -35,11 +38,18 @@ export default function Page({
 
         try {
 
-            const { url } = await checkout(user.uid, cart, total);
-            router.push(url);
+            const url = await checkout(user, cart, total);
+            console.log(url);
+            if (url) {
+                router.push(url);
+                return;
+            };
+
+            throw new Error("Checkout URL not found");
 
         } catch (err) {
 
+            console.log(err);
             setError("An error occured. Please try again or come back later");
 
         } finally {
@@ -50,131 +60,120 @@ export default function Page({
 
     };
 
+    useEffect(() => {
+
+        if (params.has("checkout") && params.has("order_id")) {
+
+            const orderId = params.get("order_id");
+            if (user) deleteOrder(orderId);
+            router.push("/cart");
+
+        };
+
+    }, [params]);
+
+    if (!cart || cart.length === 0) {
+
+        return (
+
+            <NoContentLayout
+                title="Your cart is empty"
+                text="Looks like you haven’t picked anything yet. Let’s change that!"
+                linkTitle="start shopping"
+                link="/shop"
+            />
+
+        );
+
+    };
+
     return (
 
-        <>
+        <div className="h-auto w-full lg:grid grid-cols-4 gap-4 pt-24 pb-10">
 
-            {
-                cart && cart.length >= 1 ? (
+            <div className="col-start-2 col-span-2 h-full flex flex-col space-y-4">
 
-                    <>
+                <div>
 
-                        <div className="h-auto w-full lg:grid grid-cols-4 gap-4 pt-24 pb-10">
+                    <h1 className="text-lg capitalize mx-2">cart ({cart?.length} items)</h1>
 
-                            <div className="col-start-2 col-span-2 h-full flex flex-col space-y-4">
+                    {
+                        user == null && (
 
-                                <div>
+                            <p className="mt-1 text-sm">
+                                For your cart to be saved, either&nbsp;
+                                <span onClick={() => openModal("sign_in")} className="underline cursor-pointer">sign in</span>
+                                &nbsp;or&nbsp;
+                                <span onClick={() => openModal("sign_up")} className="underline cursor-pointer">create an account</span>
+                            </p>
 
-                                    <h1 className="text-lg capitalize mx-2">cart ({cart?.length} items)</h1>
+                        )
+                    }
 
-                                    {
-                                        user == null && (
+                </div>
 
-                                            <p className="mt-1 text-sm">
-                                                For your cart to be saved, either&nbsp;
-                                                <span onClick={() => openModal("sign_in")} className="underline cursor-pointer">sign in</span>
-                                                &nbsp;or&nbsp;
-                                                <span onClick={() => openModal("sign_up")} className="underline cursor-pointer">create an account</span>
-                                            </p>
+                <div className="h-full w-full space-y-2">
 
-                                        )
-                                    }
+                    {
+                        cart?.map((item, index) => (
 
-                                </div>
-
-                                <div className="h-full w-full space-y-2">
-
-                                    {
-                                        cart?.map((item, index) => (
-
-                                            <CartItemSmall
-                                                lang={lang}
-                                                content={item}
-                                                clickable={true}
-                                                backgroundColor={{
-                                                    card: "cream-300",
-                                                    image: "cream-200"
-                                                }}
-                                            />
-
-                                        ))
-                                    }
-
-                                </div>
-
-
-                            </div>
-
-                            <div className="h-auto bg-cream-100 sticky col-start-2 col-span-2 left-0 bottom-0 py-4 space-y-4">
-
-                                <div className="text-sm capitalize space-y-1">
-
-                                    <div className="w-full flex justify-between">
-                                        <p className="text-xs">shipping cost</p>
-                                        <p className="text-xs">calculated at checkout</p>
-                                    </div>
-
-                                    <div className="w-full flex justify-between">
-                                        <p className="text-sm">subtotal</p>
-                                        {/* <p className="text-sm bg-neon-green">{cart.price} €</p> */}
-                                        <p className="text-sm bg-neon-green">{total} €</p>
-                                    </div>
-
-                                </div>
-
-                                <div className="space-y-2">
-
-                                    <Button
-                                        title="proceed to checkout"
-                                        onClick={getCheckout}
-                                        size="w-full lg:h-14 h-10"
-                                        loading={loading}
-                                        text="uppercase"
-                                    />
-
-                                    {error && <p className="text-error-red text-sm">{error}</p>}
-
-                                </div>
-
-
-                            </div>
-
-                            <div className="col-start-2 col-span-2">
-                                <Menu />
-                            </div>
-
-                        </div>
-
-                    </>
-
-                ) : (
-
-                    <div className="h-screen w-full lg:grid grid-cols-4 gap-2 flex items-center justify-center">
-
-                        <div className="col-span-2 col-start-2 lg:w-full md:w-2/3 w-full md:p-0 sm:px-8 flex flex-col justify-center space-y-4">
-
-                            <div className="w-full flex flex-col space-y-2">
-                                <h1 className="text-4xl">Your cart is empty</h1>
-                                <p className="lg:w-2/3">
-                                    Looks like you haven’t picked anything yet. Let’s change that!
-                                </p>
-                            </div>
-
-                            <Hyperlink
-                                title="start shopping"
-                                size="h-14 lg:w-2/3"
-                                to={`/shop`}
+                            <CartItemSmall
+                                key={index}
+                                lang={lang}
+                                content={item}
+                                clickable={true}
+                                backgroundColor={{
+                                    card: "cream-300",
+                                    image: "cream-200"
+                                }}
                             />
 
-                        </div>
+                        ))
+                    }
 
+                </div>
+
+
+            </div>
+
+            <div className="h-auto bg-cream-100 sticky col-start-2 col-span-2 left-0 bottom-0 py-4 space-y-4">
+
+                <div className="text-sm capitalize space-y-1">
+
+                    <div className="w-full flex justify-between">
+                        <p className="text-xs">shipping cost</p>
+                        <p className="text-xs">calculated at checkout</p>
                     </div>
 
-                )
-            }
+                    <div className="w-full flex justify-between">
+                        <p className="text-sm">subtotal</p>
+                        <p className="text-sm bg-neon-green">{total} €</p>
+                    </div>
 
-        </>
+                </div>
 
+                <div className="space-y-2">
+
+                    <Button
+                        title="proceed to checkout"
+                        onClick={getCheckout}
+                        size="w-full lg:h-14 h-10"
+                        loading={loading}
+                        text="uppercase"
+                    />
+
+                    {error && <p className="text-error-red text-sm">{error}</p>}
+
+                </div>
+
+
+            </div>
+
+            <div className="col-start-2 col-span-2">
+                <Menu />
+            </div>
+
+        </div>
 
     );
 

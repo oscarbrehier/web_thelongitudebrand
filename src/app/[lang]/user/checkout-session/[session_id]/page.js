@@ -23,7 +23,7 @@ export default function Page({ params }) {
             
             const { origin } = window.location;
 
-            let res = await fetch(`${origin}/api/checkout-session`, {
+            let res = await fetch(`${origin}/api/checkout/session`, {
                 method: 'GET',
                 headers: {
                     'session-id': session_id

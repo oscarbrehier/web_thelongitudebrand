@@ -7,7 +7,7 @@ export default async function createCheckoutSession(items, cancelUrl) {
 
     try {
 
-        let res = await fetch(`${origin}/api/checkout-session`, {
+        let res = await fetch(`${origin}/api/checkout/session`, {
             method: 'POST',
             body: JSON.stringify({
                 cart: cart,

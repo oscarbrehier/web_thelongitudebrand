@@ -10,6 +10,7 @@ export default function Button({
     onClick,
     style = null,
     text = "capitalize",
+    disabled = false,
     ...props
 }) {
 
@@ -18,9 +19,18 @@ export default function Button({
         setStatus(loading)
     }, [loading]);
 
+    const btnOutline = `
+        bg-transparent border-[1px] ${" "}
+        ${disabled ? "border-cream-400" : "border-black"}
+    `;
+
+    const btnFill = `
+        ${disabled ? "bg-cream-400" : "bg-black"}
+    `;
+
     const buttonClasses = `
-        ${border ? "bg-transparent border-[1px] border-black" : "bg-black"}
-        ${!loading && "hover:bg-neon-green"}
+        ${border ? btnOutline : btnFill}
+        ${(!loading && !disabled) && "hover:bg-neon-green"}
         ${loading ? "cursor-not-allowed" : ""}
         select-none flex items-center justify-center text-sm transition-all duration-300 ease-in-out box-border	
         ${size} ${style} ${text}
@@ -30,7 +40,8 @@ export default function Button({
 
         <button
             className={buttonClasses}
-            onClick={onClick}
+            onClick={!disabled ? onClick : undefined}
+            disabled={disabled}
             {...props}
         >
 
@@ -41,7 +52,12 @@ export default function Button({
 
                 ) : (
 
-                    <p className={border ? "hover:text-black" : "text-white"}>{title}</p>
+                    <p
+                        className={border
+                            ? (disabled ? "text-neutral-500" : "text-black")
+                            : (disabled ? "text-neutral-500" : "text-white hover:text-black")
+                    }>
+                        {title}</p>
 
                 )
             }

@@ -4,6 +4,10 @@ export const fallbackLng = 'en';
 export const languages = [fallbackLng, 'fr'];
 export const defaultNS = 'translation';
 export const cookieName = storageKeys.LANGUAGE;
+export const languageMap = {
+    en: "english",
+    fr: "français"
+};
 
 export function getOptions(lng = fallbackLng, ns = defaultNS) {
 

@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Newsletter from "../Newsletter";
 import { useTranslation } from "@/app/i18n/client";
+import LanguageSelector from "../LanguageSelector";
 
 export default function Footer({ lang }) {
 
@@ -10,7 +11,7 @@ export default function Footer({ lang }) {
     const { t } = useTranslation(lang, "navigation");
 
     useEffect(() => {
-        
+
         if (activeMenu !== null) {
 
             window.scrollTo({
@@ -30,7 +31,13 @@ export default function Footer({ lang }) {
 
         <div className="h-auto w-full mb-4">
 
-            <Newsletter lang={lang} />
+
+            <section className="h-auto w-full py-2 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 sm:gap-2 gap-x-0 gap-y-2">
+
+                <Newsletter lang={lang} />
+                <LanguageSelector lang={lang} />
+
+            </section>
 
             <section className="sm:h-10 w-full bg-neon-green flex sm:flex-row flex-col items-center justify-between children:text-xs children:sm:space-x-4 sm:py-0">
 

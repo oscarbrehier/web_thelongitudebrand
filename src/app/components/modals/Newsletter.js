@@ -8,6 +8,7 @@ import { database } from "@/lib/firebase/client";
 import { newsletterSchema } from "@/lib/constants/zodSchema";
 import handleFirebaseError from "@/lib/firebase/handleFirebaseError";
 import ModalContainer from "./ModalContainer";
+import Checkbox from "../ui/Checkbox";
 
 const FORM_DEFAULT = {
     error: "",
@@ -186,12 +187,13 @@ export default function NewsletterModal() {
 
                 </div>
 
-                <div className="flex text-xs space-x-4">
+                <div className="flex items-center text-xs space-x-4">
 
-                    <input
-                        type="checkbox"
+                    <Checkbox
                         name="terms"
+                        id="terms"
                         checked={form.terms}
+                        size="4"
                         onChange={() => setForm(prev => ({ ...prev, terms: !prev.terms }))}
                     />
 

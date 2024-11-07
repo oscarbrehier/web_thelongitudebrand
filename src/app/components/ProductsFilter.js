@@ -38,8 +38,6 @@ export default function ProductsFilter({ lang, products, categories }) {
 
     useEffect(() => {
 
-        console.log(products)
-        console.log(query)
         if (query && categories.includes(query)) setFilter(query);
 
     }, [query]);

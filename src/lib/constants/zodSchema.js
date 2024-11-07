@@ -60,3 +60,9 @@ export const newsletterSchema = z.object({
             message: "You must accept the terms and conditions"
         }),
 });
+
+export const resetPasswordSchema = z.object({
+    email: z.string()
+        .min(1, { message: "Email is required" })
+        .email("Please enter a valid email address")
+});

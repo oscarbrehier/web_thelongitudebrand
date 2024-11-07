@@ -37,7 +37,7 @@ export default function NavigationBar({ lang }) {
         </>
 
     ) : (
-        <button onClick={() => openModal('sign_in')}>{t("account")}</button>
+        <button onClick={() => openModal('sign_in')}>{t("sign_in")}</button>
     );
 
     useEffect(() => {

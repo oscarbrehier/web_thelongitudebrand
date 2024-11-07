@@ -29,7 +29,7 @@ export default function InputWithLabel({
 
     useEffect(() => {
         
-        if (error) setErrorMessage(error);
+        setErrorMessage(error || null);
 
     }, [error]);
 

@@ -2,12 +2,13 @@
 import Input from "../ui/Input";
 import { useEffect, useState } from "react";
 import { useModalContext } from "@/lib/context/ModalContext";
-import { signIn } from "@/lib/authentication/service";
+import signIn from "@/lib/authentication/signIn";
 import { signInSchema } from "@/lib/constants/zodSchema";
 import Button from "../ui/Button";
 import handleFirebaseError from "@/lib/firebase/handleFirebaseError";
 import ModalContainer from "./ModalContainer";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const FORM_DEFAULT = {
     submit: false,
@@ -18,6 +19,7 @@ const FORM_DEFAULT = {
 
 export default function SignInModal() {
 
+    const router = useRouter();
     const { activeModal, openModal, closeModal } = useModalContext();
 
     const [form, setForm] = useState(FORM_DEFAULT);
@@ -41,7 +43,9 @@ export default function SignInModal() {
             signInSchema.parse(data);
 
             await signIn(data.email, data.password);
+            
             closeModal();
+            router.push("/customer/personal-information");
 
         } catch (error) {
 
@@ -133,7 +137,7 @@ export default function SignInModal() {
                     <Link href="/auth/reset-password">Forgot your password?</Link>
                     <div className="flex">
                         <p className="text-neutral-500">Don't have an account? &nbsp;</p>
-                        <p className="cursor-pointer capitalize" onClick={() => openModal('sign_up')}>sign up</p>
+                        <p className="cursor-pointer capitalize underline" onClick={() => openModal('sign_up')}>sign up</p>
                     </div>
 
                 </div>

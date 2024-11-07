@@ -1,10 +1,13 @@
 export default async function getCheckoutData(checkoutId) {
 
-	const { origin } = window.location;
+	const isDev = process.env.NODE_ENV === "development";
+	const baseRoute = isDev ? "http://localhost:3000" : "https://thelongitudebrand.com";
+
+	console.log(baseRoute)
 
 	try {
 
-		let res = await fetch(`${origin}/api/checkout-session`, {
+		let res = await fetch(`${baseRoute}/api/checkout/session`, {
 			method: 'GET',
 			headers: {
 				'session-id': checkoutId

@@ -2,7 +2,7 @@
 import { useModalContext } from "@/lib/context/ModalContext";
 import Input from "../ui/Input";
 import { useState, useEffect } from "react";
-import { signUp } from "@/lib/authentication/service";
+import signUp from "@/lib/authentication/signUp";
 import { signUpSchema } from "@/lib/constants/zodSchema";
 import Button from "../ui/Button";
 import handleFirebaseError from "@/lib/firebase/handleFirebaseError";
@@ -25,7 +25,7 @@ const FORM_DEFAULT = {
 
 export default function SignUpModal() {
 
-    const { activeModal, closeModal } = useModalContext();
+    const { activeModal, openModal, closeModal } = useModalContext();
 
     const [loading, setLoading] = useState(false);
     const [form, setForm] = useState(FORM_DEFAULT);
@@ -198,6 +198,15 @@ export default function SignUpModal() {
                             )
                         }
                     </>
+
+                </div>
+
+                <div className="text-sm mt-6 space-y-2">
+
+                    <div className="flex">
+                        <p className="text-neutral-500">Already have an account? &nbsp;</p>
+                        <p className="cursor-pointer capitalize underline" onClick={() => openModal('sign_in')}>sign in</p>
+                    </div>
 
                 </div>
 

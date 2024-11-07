@@ -1,5 +1,5 @@
 'use client';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import InputWithLabel from "@/app/components/ui/InputWithLabel";
 import Button from "@/app/components/ui/Button";
 import { IoCheckmark } from "react-icons/io5";
@@ -7,37 +7,85 @@ import { useAuthContext } from "@/lib/context/AuthContext";
 import updateUserProfile from "@/lib/authentication/updateUserProfile";
 import Hyperlink from '@/app/components/ui/Hyperlink';
 import Checkbox from "@/app/components/ui/Checkbox";
+import * as Sentry from "@sentry/nextjs";
+import { z } from "zod";
+
+export const formSchema = z.object({
+    firstName: z
+        .string()
+        .min(1, { message: "First name is required" }),
+    lastName: z
+        .string()
+        .min(1, { message: "Last name is required" }),
+});
 
 export default function Content({ content, lang }) {
 
-    const [formValues, setFormValues] = useState({ ...content });
-
+    const [form, setForm] = useState({
+        error: null,
+        inputErrors: {
+            firstName: null,
+            lastName: null
+        }
+    })
+    const [inputs, setInputs] = useState({ ...content });
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [isModified, setIsModified] = useState(false);
 
     const { user } = useAuthContext();
 
     const handleInputChange = (e) => {
 
         const { name, value, type, checked } = e.target;
+        const newValue = type === "checkbox" ? checked : value;
 
-        setFormValues(prev => ({
+        setInputs(prev => ({
             ...prev,
-            [name]: type === "checkbox" ? checked : value,
+            [name]: newValue,
         }));
+
+        if (!isModified) setIsModified(true);
 
     };
 
     const handleSubmitForm = async () => {
 
+        setLoading(true); 
+        setForm(prev => ({ ...prev, error: null, inputErrors: { firstName: "", lastName: "" } }));
+
         try {
 
-            setLoading(true);
-            await updateUserProfile(user.uid, formValues);
+            formSchema.parse(inputs);
+
+            await updateUserProfile(user.uid, inputs);
+            setIsModified(false);
 
         } catch (error) {
 
-            setError("An error occured. Please try again or come back later");
+            if (error.errors) {
+
+                const errors = error.errors.reduce((acc, curr) => {
+
+                    acc[curr.path[0]] = curr.message;
+                    return acc;
+
+                }, {});
+
+                setForm(prev => ({
+                    ...prev,
+                    inputErrors: {
+                        ...prev.error,
+                        firstName: errors.firstName,
+                        lastName: errors.lastName
+                    }
+                }));
+
+                return;
+
+            };
+
+            setForm(prev => ({ ...prev, error: "An error occured. Please try again or come back later." }));
+            Sentry.captureException(error);
 
         } finally {
 
@@ -47,54 +95,33 @@ export default function Content({ content, lang }) {
 
     };
 
-    const handleSubscribeCheckbox = async (event) => {
-
-        const { checked } = event.target;
-
-        try {
-
-            setFormValues(prev => ({
-                ...prev,
-                newsletterSubscriber: checked
-            }));
-
-            await updateUserProfile(user.uid, {
-                newsletterSubscriber: checked
-            });
-
-        } catch (error) {
-
-            console.error(error);
-
-        };
-
-    };
-
     return (
 
         <>
 
-            <div>
+            <div className="space-y-8">
 
                 <div className="space-y-2">
 
                     <InputWithLabel
                         title='first name'
-                        value={formValues.firstName}
+                        value={inputs.firstName}
                         type='text'
                         onChange={(e) => handleInputChange(e)}
+                        error={form.inputErrors?.firstName}
                     />
 
                     <InputWithLabel
                         title='last name'
-                        value={formValues.lastName}
+                        value={inputs.lastName}
                         type='text'
                         onChange={(e) => handleInputChange(e)}
+                        error={form.inputErrors?.lastName}
                     />
 
                     <InputWithLabel
                         title='email'
-                        value={formValues.email}
+                        value={inputs.email}
                         type='email'
                         disabled
                     />
@@ -103,23 +130,55 @@ export default function Content({ content, lang }) {
                         title='date of birth'
                         type='date'
                         optional={true}
-                        value={formValues.dateOfBirth}
+                        value={inputs.dateOfBirth}
                         onChange={(e) => handleInputChange(e)}
                     />
 
-                    {error !== "" && (
-                        <p className="text-sm text-error-red">{error}</p>
-                    )}
+                </div>
+
+                <div className="space-y-4">
+
+                    {/* <p className="capitalize mx-2 my-1 text-lg">preferences</p> */}
+
+                    <div className="space-y-1">
+
+                        <h2 className="">Communication Preferences</h2>
+
+                        <div className="flex space-x-2 h-auto items-center">
+
+                            <Checkbox
+                                name="newsletterSubscriber"
+                                onChange={handleInputChange}
+                                size="6"
+                                checked={inputs.newsletterSubscriber}
+                            />
+
+                            <div className="text-xs">
+
+                                <p className="text-neutral-600">
+                                    Be the first to receive Longitude news, including new collections, launches and sales. Sent twice a week.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
-                <div className="mt-4 space-y-2">
+                <div className="space-y-2">
+
+                    {form.error !== "" && (
+                        <p className="text-sm text-error-red">{form.error}</p>
+                    )}
 
                     <Button
                         title='save'
                         size='w-full h-14'
                         onClick={handleSubmitForm}
                         loading={loading}
+                        disabled={!isModified}
                     />
 
                     <Hyperlink
@@ -128,37 +187,6 @@ export default function Content({ content, lang }) {
                         size='w-full h-14'
                         border={true}
                     />
-
-                </div>
-
-            </div>
-
-            <div className="space-y-4 mt-20">
-
-                {/* <p className="capitalize mx-2 my-1 text-lg">preferences</p> */}
-
-                <div className="space-y-1">
-                    
-                    <h2 className="">Communication Preferences</h2>
-
-                    <div className="flex space-x-2 h-auto items-center">
-
-                        <Checkbox
-                            name="newsletterSubscriber"
-                            onChange={(e) => handleSubscribeCheckbox(e)}
-                            size="6"
-                            checked={formValues.newsletterSubscriber}
-                        />
-
-                        <div className="text-xs">
-
-                            <p className="text-neutral-600">
-                                Be the first to receive Longitude news, including new collections, launches and sales. Sent twice a week.
-                            </p>
-
-                        </div>
-
-                    </div>
 
                 </div>
 

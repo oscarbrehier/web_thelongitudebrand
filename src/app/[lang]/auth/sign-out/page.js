@@ -5,11 +5,13 @@ import { useCartStore } from "@/lib/stores/useCartStore";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { storageKeys } from "@/lib/constants/settings.config";
+import { useAuthContext } from "@/lib/context/AuthContext";
 
 export default function Page() {
 
     const router = useRouter();
 
+    const { user } = useAuthContext();
     const { clearCart } = useCartStore((state) => ({
         clearCart: state.clearCart
     }));
@@ -18,7 +20,7 @@ export default function Page() {
 
         const signOut = async () => {
 
-            clearCart();
+            clearCart(user);
             localStorage.removeItem(storageKeys.CART);
 
             await auth.signOut();

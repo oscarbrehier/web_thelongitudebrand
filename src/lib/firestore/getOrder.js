@@ -11,7 +11,7 @@ export default async function getOrder(orderId) {
 
         if (res.exists) {
 
-            const stripeSession = await getCheckoutData(res.data().checkoutId);
+            const stripeSession = await getCheckoutData(res.data().stripeCheckoutId);
 
             return {
                 order: res.data(),

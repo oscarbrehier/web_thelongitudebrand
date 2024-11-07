@@ -37,11 +37,6 @@ module.exports = {
 			},
 		},
 		fontFamily: {
-			"helveticablack": "HelveticaNeueCE-Black",
-			"helvetica75": "HelveticaNeueCe70-Bold",
-			"helvetica": "Helvetica",
-			"chiquita": "Chiquita",
-			"anderson": "AndersonGrotesk",
 			"space": "Space Grotesk",
 			"playfair": ["Playfair Display", "serif"]
 		},

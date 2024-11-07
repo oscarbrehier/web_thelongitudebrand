@@ -1,34 +1,15 @@
+import { spaceGrotesk } from "@/styles/fonts";
+
 export default function Page({ params: { lang } }) {
 
 	return (
 
-		// <PageContainer lang={lang}>
-
-		// 	<main className="h-screen w-full md:pt-[4.5rem] pt-[6.5rem] pb-4">
-
-		// 		<div className="size-full flex flex-col items-center justify-center bg-neon-green space-y-8">
-
-		// 			<div className="h-auto w-auto md:p-0 sm:px-8 px-4">
-
-		// 				<img className={`svg-blur-white md:w-[40rem]`} src="/images/landing/oval-white.png" alt="" />
-
-		// 			</div>
-					
-		// 			<Link href="/shop" className="uppercase md:text-2xl text-xl font-medium font-space text-neutral-800">
-		// 				shop now
-		// 			</Link>
-
-		// 		</div>
-
-		// 	</main>
-
-		// </PageContainer>
-
 		<div className="h-screen w-full flex items-center justify-center">
 
-			<p className="uppercase text-2xl font-medium font-space text-neutral-800">soon coming.</p>
+			<p className={`uppercase text-2xl font-medium text-neutral-800 ` + spaceGrotesk.className}>soon coming.</p>
 
 		</div>
 
 	);
-}
+	
+};

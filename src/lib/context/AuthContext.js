@@ -9,7 +9,7 @@ const auth = getAuth(firebase_app);
 export const AuthContext = createContext();
 export const useAuthContext = () => useContext(AuthContext);
 
-export const AuthContextProvider = ({ children }) => {
+export default function AuthContextProvider({ children }) {
 
     const [user, setUser] = useState(null);
     const [isAuth, setIsAuth] = useState(false);

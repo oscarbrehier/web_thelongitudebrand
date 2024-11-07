@@ -14,7 +14,25 @@ export const useCartStore = create(
 
             cartLength: () => get().cart.length,
 
-            clearCart: () => set({ cart: [], total: 0 }),
+            clearCart: async (user, database = false) => {
+
+                if (user && database) {
+
+                    try {
+
+                        await updateCartInFirestore([], user.uid);
+
+                    } catch (err) {
+
+                        updateError();
+
+                    };
+
+                };
+
+                set({ cart: [], total: 0 })
+
+            },
 
             getCart: async (user) => {
 

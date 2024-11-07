@@ -1,15 +1,23 @@
-import { doc, updateDoc } from "@firebase/firestore";
-import { database } from "../firebase/client";
+"use server"
+import { adminFirestore } from "../firebase/admin";
 
-export default async function updateUserProfile(userUid, data) {
+export default async function updateUserProfile(userId, data) {
+
+    if (!userId || typeof data !== "object") throw new Error("Invalid parameters provided to updateUserProfile");
 
     try {
 
-        await updateDoc(doc(database, "users", userUid), data);
+        const docRef = adminFirestore
+            .collection("users")
+            .doc(userId);
 
-    } catch (error) {
+        await docRef.update(data);
 
-        return error;
+    } catch (err) {
+
+        console.error(`Failed to update information for user with ID: ${userId}`)
+        console.error(err);
+        throw new Error("Failed to update user information");
 
     };
 

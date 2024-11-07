@@ -1,7 +1,7 @@
 "use client"
 import Button from "@/app/components/ui/Button";
 import InputWithLabel from "@/app/components/ui/InputWithLabel";
-import { signIn } from "@/lib/authentication/service";
+import signIn from "@/lib/authentication/signIn";
 import { useAuthContext } from "@/lib/context/AuthContext";
 import handleFirebaseError from "@/lib/firebase/handleFirebaseError";
 import Link from "next/link";
@@ -43,11 +43,10 @@ export default function Page({
             };
 
             signInSchema.parse(data);
-
             await signIn(data.email, data.password);
-            router.push("/shop");
-
+            
             setStatus("success");
+            router.push("/customer/personal-information");
 
         } catch (error) {
 
@@ -64,8 +63,8 @@ export default function Page({
 
                 setInputErrors(prev => ({
                     ...prev,
-                    email: errors.email || "",
-                    password: errors.password || "",
+                    email: errors.email || null,
+                    password: errors.password || null,
                 }));
 
             } else if (error.code) {

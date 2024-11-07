@@ -1,23 +1,12 @@
 import "./globals.css";
-import { Poppins } from "next/font/google";
-import { AuthContextProvider } from "@/lib/context/AuthContext";
+import { poppins } from "@/styles/fonts";
+import AuthContextProvider from "@/lib/context/AuthContext";
 import ModalProvider from "@/lib/context/ModalContext";
-import { CartProvider } from "@/lib/context/CartContext";
 import { languages, fallbackLng } from "./i18n/settings";
-import { getCurrentUser } from "@/lib/authentication/sessionHelpers";
-import { cookies, headers } from "next/headers";
+import { headers } from "next/headers";
 import Head from "next/head";
-import { storageKeys } from "@/lib/constants/settings.config";
-import { deleteAuthCookie } from "@/actions/handleAuthCookie";
 
 const baseUrl = "https://thelongitudebrand.com";
-
-const poppins = Poppins({
-	display: "swap",
-	subsets: ["latin"],
-	variable: "--poppins-font",
-	weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900']
-});
 
 export const metadata = {
 
@@ -57,8 +46,6 @@ export default async function RootLayout({
 
 	lang = headersList.has("x-language") ? headersList.get("x-languge") : fallbackLng;
 
-	const user = await getCurrentUser();
-
 	const structuredData = JSON.stringify({
 		"@context": "https://schema.org",
 		"@type": "Organization",
@@ -78,7 +65,6 @@ export default async function RootLayout({
 
 			<AuthContextProvider>
 
-				<CartProvider user={user ? user.uid : null} >
 					<ModalProvider>
 
 						<body className={poppins.className}>
@@ -87,7 +73,6 @@ export default async function RootLayout({
 						</body>
 
 					</ModalProvider>
-				</CartProvider>
 
 			</AuthContextProvider>
 

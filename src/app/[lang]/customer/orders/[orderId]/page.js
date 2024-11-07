@@ -2,6 +2,7 @@ import formatTimestamp from "@/lib/firestore/formatTimestamp";
 import OrderView from "@/app/components/OrderView";
 import { adminFirestore } from "@/lib/firebase/admin";
 import { headers } from "next/headers";
+import { origin } from "@/lib/constants/settings.config";
 
 const serializeOrderData = (orderData) => {
 
@@ -17,16 +18,12 @@ export default async function Page({ params: { orderId } }) {
 
     let data = null;
 
-    const getStripeCheckoutData = async (checkoutId) => {
+    const getStripeCheckoutData = async (stripeCheckoutId) => {
 
-        const headersList = headers();
-        const host = headersList.get('X-Forwarded-Host');
-        const proto = headersList.get('X-Forwarded-Proto');
-
-        const res = await fetch(`${proto}://${host}/api/checkout-session`, {
+        const res = await fetch(`${origin}/api/checkout/session`, {
             method: "GET",
             headers: {
-                "session-id": checkoutId
+                "session-id": stripeCheckoutId
             },
         }).then(res => res.json());
 
@@ -44,7 +41,7 @@ export default async function Page({ params: { orderId } }) {
         if (orderSnapshot.exists) {
 
             let orderData = orderSnapshot.data();
-            const stripeCheckoutData = await getStripeCheckoutData(orderData.checkoutId);
+            const stripeCheckoutData = await getStripeCheckoutData(orderData.stripeCheckoutId);
 
             orderData["date"] = formatTimestamp(orderData.at);
             orderData = serializeOrderData(orderData);

@@ -1,38 +1,36 @@
-import { addDoc, collection, Timestamp } from "@firebase/firestore";
-import { database } from "./firebase/client";
-import createCheckoutSession from "./stripe/createCheckoutSession";
+import createCheckoutSession from "@/actions/stripe/createCheckoutSession";
+import createCart from "./stripe/createCart";
+import getUserCustomerId from "./firestore/getUserCustomerId";
+import createOrder from "./firestore/createOrder";
 import generateOrderId from "./utils/generateOrderId";
+import { v4 as uuid } from "uuid";
 
-export const checkout = async (data) => {
+export default async function checkout(user = null, items, total) {
 
-    const { userId, cart, total, cancelUrl } = data;
+    if (!Array.isArray(items) || items.length === 0 || typeof total !== "number") {
+        throw new Error("Invalid parameters provided to checkout");
+    };
 
     try {
 
-        const { url, id } = await createCheckoutSession(cart, cancelUrl);
+        const { cart } = createCart(items);
+        const customerId = user ? await getUserCustomerId(user?.uid) : null;
+        const orderId = generateOrderId(user?.uid || uuid());
 
-        if (userId) {
+        const { url } = await createCheckoutSession({
+            stripeCart: cart,
+            cartItems: items,
+            customerId, 
+            orderId, 
+            userId: user?.uid || null
+        });
 
-            const cartRef = collection(database, "orders");
-
-            const orderId = generateOrderId(userId);
-
-            await addDoc(cartRef, {
-                userId,
-                items: cart,
-                total,
-                orderId,
-                checkoutId: id,
-                at: Timestamp.now(),
-            });
-
-        };
-
-        return { url };
+        return url;
 
     } catch (err) {
 
-        throw err;
+        console.error(err);
+        throw new Error("Checkout creation failed. Please try again later.");
 
     };
 

@@ -1,7 +1,8 @@
-import Hyperlink from "@/app/components/ui/Hyperlink";
-import { isUserAuthenticated } from "@/lib/authentication/sessionHelpers";
+import { getCurrentUser } from "@/lib/authentication/sessionHelpers";
 import getOrderByCheckoutId from "@/lib/firestore/getOrderByCheckoutId";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import NoContentLayout from "@/app/components/NoContentLayout";
+
 
 export default async function Page({
     params: {
@@ -10,53 +11,35 @@ export default async function Page({
     }
 }) {
 
-    let checkout;
-    const isAuth = await isUserAuthenticated();
+    const user = await getCurrentUser();
+    const checkout = await getOrderByCheckoutId(id, user?.uid || null);
 
-    if (isAuth) {
+    if (!checkout) return notFound();
 
-        checkout = await getOrderByCheckoutId(id);
-        if (!checkout.id) return notFound();
+    const currentDate = new Date();
+    const checkoutDate = new Date(checkout.data().at._seconds * 1000);
+
+
+    const timeDifference = currentDate - checkoutDate;
+
+    if (timeDifference > 600000) {
+
+        return redirect(user ? `/customer/orders/${checkout.id}` : "/shop");
 
     };
 
     const orderId = checkout?.id;
 
-
     return (
 
-        <div className="h-screen w-full lg:grid grid-cols-4 gap-2 flex items-center justify-center">
-
-            <div className="col-span-2 col-start-2 lg:w-full md:w-2/3 md:p-0 px-8 flex flex-col justify-center space-y-4">
-
-                <div className="w-full flex flex-col space-y-2">
-                    <h1 className="text-4xl">Order successfully placed</h1>
-                    <p className="lg:w-2/3">Your order will be processed within 24 hours during work days. We will notify you by email once your order has been shipped.</p>
-                </div>
-
-                {
-                    isAuth ? (
-
-                        <Hyperlink
-                            title="View order details"
-                            size="h-14 lg:w-2/3"
-                            to={`/customer/orders/${orderId}`}
-                        />
-
-                    ) : (
-
-                        <Hyperlink
-                            title="return to homepage"
-                            size="h-14 lg:w-2/3"
-                            to={`/shop`}
-                        />
-
-                    )
-                }
-
-            </div>
-
-        </div>
+        <NoContentLayout
+            title={`Order successfully placed`}
+            text={`Your order will be processed within 24 hours during work days. We will notify you by email once your order has been shipped`}
+            linkTitle={user ? "view order details" : "return to homepage"}
+            link={user ? `/customer/orders/${orderId}` : "/shop"}
+        >
+            <p>Order ID: {orderId}</p>
+        </NoContentLayout>
 
     );
 

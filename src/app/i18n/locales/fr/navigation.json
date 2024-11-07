@@ -1,6 +1,7 @@
 {
     "shop": "boutique",
     "account": "compte",
+    "sign_in": "se connecter",
     "cart": "panier",
     "wishlist": "wishlist",
     "shipping": "expéditon",

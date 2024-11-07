@@ -191,7 +191,7 @@ export default function OrderView({ order, checkout }) {
 
             <section className="h-auto w-full space-y-2">
 
-                <p className="capitalize text-lg font-medium">items (4)</p>
+                <p className="capitalize text-lg font-medium">items ({order.items.length})</p>
 
                 <div className="h-auto w-full grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-2">
 

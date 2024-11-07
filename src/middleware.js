@@ -25,7 +25,7 @@ export async function middleware(request) {
 
     const session = cookieStore.get(storageKeys.SESSION)?.value;
 
-    if (fullPathname === "/sitemap.xml" || fullPathname === "/robots.txt" || fullPathname.includes("icon") || fullPathname.includes("chrome")) {
+    if (fullPathname === "/sitemap.xml" || fullPathname === "/robots.txt" || fullPathname.includes("icon") || fullPathname.includes("chrome") || fullPathname === "/monitoring") {
         return response;
     };
 
@@ -75,7 +75,9 @@ export async function middleware(request) {
             isAuth = true;
             
         } catch (err) {
-            
+
+            console.log(err);
+
             if (session && !pathname.includes("/auth/sign-out")) {
                 return NextResponse.redirect(new URL("/auth/sign-out", request.url));
             };

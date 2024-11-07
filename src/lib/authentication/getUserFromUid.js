@@ -11,4 +11,6 @@ export default async function getUserFromUid(userUid) {
 
     };
 
+    return null;
+
 };

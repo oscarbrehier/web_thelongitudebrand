@@ -1,6 +1,7 @@
 import { client } from "@/lib/sanity/client";
 import ProductsFilter from "@/app/components/ProductsFilter";
 import { useTranslation } from "@/app/i18n";
+import { playfair } from "@/styles/fonts";
 
 export default async function Page({ params: { lang } }) {
 
@@ -32,7 +33,7 @@ export default async function Page({ params: { lang } }) {
 
 				<div className="h-full flex justify-start items-center col-start-2">
 					<div className="bg-neon-green">
-						<h1 className="capitalize font-playfair italic font-medium text-6xl">{t("shop")}</h1>
+						<h1 className={`capitalize italic font-medium text-6xl font-playfair`}>{t("shop")}</h1>
 					</div>
 				</div>
 
