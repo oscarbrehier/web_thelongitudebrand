@@ -4,7 +4,7 @@ import { useTranslation } from "@/app/i18n/client";
 import { StoreItem } from "@/app/components/store/StoreItem";
 import { useSearchParams } from "next/navigation";
 
-export default function ProductsFilter({ lang, products, categories }) {
+export function ProductsFilter({ lang, products, categories }) {
 
     const query = useSearchParams()?.get('category');
 
@@ -24,13 +24,13 @@ export default function ProductsFilter({ lang, products, categories }) {
                     "@type": "ListItem",
                     position: 1,
                     name: "Home",
-                    item: `https://thelongitudebrand.com/${lang}`,
+                    item: `https://www.thelongitudebrand.com/${lang}`,
                 },
                 {
                     "@type": "ListItem",
                     position: 2,
                     name: "Shop",
-                    item: `https://thelongitudebrand.com/${lang}/shop`,
+                    item: `https://www.thelongitudebrand.com/${lang}/shop`,
                 },
             ],
         },

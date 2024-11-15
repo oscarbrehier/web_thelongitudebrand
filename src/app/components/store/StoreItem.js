@@ -8,7 +8,7 @@ export function StoreItem({ data: content, lang }) {
         name: content.title,
         description: content.description,
         image: Array.isArray(content.cover) ? content.cover : [content.cover],
-        url: `https://thelongitudebrand.com/${lang}/shop/${content.slug.current}`,
+        url: `https://www.thelongitudebrand.com/${lang}/shop/${content.slug.current}`,
         brand: {
             "@type": "Brand",
             name: "Longitude",

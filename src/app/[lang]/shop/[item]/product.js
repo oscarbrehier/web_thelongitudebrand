@@ -5,11 +5,11 @@ import { useModalContext } from "@/lib/context/ModalContext";
 import addToWishlist from "@/lib/firestore/wishlist/add";
 import removeFromWishlist from "@/lib/firestore/wishlist/remove";
 import isProductInWishlist from "@/lib/firestore/wishlist/isProductInWishlist";
-import SanityImage from "./ui/SanityImage";
+import SanityImage from "@/app/components/ui/SanityImage";
 import { useCartStore } from "@/lib/stores/useCartStore";
-import Button from "./ui/Button";
+import Button from "@/app/components/ui/Button";
 
-export default function Product({
+export function Product({
     lang,
     content,
     auth,

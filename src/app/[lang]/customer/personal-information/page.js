@@ -25,7 +25,7 @@ export default async function Page({
 
                 <h1 className="capitalize mx-2 my-1 text-lg">personal information</h1>
 
-                <Content content={content} lang={lang} />
+                {content && <Content content={content} lang={lang} />}
 
             </div>
         </div>

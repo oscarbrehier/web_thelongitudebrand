@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from "react";
-import Newsletter from "../Newsletter";
+import Newsletter from "./Newsletter";
 import { useTranslation } from "@/app/i18n/client";
 import LanguageSelector from "../LanguageSelector";
 

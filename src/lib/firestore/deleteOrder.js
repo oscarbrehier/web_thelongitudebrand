@@ -1,5 +1,4 @@
 "use server"
-
 import { adminFirestore } from "../firebase/admin";
 
 export default async function deleteOrder(orderId) {
@@ -18,7 +17,10 @@ export default async function deleteOrder(orderId) {
 
         console.error("Failed to delete order with ID:", orderId);
         console.error(err);
-        throw new Error("Failed to delete order.");
+        
+        return {
+            errors: "order-delete/failed",
+        };
 
     };
 

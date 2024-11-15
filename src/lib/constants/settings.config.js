@@ -20,4 +20,4 @@ export const guestRoutes = [
 
 export const origin = isDev
     ? "http://localhost:3000"
-    : "https://thelongitudebrand.com";
+    : "https://www.thelongitudebrand.com";

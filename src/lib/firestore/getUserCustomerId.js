@@ -1,4 +1,5 @@
-import getUserFromUid from "../authentication/getUserFromUid";
+import { doc, getDoc } from "@firebase/firestore";
+import { database } from "../firebase/client";
 
 export default async function getUserCustomerId(userId) {
 
@@ -6,8 +7,8 @@ export default async function getUserCustomerId(userId) {
 
     try {
 
-        const user = await getUserFromUid(userId);
-        return user ? user.stripeCustomerId : null;
+        const user = await getDoc(doc(database, "users", userId));
+        return user.exists ? user.data().stripeCustomerId : null;
 
     } catch (err) {
 

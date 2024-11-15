@@ -38,7 +38,7 @@ export async function getCurrentUser() {
 
 };
 
-async function getSession() {
+export async function getSession() {
 
     try {
 

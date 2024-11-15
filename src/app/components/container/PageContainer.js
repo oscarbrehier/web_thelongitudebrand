@@ -26,30 +26,6 @@ export const PageContainer = ({ children, className, lang }) => {
 
         </div>
 
-        // <div className="h-auto w-full relative">
-
-        //     <ClientModals>
-
-        //         <div className={`h-auto w-full z-10`}>
-
-        //             <header className="z-10 h-auto w-full px-4 fixed top-4">
-        //                 <NavigationBar lang={lang} />
-        //             </header>
-
-        //             <main className={`z-20 px-4 ${" " + className}`}>
-        //                 {children}
-        //             </main>
-
-        //             <footer className="px-4 mt-10">
-        //                 <Footer lang={lang} />
-        //             </footer>
-
-        //         </div>
-
-        //     </ClientModals>
-
-        // </div>
-
     );
 
 };

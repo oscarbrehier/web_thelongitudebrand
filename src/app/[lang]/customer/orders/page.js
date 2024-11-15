@@ -1,5 +1,5 @@
-import OrderTableRow from "@/app/components/OrderTableRow";
 import getOrders from "@/lib/firestore/getOrders";
+import TableRow from "./table-row";
 
 export default async function Page() {
 
@@ -41,7 +41,7 @@ export default async function Page() {
 
                                 {
                                     orders.map((order, index) => (
-                                        <OrderTableRow key={index} id={order.id} order={order.data()} />
+                                        <TableRow key={index} id={order.id} order={order.data()} />
                                     ))
                                 }
 

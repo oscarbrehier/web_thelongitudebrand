@@ -23,6 +23,8 @@
     "accept-language": "^3.0.20",
     "child-process": "^1.0.2",
     "cookies-next": "^4.3.0",
+    "data-fns": "^1.1.0",
+    "date-fns": "^4.1.0",
     "firebase": "^10.14.1",
     "firebase-admin": "^12.6.0",
     "gsap": "^3.12.5",

@@ -17,13 +17,26 @@ export default async function checkout(user = null, items, total) {
         const customerId = user ? await getUserCustomerId(user?.uid) : null;
         const orderId = generateOrderId(user?.uid || uuid());
 
-        const { url } = await createCheckoutSession({
+        const checkoutSession = await createCheckoutSession({
             stripeCart: cart,
-            cartItems: items,
-            customerId, 
-            orderId, 
+            customerId,
+            orderId,
             userId: user?.uid || null
         });
+
+        if (checkoutSession?.errors) throw new Error("Checkout creation failed. Please try again later.");
+
+        const { url, id: stripeCheckoutId } = checkoutSession;
+
+        const order = await createOrder(
+            orderId,
+            user?.uid || null,
+            items,
+            total,
+            stripeCheckoutId || null,
+        );
+
+        if (order?.errors) throw new Error("Checkout creation failed. Please try again later.");
 
         return url;
 

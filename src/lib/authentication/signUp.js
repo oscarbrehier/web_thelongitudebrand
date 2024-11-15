@@ -23,6 +23,8 @@ export default async function signUp(form) {
         const firebaseUser = await createUserWithEmailAndPassword(auth, email, password);
         const stripeCustomer = await createCustomer(`${firstName} ${lastName}`, email);
 
+        if (stripeCustomer?.errors) throw new Error("Failed to create customer.");
+
         const userUid = firebaseUser.user.uid;
 
         await createUser(userUid, {

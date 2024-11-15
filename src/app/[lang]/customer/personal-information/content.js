@@ -1,8 +1,7 @@
 'use client';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import InputWithLabel from "@/app/components/ui/InputWithLabel";
 import Button from "@/app/components/ui/Button";
-import { IoCheckmark } from "react-icons/io5";
 import { useAuthContext } from "@/lib/context/AuthContext";
 import updateUserProfile from "@/lib/authentication/updateUserProfile";
 import Hyperlink from '@/app/components/ui/Hyperlink';
@@ -27,8 +26,8 @@ export default function Content({ content, lang }) {
             firstName: null,
             lastName: null
         }
-    })
-    const [inputs, setInputs] = useState({ ...content });
+    });
+
     const [loading, setLoading] = useState(false);
     const [isModified, setIsModified] = useState(false);
 
@@ -36,35 +35,22 @@ export default function Content({ content, lang }) {
 
     const handleInputChange = (e) => {
 
-        const { name, value, type, checked } = e.target;
-        const newValue = type === "checkbox" ? checked : value;
-
-        setInputs(prev => ({
-            ...prev,
-            [name]: newValue,
-        }));
-
         if (!isModified) setIsModified(true);
 
     };
 
-    const handleSubmitForm = async () => {
-
-        setLoading(true); 
-        setForm(prev => ({ ...prev, error: null, inputErrors: { firstName: "", lastName: "" } }));
+    const validateForm = (data) => {
 
         try {
 
-            formSchema.parse(inputs);
+            formSchema.parse(data);
+            return true;
 
-            await updateUserProfile(user.uid, inputs);
-            setIsModified(false);
+        } catch (err) {
 
-        } catch (error) {
+            if (err.errors) {
 
-            if (error.errors) {
-
-                const errors = error.errors.reduce((acc, curr) => {
+                const errors = err.errors.reduce((acc, curr) => {
 
                     acc[curr.path[0]] = curr.message;
                     return acc;
@@ -80,12 +66,65 @@ export default function Content({ content, lang }) {
                     }
                 }));
 
+            };
+
+            return false;
+
+        };
+
+    };
+
+    const getModifiedInputs = (data) => {
+
+        return Object.keys(data).reduce((acc, key) => {
+            if (data[key] !== content[key]) {
+                acc[key] = data[key];
+            }
+            return acc;
+        }, {});
+
+    };
+
+    const handleSubmitForm = async (event) => {
+
+        event.preventDefault();
+
+        setLoading(true);
+        setForm(prev => ({ ...prev, error: null, inputErrors: { firstName: "", lastName: "" } }));
+
+        const formData = new FormData(event.target);
+        const data = Object.fromEntries(formData.entries());
+
+        if (!validateForm(data)) {
+            setLoading(false);
+            return;
+        };
+
+        const modifiedInputs = getModifiedInputs(data);
+
+        if (Object.keys(modifiedInputs).length === 0) {
+            setLoading(false);
+            return;
+        };
+
+        try {
+
+            const result = await updateUserProfile(user.uid, modifiedInputs);
+
+            if (result?.errors) {
+
+                setForm(prev => ({ ...prev, error: "An error occured. Please try again or come back later." }));
+                Sentry.captureException(result.errors);
                 return;
 
             };
 
-            setForm(prev => ({ ...prev, error: "An error occured. Please try again or come back later." }));
-            Sentry.captureException(error);
+            setIsModified(false);
+
+        } catch (err) {
+            console.error(err);
+            setForm(prev => ({ ...prev, error: "An unexpected error occurred." }));
+            Sentry.captureException(err);
 
         } finally {
 
@@ -99,13 +138,13 @@ export default function Content({ content, lang }) {
 
         <>
 
-            <div className="space-y-8">
+            <form onSubmit={handleSubmitForm} className="space-y-8">
 
                 <div className="space-y-2">
 
                     <InputWithLabel
                         title='first name'
-                        value={inputs.firstName}
+                        value={content.firstName}
                         type='text'
                         onChange={(e) => handleInputChange(e)}
                         error={form.inputErrors?.firstName}
@@ -113,7 +152,7 @@ export default function Content({ content, lang }) {
 
                     <InputWithLabel
                         title='last name'
-                        value={inputs.lastName}
+                        value={content.lastName}
                         type='text'
                         onChange={(e) => handleInputChange(e)}
                         error={form.inputErrors?.lastName}
@@ -121,7 +160,7 @@ export default function Content({ content, lang }) {
 
                     <InputWithLabel
                         title='email'
-                        value={inputs.email}
+                        value={content.email}
                         type='email'
                         disabled
                     />
@@ -130,7 +169,7 @@ export default function Content({ content, lang }) {
                         title='date of birth'
                         type='date'
                         optional={true}
-                        value={inputs.dateOfBirth}
+                        value={content.dateOfBirth}
                         onChange={(e) => handleInputChange(e)}
                     />
 
@@ -150,7 +189,7 @@ export default function Content({ content, lang }) {
                                 name="newsletterSubscriber"
                                 onChange={handleInputChange}
                                 size="6"
-                                checked={inputs.newsletterSubscriber}
+                                checked={content.newsletterSubscriber}
                             />
 
                             <div className="text-xs">
@@ -176,7 +215,7 @@ export default function Content({ content, lang }) {
                     <Button
                         title='save'
                         size='w-full h-14'
-                        onClick={handleSubmitForm}
+                        type="submit"
                         loading={loading}
                         disabled={!isModified}
                     />
@@ -190,7 +229,7 @@ export default function Content({ content, lang }) {
 
                 </div>
 
-            </div>
+            </form>
 
         </>
 

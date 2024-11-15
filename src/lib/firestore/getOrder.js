@@ -1,31 +1,32 @@
-import { doc, getDoc } from "@firebase/firestore";
-import { database } from "../firebase/client";
-import getCheckoutData from "../stripe/getCheckoutData";
+"use server"
+import { adminFirestore } from "../firebase/admin";
+import formatTimestamp from "./formatTimestamp";
 
 export default async function getOrder(orderId) {
 
+    if (!orderId) throw new Error("Invalid parameter provided to getOrder");
+
+    const docRef = adminFirestore
+        .collection("orders")
+        .doc(orderId);
+
     try {
 
-        const ref = doc(database, "s", orderId);
-        const res = await getDoc(ref);
+        const res = await docRef.get();
 
-        if (res.exists) {
+        if (!res.exists) return null;
 
-            const stripeSession = await getCheckoutData(res.data().stripeCheckoutId);
-
-            return {
-                order: res.data(),
-                checkout: stripeSession
-            };
-
-        };
-
-        return null;
+        return {
+            ...res.data(),
+            at: formatTimestamp(res.data().at, "MMMM d, yyyy h:mm a")
+        }
 
     } catch (err) {
 
         console.error(err);
-        throw new Error("ERROR_FETCH_ORDER");
+        return {
+            error: "order-fetch/failed",
+        };
 
     };
 

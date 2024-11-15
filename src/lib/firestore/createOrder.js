@@ -26,7 +26,9 @@ export default async function createOrder(orderId, userId, items, total, stripeC
     } catch (err) {
 
         console.error(err);
-        throw new Error("Failed to create order. Please try again later");
+        return {
+            errors: "create-order/failed",
+        };
 
     };
 

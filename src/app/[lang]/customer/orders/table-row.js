@@ -1,6 +1,7 @@
+import orderStatus from "@/lib/constants/orderStatus";
 import Link from "next/link";
 
-export default function OrderTableRow({ id, order, ...props }) {
+export default function TableRow({ id, order, ...props }) {
 
     return (
 
@@ -34,13 +35,12 @@ export default function OrderTableRow({ id, order, ...props }) {
 
             <div className="flex justify-between">
 
-                <p className="capitalize bg-neon-green text-sm md:block hidden">delivered</p>
-
-                {/* <p className="text-sm md:block hidden">view</p> */}
+                <p className={`capitalize text-sm md:block hidden`}>{orderStatus[order.status].label}</p>
 
             </div>
 
         </Link>
-    )
 
-}
+    );
+
+};

@@ -1,29 +1,8 @@
-const getUserTimezone = () => {
+import { format } from "date-fns";
 
-    if (typeof window !== 'undefined') {
-        return Intl.DateTimeFormat().resolvedOptions().timeZone;
-    };
+export default function formatTimestamp(timestamp, formatStr) {
 
-    return 'UTC';
-
-};
-
-export default function formatTimestamp(timestamp) {
-
-    const date = timestamp.toDate();
-    const timezone = getUserTimezone();
-
-    const options = {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric',
-        hour12: true,
-        timezone
-    };
-
-    return date.toLocaleString('en-US', options) + ' UTC' + date.getTimezoneOffset() / -60;
+    const date = new Date(timestamp._seconds * 1000 + timestamp._nanoseconds / 1e6);
+    return format(date, formatStr);
 
 };

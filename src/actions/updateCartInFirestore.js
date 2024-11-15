@@ -16,7 +16,9 @@ export default async function updateCartInFirestore(items, userId) {
     } catch (err) {
 
         console.log(err);
-        throw new Error("ERROR_UPDATE_CART");
+        return {
+            errors: "cart-update/failed"
+        };
 
     };
 

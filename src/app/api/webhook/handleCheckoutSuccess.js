@@ -1,5 +1,4 @@
 import * as Sentry from "@sentry/nextjs";
-import createOrder from "@/lib/firestore/createOrder";
 import { adminFirestore } from "@/lib/firebase/admin";
 import admin from "firebase-admin";
 
@@ -20,7 +19,7 @@ async function deleteUserCart(userId) {
     } catch (err) {
 
         console.log("Failed to delete cart for user with ID:", userId);
-        throw(err);
+        throw (err);
 
     };
 
@@ -29,20 +28,21 @@ async function deleteUserCart(userId) {
 export default async function handleCheckoutSuccess(event) {
 
     const data = event.data.object;
-    let { id: stripeCheckoutId, amount_total: total } = data;
-    let { orderId, userId, items } = data.metadata;
+    let { orderId, userId } = data.metadata;
+
+    const orderRef = adminFirestore
+        .collection("orders")
+        .doc(orderId)
 
     try {
 
-        items = JSON.parse(items);
-
-        await createOrder(
-            orderId,
-            userId || null,
-            items,
-            total,
-            stripeCheckoutId || null
-        );
+        await orderRef
+            .update({
+                completed: true,
+                customer: {
+                    ...data.customer_details
+                }
+            });
 
         if (userId) await deleteUserCart(userId);
 

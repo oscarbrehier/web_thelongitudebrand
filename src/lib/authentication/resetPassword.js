@@ -1,4 +1,4 @@
-import { confirmPasswordReset, verifyPasswordResetCode } from "firebase/auth";
+import { verifyPasswordResetCode } from "firebase/auth";
 import { auth } from "../firebase/client";
 
 export default async function resetPassword(code, password) {

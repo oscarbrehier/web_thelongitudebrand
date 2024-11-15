@@ -1,9 +1,7 @@
 export default async function getCheckoutData(checkoutId) {
 
 	const isDev = process.env.NODE_ENV === "development";
-	const baseRoute = isDev ? "http://localhost:3000" : "https://thelongitudebrand.com";
-
-	console.log(baseRoute)
+	const baseRoute = isDev ? "http://localhost:3000" : "https://www.thelongitudebrand.com";
 
 	try {
 
@@ -19,7 +17,9 @@ export default async function getCheckoutData(checkoutId) {
 	} catch (err) {
 
 		console.error(err);
-		throw new Error("ERROR_FETCH_STRIPE_CHECKOUT");
+		return {
+			error: "checkout-fetch/failed",
+		};
 
 	};
 

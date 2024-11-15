@@ -8,10 +8,10 @@ export default async function createCheckoutSession(data) {
 	// 	throw new Error("Invalid parameters provided to createCheckoutSession");
 	// };
 
-	const { stripeCart, cartItems, customerId, orderId, userId } = data;
+	const { stripeCart, customerId, orderId, userId } = data;
 
 	const isDev = process.env.NODE_ENV === "development";
-	const origin = isDev ? "http://localhost:3000" : "https://thelongitudebrand.com";
+	const origin = isDev ? "http://localhost:3000" : "https://www.thelongitudebrand.com";
 
 	try {	
 
@@ -28,7 +28,6 @@ export default async function createCheckoutSession(data) {
 			metadata: {
 				orderId,
 				userId,
-				items: JSON.stringify(cartItems)
 			}
 		};
 
@@ -41,7 +40,9 @@ export default async function createCheckoutSession(data) {
 	} catch (err) {
 
 		console.error(err);
-		throw new Error("Failed to create a Stripe checkout session");
+		return {
+			errors: "checkout-create/failed",
+		};
 
 	};
 

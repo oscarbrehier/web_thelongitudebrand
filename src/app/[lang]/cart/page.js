@@ -60,17 +60,17 @@ export default function Page({
 
     };
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        if (params.has("checkout") && params.has("order_id")) {
+    //     if (params.has("checkout") && params.has("order_id")) {
 
-            const orderId = params.get("order_id");
-            if (user) deleteOrder(orderId);
-            router.push("/cart");
+    //         const orderId = params.get("order_id");
+    //         if (user) deleteOrder(orderId);
+    //         router.push("/cart");
 
-        };
+    //     };
 
-    }, [params]);
+    // }, [params]);
 
     if (!cart || cart.length === 0) {
 

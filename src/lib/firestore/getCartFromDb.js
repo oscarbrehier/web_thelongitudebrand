@@ -1,18 +1,20 @@
 import { doc, getDoc } from "@firebase/firestore";
 import { database } from "../firebase/client";
+import * as Sentry from "@sentry/nextjs";
 
 export default async function getCartFromDb(userId) {
 
     const ref = doc(database, 'carts', userId);
-    const snapshot = await getDoc(ref);
+    
+    try {
 
-    if (snapshot.exists()) {
+        const snapshot = await getDoc(ref);
+        return snapshot.exists ? snapshot.data() : null;
 
-        return snapshot.data();
+    } catch (err) {
 
-    } else {
-
-        return null;
+        Sentry.captureException(err, { extra: { userId }});
+        throw new Error("Failed to fetch user's cart from database");
 
     };
 

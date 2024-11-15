@@ -1,4 +1,4 @@
-const baseUrl = "https://thelongitudebrand.com";
+const baseUrl = "https://www.thelongitudebrand.com";
 
 export const metadata = {
 	metadataBase: new URL(`${baseUrl}/shop`),

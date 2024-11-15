@@ -6,7 +6,7 @@ import { languages, fallbackLng } from "./i18n/settings";
 import { headers } from "next/headers";
 import Head from "next/head";
 
-const baseUrl = "https://thelongitudebrand.com";
+const baseUrl = "https://www.thelongitudebrand.com";
 
 export const metadata = {
 
@@ -50,8 +50,8 @@ export default async function RootLayout({
 		"@context": "https://schema.org",
 		"@type": "Organization",
 		name: "Longitude",
-		url: "https://thelongitudebrand.com",
-		logo: "https://thelongitudebrand.com/logo.png",
+		url: baseUrl,
+		logo: `${baseUrl}/logo.png`,
 	})
 
 	return (

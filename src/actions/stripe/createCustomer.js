@@ -14,7 +14,10 @@ export default async function createCustomer(name, email) {
 
     } catch (err) {
 
-        throw err;
+        console.error(err);
+        return {
+            errors: "stripe-create-customer/failed"
+        };
 
     };
 

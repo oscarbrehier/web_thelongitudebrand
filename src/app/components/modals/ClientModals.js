@@ -1,14 +1,15 @@
 "use client"
 import { useModalContext } from "@/lib/context/ModalContext";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
+import AddedToCart from "./AddedToCart";
 
 const modals = {
     sign_in: dynamic(() => import("./SignIn")),
     sign_up: dynamic(() => import("./SignUp")),
     newsletter: dynamic(() => import("./Newsletter")),
-    added_cart: dynamic(() => import("./AddedToCart")),
+    added_cart: AddedToCart,
 };
 
 export default function ClientModals({ children }) {

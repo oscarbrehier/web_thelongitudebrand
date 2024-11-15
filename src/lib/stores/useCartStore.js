@@ -1,7 +1,7 @@
 import { persist } from "zustand/middleware";
 import { create } from "zustand";
 import getCartFromDb from "../firestore/getCartFromDb";
-import updateCartInFirestore from "@/actions/addToCart";
+import updateCartInFirestore from "@/actions/updateCartInFirestore";
 
 const updateError = () => console.error('Failed to update cart in Firebase.');
 
@@ -18,15 +18,9 @@ export const useCartStore = create(
 
                 if (user && database) {
 
-                    try {
+                    const result = await updateCartInFirestore([], user.uid);
 
-                        await updateCartInFirestore([], user.uid);
-
-                    } catch (err) {
-
-                        updateError();
-
-                    };
+                    if (result?.errors) updateError();
 
                 };
 
@@ -41,12 +35,13 @@ export const useCartStore = create(
                 if (user) {
 
                     try {
+
                         const { items } = await getCartFromDb(user);
                         set({ cart: items.length !== 0 ? items : [] });
 
                     } catch (err) {
 
-                        console.error('Failed to fetch cart from Firebase');
+                        throw err;
 
                     };
                 };
@@ -75,11 +70,8 @@ export const useCartStore = create(
 
                 if (user) {
 
-                    try {
-                        await updateCartInFirestore(cart, user);
-                    } catch (err) {
-                        updateError();
-                    };
+                    const result = await updateCartInFirestore(cart, user);
+                    if (result?.errors) updateError();
 
                 };
 
@@ -97,11 +89,8 @@ export const useCartStore = create(
 
                 if (user) {
 
-                    try {
-                        await updateCartInFirestore(updatedCart, user.uid);
-                    } catch (err) {
-                        updateError();
-                    };
+                    const result = await updateCartInFirestore(cart, user);
+                    if (result?.errors) updateError();
 
                 };
 
@@ -120,18 +109,15 @@ export const useCartStore = create(
                 } else if (direction === 'down' && cart[itemIndex].quantity > 1) {
                     cart[itemIndex].quantity -= 1;
                 };
-                
+
                 set({ cart });
                 get().calculateTotal();
 
                 if (user) {
 
-                    try {
-                        await updateCartInFirestore(cart, user.uid);
-                    } catch (err) {
-                        updateError();
-                    };
-
+                    const result = await updateCartInFirestore(cart, user);
+                    if (result?.errors) updateError();
+                    
                 };
 
 
@@ -145,7 +131,7 @@ export const useCartStore = create(
                 );
 
                 set({ total });
-                
+
             },
         }),
         {
