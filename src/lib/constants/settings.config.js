@@ -10,6 +10,7 @@ export const storageKeys = {
     SESSION_ID: "__session_id",
     ANALYTICS_SESSION_ID: "__analytics_session_id",
     ANALYTICS_LAST_ACTIVE: "__analytics_last_active",
+    ANALYTICS_LAST_LOG_ID: "__analytics_last_log_id",
     AUTH_TOKEN: "__auth_token",
     LANGUAGE: "i18next"
 };

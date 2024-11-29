@@ -30,6 +30,15 @@ export class Analytics {
                         ...options.headers
                     },
                 });
+
+                if (response.status === 429) {
+
+                    return {
+                        success: false, 
+                        error: "Rate Limit"
+                    };
+
+                };
         
                 return {
                     success: !!response.ok,
@@ -59,7 +68,7 @@ export class Analytics {
 
         try {
 
-            console.log(`Capturing event ${eventType} with payload`, payload);
+            // console.log(`Capturing event ${eventType} with payload`, payload);
 
             const result = await this.makeRequest("/events", {
                 method: "POST",

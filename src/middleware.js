@@ -7,6 +7,7 @@ import { authRoutes, guestRoutes, storageKeys } from './lib/constants/settings.c
 import { v4 as uuid } from 'uuid';
 import { RequestCookies, ResponseCookies } from 'next/dist/compiled/@edge-runtime/cookies';
 import { Analytics } from './lib/analytics/Analytics';
+import { captureException } from '@sentry/nextjs';
 
 acceptLanguage.languages(languages);
 
@@ -16,6 +17,21 @@ const analytics = new Analytics({
 });
 
 const isDev = (process.env.NODE_ENV || "production") === "development";
+
+// Helper function to hash the current path
+async function hashPath(path) {
+
+    const encoder = new TextEncoder();
+    const data = encoder.encode(path);
+
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer)); // Convert ArrayBuffer to byte array
+
+    const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+
+    return hashHex;
+
+};
 
 // Helper function to check static assets or special paths
 function isStaticPath(pathname) {
@@ -64,14 +80,14 @@ function handleLanguageRedirect(request, pathname, lng) {
 function manageAnalyticsCookies(cookieStore, response) {
 
     let analyticsSessionId = cookieStore.get(storageKeys.ANALYTICS_SESSION_ID)?.value;
-    
+
     const lastActive = parseInt(cookieStore.get(storageKeys.ANALYTICS_LAST_ACTIVE)?.value, 10);
     const now = Date.now();
-    
+
     const sessionTimeout = 10 * 60 * 1000;
 
     if (!analyticsSessionId || !lastActive || now - lastActive > sessionTimeout) {
-        
+
         analyticsSessionId = uuid();
         response.cookies.set(storageKeys.ANALYTICS_SESSION_ID, analyticsSessionId);
 
@@ -94,16 +110,19 @@ function manageSessionCookies(cookieStore, response) {
 };
 
 // User route tracking function for analytics
-async function handleAnalyticsRouteTracking(data) {
-
-    // if (isDev) return;
+async function handleAnalyticsRouteTracking(data, request, headers) {
 
     await analytics.captureEventServerSide("page view", {
         distinctId: data.sessionId,
-        ...data
+        propreties: {
+            "client-ip": headers.get("x-real-ip") || null
+        },
+        ...data,
     });
 
 };
+
+
 
 // Middleware function
 export async function middleware(request) {
@@ -120,36 +139,10 @@ export async function middleware(request) {
     response.headers.set('x-pathname', pathname || 'home');
     response.headers.set('x-user-agent', userAgents);
 
+    console.log("Navigation to", pathname);
+
     // Skip static paths
     if (isStaticPath(fullPathname)) {
-        return response;
-    };
-
-    // Redirect locked paths
-    if (pathname.startsWith('/locked')) {
-        return NextResponse.redirect(new URL('/shop', request.url));
-    };
-
-    // Resolve language
-    const lng = resolveLanguage(cookieStore, headersList, response);
-    response.headers.set('x-language', lng);
-
-    // Handle language prefix redirects
-    const langRedirect = handleLanguageRedirect(request, pathname, lng);
-    if (langRedirect) return langRedirect;
-
-    // Referer-based language updates
-    const referer = headersList.get('referer');
-
-    if (referer) {
-
-        const refererLng = languages.find((l) => new URL(referer).pathname.startsWith(`/${l}`));
-        if (refererLng) response.cookies.set(cookieName, refererLng);
-
-    };
-
-    // Skip specific routes
-    if (pathname.startsWith('/shop') || pathname.startsWith('/password')) {
         return response;
     };
 
@@ -187,26 +180,63 @@ export async function middleware(request) {
     // Manage analytics
     const analyticsSessionId = manageAnalyticsCookies(cookieStore, response);
 
+    try {
+
+        await handleAnalyticsRouteTracking({
+            sessionId: analyticsSessionId,
+            referer: headersList.get("referer"),
+            userAgent: userAgents.ua,
+            path: pathname,
+            user: {
+                id: userId
+            }
+        }, request, headersList);
+
+    } catch (err) {
+
+        console.log(err);
+        captureException(err);
+
+    };
+
+    // Redirect locked paths
+    if (pathname.startsWith('/locked')) {
+        return NextResponse.redirect(new URL('/shop', request.url));
+    };
+
+    // Resolve language
+    const lng = resolveLanguage(cookieStore, headersList, response);
+    response.headers.set('x-language', lng);
+
+    // Handle language prefix redirects
+    const langRedirect = handleLanguageRedirect(request, pathname, lng);
+    if (langRedirect) return langRedirect;
+
+    // Referer-based language updates
+    const referer = headersList.get('referer');
+
+    if (referer) {
+
+        const refererLng = languages.find((l) => new URL(referer).pathname.startsWith(`/${l}`));
+        if (refererLng) response.cookies.set(cookieName, refererLng);
+
+    };
+
+    // Skip specific routes
+    if (pathname.startsWith('/shop') || pathname.startsWith('/password')) {
+        return response;
+    };
+
     // Manage session
     manageSessionCookies(cookieStore, response);
 
     applySetCookie(request, response);
 
-    await handleAnalyticsRouteTracking({
-        sessionId: analyticsSessionId, 
-        referer: headersList.get("referer"),
-        userAgent: userAgents.ua,
-        path: pathname,
-        user: {
-            id: userId
-        }
-    });
-
     return response;
 }
 
 export const config = {
-    matcher: '/((?!api|_next/static|_next/image|.*\\.png$|password).*)',
+    matcher: '/((?!api|_next/static|_next/image|.*\\.png$|.*\\.ico$|password).*)',
 };
 
 
