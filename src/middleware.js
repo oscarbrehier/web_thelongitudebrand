@@ -1,5 +1,5 @@
 import { NextResponse, userAgent } from 'next/server';
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import acceptLanguage from 'accept-language';
 import { fallbackLng, languages, cookieName } from './app/i18n/settings';
 import verifyFirebaseSessionJwt from './lib/authentication/verifyFirebaseJwt';
@@ -111,6 +111,8 @@ function manageSessionCookies(cookieStore, response) {
 
 // User route tracking function for analytics
 async function handleAnalyticsRouteTracking(data, request, headers) {
+
+    if (headers?.has("next-router-prefetch") || headers?.has("prefetch")) return;
 
     await analytics.captureEventServerSide("page view", {
         distinctId: data.sessionId,
