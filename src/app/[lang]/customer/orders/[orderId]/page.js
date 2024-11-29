@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic";
 import getOrderDetails from "@/lib/firestore/getOrderDetails";
 import { CarrierInfoCard } from "./card-carrier-info";
 import { TimelineCard } from "./card-timeline";
@@ -6,16 +7,20 @@ import { ItemsSection } from "./section-items";
 import { DownloadReceiptButton } from "./button-download-receipt";
 import catchError from "@/lib/catchErrors";
 import orderStatus from "@/lib/constants/orderStatus";
+import { FallbackContent } from "./fallback-content";
+import { getCurrentUser } from "@/lib/authentication/sessionHelpers";
 
 export default async function Page({ params: { orderId } }) {
 
-    const [error, data] = await catchError(getOrderDetails(orderId));
+    const user = await getCurrentUser();
+    const data = await getOrderDetails(orderId, user?.uid);
 
-    if (error) return;
+    if (data?.error || !data) return <FallbackContent />;
 
     const { order, orderProcess, checkout } = data;
- 
-    return data && (
+    if (!order || !orderProcess || !checkout) return <FallbackContent />;
+
+    return (
 
         <div className="h-auto w-full mt-16 sm:space-y-8 space-y-12">
 
@@ -25,7 +30,7 @@ export default async function Page({ params: { orderId } }) {
 
                     <div>
                         <p className="text-xs text-neutral-700 capitalize">order ID</p>
-                        <p className="md:text-xl text-2xl">#{order.orderId}</p>
+                        <p className="md:text-xl text-2xl">#{orderId}</p>
                     </div>
 
                     <p>
@@ -104,8 +109,15 @@ export default async function Page({ params: { orderId } }) {
                 <div className="h-auto w-full grid lg:grid-cols-3 md:grid-cols-2 gap-2">
 
                     <TimelineCard data={orderProcess.timeline} />
-                    <CarrierInfoCard data={orderProcess.shipment} />
-                    <DeliveryInfoCard data={orderProcess.shipment} />
+
+                    {
+                        order.status >= 2 && (
+                            <>
+                                <CarrierInfoCard data={orderProcess.shipment} />
+                                <DeliveryInfoCard data={orderProcess.shipment} />
+                            </>
+                        )
+                    }
 
                 </div>
 

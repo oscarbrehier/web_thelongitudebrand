@@ -1,6 +1,6 @@
 import Hyperlink from "./ui/Hyperlink"
 
-export default function NoContentLayout({
+export default function MessageWithAction({
     title,
     text,
     linkTitle,

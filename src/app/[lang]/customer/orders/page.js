@@ -1,9 +1,11 @@
 import getOrders from "@/lib/firestore/getOrders";
 import TableRow from "./table-row";
+import { getCurrentUser } from "@/lib/authentication/sessionHelpers";
 
 export default async function Page() {
 
     const orders = await getOrders();
+    const currentUser = await getCurrentUser();
 
     return (
 

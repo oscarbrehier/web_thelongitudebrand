@@ -45,8 +45,7 @@ export default function SignInModal() {
             await signIn(data.email, data.password);
             
             closeModal();
-            router.push("/customer/personal-information");
-
+            
         } catch (error) {
 
             if (error.errors) {

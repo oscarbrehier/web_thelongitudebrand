@@ -5,24 +5,36 @@ import { storageKeys } from "@/lib/constants/settings.config";
 
 export async function GET() {
 
-    const sessionCookie = cookies().get(storageKeys.SESSION)?.value;
+    try {
 
-    if (!sessionCookie) {
+        const sessionCookie = cookies().get(storageKeys.SESSION)?.value;
 
-        return NextResponse.json(
-            { success: false, error: "Session not found." },
-            { status: 400 }
-        );
+        if (!sessionCookie) {
+
+            return NextResponse.json(
+                { success: false, error: "Session not found." },
+                { status: 400 }
+            );
+
+        };
+
+        cookies().delete(storageKeys.SESSION);
+        await revokeAllSessions(sessionCookie);
+
+        return NextResponse.json({
+            success: true,
+            data: "Signed out.",
+        });
+
+    } catch (err) {
+
+        return NextResponse.json({
+            success: false,
+            ok: false
+        }, {
+            status: 500
+        });
 
     };
-
-    cookies().delete(storageKeys.SESSION);
-
-    await revokeAllSessions(sessionCookie);
-
-    return NextResponse.json({
-        success: true,
-        data: "Signed out.",
-    });
 
 };

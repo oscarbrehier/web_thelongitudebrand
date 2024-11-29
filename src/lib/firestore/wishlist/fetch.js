@@ -1,19 +1,25 @@
-import { database } from "@/lib/firebase/client";
-import { doc, getDoc } from "@firebase/firestore";
+"use server"
 
-export default async function fetchUserWishlist(userId) {
+import { adminFirestore } from "@/lib/firebase/admin";
+import { captureException } from "@sentry/nextjs";
 
-    const ref = doc(database, "wishlists", userId);
+export async function wishlistFetch(userId) {
+
+    const ref = adminFirestore
+        .collection("wishlists")
+        .doc(userId);
 
     try {
 
-        const wishlist = await getDoc(ref);
-        return wishlist.exists() ? wishlist.data().items : null;
+        const doc = await ref.get();
+
+        return doc.exists ? doc.data().items : null;
 
     } catch (err) {
 
-        console.log(err);
-        return null;
+        captureException(err);
+
+        return "wishlist_fetch_failed";
 
     };
 

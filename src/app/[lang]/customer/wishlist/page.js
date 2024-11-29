@@ -1,30 +1,29 @@
-import { adminFirestore } from "@/lib/firebase/admin";
-import { getProductById } from "@/lib/sanity/getProduct";
+import { getProductBySlug } from "@/lib/sanity/getProduct";
 import { StoreItem } from "@/app/components/store/StoreItem";
 import { getCurrentUser } from "@/lib/authentication/sessionHelpers";
 import Hyperlink from "@/app/components/ui/Hyperlink";
+import { wishlistFetch } from "@/lib/firestore/wishlist";
+import catchError from "@/lib/catchErrors";
 
 export default async function Page() {
 
-    let data = null;
+    let wishlist = null;
 
     const user = await getCurrentUser();
     if (!user) return;
 
-    const ref = adminFirestore.collection("wishlists").doc(user.uid);
-    const doc = await ref.get();
+    const [error, wishlistItems] = await catchError(wishlistFetch(user?.uid));
+
+    if (wishlistItems) {
 
 
-    if (doc.exists) {
+        wishlist = [];
 
-        data = [];
+        wishlist = await Promise.all(
 
-        const productsId = doc.data().items;
-        data = await Promise.all(
+            wishlistItems.map(async (productSlug) => {
 
-            productsId.map(async (productId) => {
-
-                const res = await getProductById(productId);
+                const res = await getProductBySlug(productSlug);
                 return res;
 
             })
@@ -38,7 +37,7 @@ export default async function Page() {
 
         <>
             {
-                data ? (
+                wishlist ? (
 
                     <div className="mt-16">
 
@@ -46,7 +45,7 @@ export default async function Page() {
 
                         <div className="h-auto w-full grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-2">
 
-                            {data && data.map((item, index) => (
+                            {wishlist && wishlist.map((item, index) => (
                                 <StoreItem key={index} data={item} />
                             ))}
 

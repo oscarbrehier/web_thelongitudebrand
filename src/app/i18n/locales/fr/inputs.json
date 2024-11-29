@@ -1,0 +1,11 @@
+{
+    "password_change": "Modifier votre mot de passe",
+    "password_new": "Votre nouveau mot de passe",
+    "password_new_required": "Le nouveau mot de passe est requis",
+    "password_new_confirm_required": "Veuillez confirmer le nouveau mot de passe",
+    "password_new_confirm": "Confirmez le nouveau mot de passe",
+    "password_current": "Mot de passe actuel",
+    "password_current_required": "Le mot de passe actuel est requis",
+    "password_not_matching": "Les mots de passe ne correspondent pas",
+    "password_too_weak": "Le mot de passe saisi est trop faible. Choisissez un mot de passe d'au moins 6 caractères, comprenant un mélange de lettres, de chiffres et de symboles."
+}

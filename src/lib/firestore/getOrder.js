@@ -2,9 +2,7 @@
 import { adminFirestore } from "../firebase/admin";
 import formatTimestamp from "./formatTimestamp";
 
-export default async function getOrder(orderId) {
-
-    if (!orderId) throw new Error("Invalid parameter provided to getOrder");
+export default async function getOrder(orderId, userId) {
 
     const docRef = adminFirestore
         .collection("orders")
@@ -16,9 +14,19 @@ export default async function getOrder(orderId) {
 
         if (!res.exists) return null;
 
+        const data = res.data();
+
+        if (data.userId !== userId) {
+
+            return {
+                error: "order-fetch/not-found",
+            };
+
+        };
+
         return {
-            ...res.data(),
-            at: formatTimestamp(res.data().at, "MMMM d, yyyy h:mm a")
+            ...data,
+            at: formatTimestamp(data.at, "MMMM d, yyyy h:mm a")
         }
 
     } catch (err) {

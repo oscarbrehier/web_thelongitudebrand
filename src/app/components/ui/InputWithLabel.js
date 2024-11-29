@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 
 export default function InputWithLabel({
     title,
+    name = null,
     type = "text",
     value,
     onChange,
@@ -82,7 +83,7 @@ export default function InputWithLabel({
     };
 
     const labelClasses = `
-        capitalize absolute text-sm left-4 transform transition-all duration-200 ease-in-out pointer-events-none select-none
+        absolute text-sm left-4 transform transition-all duration-200 ease-in-out pointer-events-none select-none
         ${inputValue || type === "date" ? "top-1 text-xs translate-y-1" : "top-1/2 -translate-y-1/2"}
         group-focus-within:top-1 group-focus-within:text-xs group-focus-within:translate-y-1
         ${disabled ? "text-neutral-500" : ""}
@@ -109,7 +110,7 @@ export default function InputWithLabel({
                 <input
                     className={`w-full h-full outline-none bg-transparent md:text-sm text-base px-4 pt-4 pb-1 ${disabled ? "text-neutral-600" : ""} `}
                     type={type === "password" && visible ? "text" : type}
-                    name={camelize(title)}
+                    name={name || camelize(title)}
                     value={inputValue} // Bind the controlled input to inputValue
                     onChange={handleChange}
                     disabled={disabled}

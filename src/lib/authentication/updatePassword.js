@@ -2,6 +2,7 @@ import { getAuth, updatePassword as updateUserPassword } from 'firebase/auth';
 import firebase_app, { database } from '../firebase/client';
 import reauthenticateUser from './reauthenticateUser';
 import { doc, getDoc, Timestamp, updateDoc } from '@firebase/firestore';
+import setSessionCookie from './setSessionCookie';
 const auth = getAuth(firebase_app);
 
 export default async function updatePassword(currentPassword, password) {
@@ -18,28 +19,35 @@ export default async function updatePassword(currentPassword, password) {
         if (res.exists) {
 
             const lastChanged = res.data().lastPasswordUpdate;
-            const now = Timestamp.now();
-            const timeSinceLastChange = now.seconds - lastChanged.seconds;
 
-            if (lastChanged && timeSinceLastChange <= 3600) {
+            if (lastChanged) {
 
-                throw "auth/too-many-requests";
+                const now = Timestamp.now();
 
-            } else {
+                const timeSinceLastChange = now.seconds - lastChanged.seconds;
 
-                await updateUserPassword(user, password);
-                await updateDoc(ref, {
-                    lastPasswordUpdate: Timestamp.now(),
-                });
+                if (timeSinceLastChange <= 3600) {
+
+                    throw "auth/too-many-requests";
+
+                };
 
             };
+
+            await updateUserPassword(user, password);
+            await updateDoc(ref, {
+                lastPasswordUpdate: Timestamp.now(),
+            });
+
+            const newIdToken = await user.getIdToken(true);
+            await setSessionCookie(newIdToken);
 
         };
 
     } catch (err) {
 
-        console.log(err.code);
-        throw err;
+        console.log(err);
+        throw err;  
 
     };
 

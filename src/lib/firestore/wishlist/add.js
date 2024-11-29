@@ -1,36 +1,45 @@
-import { database } from "@/lib/firebase/client";
-import { arrayUnion, doc, getDoc, setDoc, Timestamp, updateDoc } from "@firebase/firestore";
+"use server"
 
-export default async function addToWishlist(productId, userId) {
+import { adminFirestore } from "@/lib/firebase/admin";
+import { setCache } from "@/lib/redis";
+import { captureException } from "@sentry/nextjs";
+import { firestore } from "firebase-admin";
 
-    const ref = doc(database, "wishlists", userId);
-    const snapshot = await getDoc(ref);
+export async function wishlistAdd(productTitle, userId) {
+
+    const ref = adminFirestore
+        .collection("wishlists")
+        .doc(userId);
 
     try {
 
-        if (snapshot.exists()) {
+        const snapshot = await ref.get();
 
-            await updateDoc(ref, {
-                items: arrayUnion(productId),
-                updatedAt: Timestamp.now(),
+        if (snapshot.exists) {
+
+            await ref.update({
+                items: firestore.FieldValue.arrayUnion(productTitle),
+                updatedAt: firestore.Timestamp.now(),
             });
 
         } else {
 
-            const createRef = doc(database, "wishlists", userId);
-
-            await setDoc(createRef, {
-                items: [
-                    productId
-                ],
-                updatedAt: Timestamp.now(),
+            await ref.set({
+                items: [productTitle],
+                updatedAt: firestore.Timestamp.now(),
             });
 
         };
 
+        await setCache(`wishlist-${productTitle}-${userId}`, true);
+
+        return [null, true];
+
     } catch (err) {
 
-        console.error(err);
+        captureException(err);
+        
+        return [true, false];
 
     };
 

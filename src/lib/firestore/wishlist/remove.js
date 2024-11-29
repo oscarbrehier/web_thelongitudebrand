@@ -1,20 +1,29 @@
-import { database } from "@/lib/firebase/client";
-import { arrayRemove, doc, Timestamp, updateDoc } from "@firebase/firestore";
+"use server"
 
-export default async function removeFromWishlist(productId, userId) {
+import { adminFirestore } from "@/lib/firebase/admin"
+import { delCache } from "@/lib/redis";
+import { firestore } from "firebase-admin";
 
-    const ref = doc(database, "wishlists", userId);
+export async function wishlistRemove(productTitle, userId) {
+
+    const ref = adminFirestore
+        .collection("wishlists")
+        .doc(userId);
 
     try {
 
-        await updateDoc(ref, {
-            items: arrayRemove(productId),
-            updatedAt: Timestamp.now(),
+        await ref.update({
+            items: firestore.FieldValue.arrayRemove(productTitle),
+            updatedAt: firestore.Timestamp.now(),
         });
+
+        await delCache(`wishlist-${productTitle}-${userId}`);
+
+        return [null, false];
 
     } catch (err) {
 
-        console.error(err);
+        return [true, true];
 
     };
 

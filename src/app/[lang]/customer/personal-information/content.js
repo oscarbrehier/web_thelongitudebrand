@@ -1,5 +1,5 @@
 'use client';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import InputWithLabel from "@/app/components/ui/InputWithLabel";
 import Button from "@/app/components/ui/Button";
 import { useAuthContext } from "@/lib/context/AuthContext";
@@ -8,42 +8,66 @@ import Hyperlink from '@/app/components/ui/Hyperlink';
 import Checkbox from "@/app/components/ui/Checkbox";
 import * as Sentry from "@sentry/nextjs";
 import { z } from "zod";
+import { useTranslation } from "@/app/i18n/client";
 
-export const formSchema = z.object({
+export const formSchema = (t) => z.object({
     firstName: z
         .string()
-        .min(1, { message: "First name is required" }),
+        .min(1, { message: t("first_name_required") }),
     lastName: z
         .string()
-        .min(1, { message: "Last name is required" }),
+        .min(1, { message: t("last_name_required") }),
 });
 
 export default function Content({ content, lang }) {
 
+    const [loading, setLoading] = useState(false);
     const [form, setForm] = useState({
         error: null,
         inputErrors: {
             firstName: null,
             lastName: null
-        }
+        },
+        firstName: null,
+        lastName: null,
+        email: null,
+        dateOfBirth: null,
+        newsletterSubscriber: null
     });
 
-    const [loading, setLoading] = useState(false);
-    const [isModified, setIsModified] = useState(false);
-
+    const { t } = useTranslation(lang, ["inputs", "customer"]);
     const { user } = useAuthContext();
+
+    useEffect(() => {
+
+        setForm(prev => ({ ...prev, ...content }));
+
+    }, [content]);
 
     const handleInputChange = (e) => {
 
-        if (!isModified) setIsModified(true);
+        const { name, value, type, checked } = e.target;
+
+        setForm((prev) => ({
+            ...prev,
+            [name]: type === "checkbox" ? checked : value,
+        }));
 
     };
+
+    const hasChanges = () => {
+
+        if (!form || !content) return false;
+        return Object.keys(content).some((key) => form[key] !== content[key]);
+
+    };
+    
 
     const validateForm = (data) => {
 
         try {
 
-            formSchema.parse(data);
+            formSchema(t).parse(data);
             return true;
 
         } catch (err) {
@@ -95,6 +119,8 @@ export default function Content({ content, lang }) {
         const formData = new FormData(event.target);
         const data = Object.fromEntries(formData.entries());
 
+        data.newsletterSubscriber = data.newsletterSubscriber === "on";
+
         if (!validateForm(data)) {
             setLoading(false);
             return;
@@ -119,9 +145,8 @@ export default function Content({ content, lang }) {
 
             };
 
-            setIsModified(false);
-
         } catch (err) {
+
             console.error(err);
             setForm(prev => ({ ...prev, error: "An unexpected error occurred." }));
             Sentry.captureException(err);
@@ -143,7 +168,8 @@ export default function Content({ content, lang }) {
                 <div className="space-y-2">
 
                     <InputWithLabel
-                        title='first name'
+                        title={t("first_name")}
+                        name="firstName"
                         value={content.firstName}
                         type='text'
                         onChange={(e) => handleInputChange(e)}
@@ -151,7 +177,8 @@ export default function Content({ content, lang }) {
                     />
 
                     <InputWithLabel
-                        title='last name'
+                        title={t("last_name")}
+                        name="lastName"
                         value={content.lastName}
                         type='text'
                         onChange={(e) => handleInputChange(e)}
@@ -159,14 +186,15 @@ export default function Content({ content, lang }) {
                     />
 
                     <InputWithLabel
-                        title='email'
+                        title={t("email")}
                         value={content.email}
                         type='email'
                         disabled
                     />
 
                     <InputWithLabel
-                        title='date of birth'
+                        title={t("birth_date")}
+                        name="dateOfBirth"
                         type='date'
                         optional={true}
                         value={content.dateOfBirth}
@@ -181,7 +209,7 @@ export default function Content({ content, lang }) {
 
                     <div className="space-y-1">
 
-                        <h2 className="">Communication Preferences</h2>
+                        <h2 className="">{t("customer:preferences_communication")}</h2>
 
                         <div className="flex space-x-2 h-auto items-center">
 
@@ -189,7 +217,7 @@ export default function Content({ content, lang }) {
                                 name="newsletterSubscriber"
                                 onChange={handleInputChange}
                                 size="6"
-                                checked={content.newsletterSubscriber}
+                                checked={form.newsletterSubscriber || false}
                             />
 
                             <div className="text-xs">
@@ -213,16 +241,16 @@ export default function Content({ content, lang }) {
                     )}
 
                     <Button
-                        title='save'
+                        title={t("save")}
                         size='w-full h-14'
                         type="submit"
                         loading={loading}
-                        disabled={!isModified}
+                        disabled={!hasChanges()}
                     />
 
                     <Hyperlink
                         to="/customer/personal-information/change-password"
-                        title='change password'
+                        title={t("customer:password_change")}
                         size='w-full h-14'
                         border={true}
                     />

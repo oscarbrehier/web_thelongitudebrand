@@ -10,7 +10,6 @@ export default async function reauthenticateUser(password) {
     try {
 
         await reauthenticateWithCredential(user, crendential);
-        console.log("user reauthenticated");
 
     } catch (err) {
 

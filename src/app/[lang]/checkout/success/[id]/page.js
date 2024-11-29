@@ -1,8 +1,7 @@
 import { getCurrentUser } from "@/lib/authentication/sessionHelpers";
 import getOrderByCheckoutId from "@/lib/firestore/getOrderByCheckoutId";
 import { notFound, redirect } from "next/navigation";
-import NoContentLayout from "@/app/components/NoContentLayout";
-
+import MessageWithAction from "@/app/components/MessageWithAction";
 
 export default async function Page({
     params: {
@@ -32,14 +31,14 @@ export default async function Page({
 
     return (
 
-        <NoContentLayout
+        <MessageWithAction
             title={`Order successfully placed`}
             text={`Your order will be processed within 24 hours during work days. We will notify you by email once your order has been shipped`}
             linkTitle={user ? "view order details" : "return to homepage"}
             link={user ? `/customer/orders/${orderId}` : "/shop"}
         >
             <p>Order ID: {orderId}</p>
-        </NoContentLayout>
+        </MessageWithAction>
 
     );
 

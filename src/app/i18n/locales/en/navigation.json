@@ -4,10 +4,16 @@
     "account": "account",
     "cart": "cart",
     "wishlist": "wishlist",
+    "orders": "orders",
+    "personal_information": "personal information",
+    "contact_us": "contact us",
+    "legal": "legal",
+    "terms_conditions": "terms & conditions",
+    "customer_service": "customer service",
+    "privacy_policy": "privacy policy",
+    "cookie_policy": "cookie policy",
     "shipping": "shipping",
     "billing": "billing",
-    "customer_service": "customer service",
-    "contact_us": "contact us",
     "help_and_assistance": "help & assistance",
     "follow_us": "follow us"
 }

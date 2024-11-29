@@ -43,7 +43,6 @@ export default async function RootLayout({
 	let lang;
 
 	const headersList = headers();
-
 	lang = headersList.has("x-language") ? headersList.get("x-languge") : fallbackLng;
 
 	const structuredData = JSON.stringify({
@@ -52,7 +51,7 @@ export default async function RootLayout({
 		name: "Longitude",
 		url: baseUrl,
 		logo: `${baseUrl}/logo.png`,
-	})
+	});
 
 	return (
 
@@ -62,17 +61,16 @@ export default async function RootLayout({
 				<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: structuredData }} />
 			</Head>
 
-
 			<AuthContextProvider>
 
-					<ModalProvider>
+				<ModalProvider>
 
 						<body className={poppins.className}>
 							{children}
 							{/* <SpeedInsights /> */}
 						</body>
 
-					</ModalProvider>
+				</ModalProvider>
 
 			</AuthContextProvider>
 

@@ -10,7 +10,9 @@ export default async function getOrders() {
 
         const snap = await adminFirestore
             .collection("orders")
-            .where("userId", "==", user.uid).get();
+            .where("userId", "==", user.uid)
+            .where("completed", "==", true)
+            .get();
 
         return snap.empty ? [] : snap.docs;
 

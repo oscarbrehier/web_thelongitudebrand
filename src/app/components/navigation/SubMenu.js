@@ -1,4 +1,5 @@
 "use client"
+import { useTranslation } from "@/app/i18n/client";
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -10,12 +11,13 @@ export default function SubMenu({
 }) {
 
     const pathname = usePathname();
+    const { t } = useTranslation(lang, "navigation");
 
     return (
 
-        <div className="w-full flex justify-between">
+        <div className="w-full flex items-start justify-between">
 
-            <div className="w-auto flex xs:flex-row flex-col xs:items-center items-start text-sm xs:space-x-4 xs:space-y-0 space-y-1 cursor-pointer">
+            <div className="w-auto flex md:flex-row flex-col md:items-center items-start text-sm md:space-x-4 md:space-y-0 space-y-1 cursor-pointer">
 
                 {
                     items && items.map((tab, index) => {
@@ -30,7 +32,8 @@ export default function SubMenu({
                                 key={index}
                                 className={`${pathname.toString().includes(`${baseRoute}/${route}`) ? 'bg-neon-green' : 'hover:bg-cream-400'}`}
                             >
-                                {title.replace(/-/g, ' ')}
+                                {/* {title.replace(/-/g, ' ')} */}
+                                {t(title)}
                             </Link>
                         )
 

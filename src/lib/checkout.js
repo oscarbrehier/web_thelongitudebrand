@@ -1,3 +1,4 @@
+"use server"
 import createCheckoutSession from "@/actions/stripe/createCheckoutSession";
 import createCart from "./stripe/createCart";
 import getUserCustomerId from "./firestore/getUserCustomerId";
@@ -21,7 +22,7 @@ export default async function checkout(user = null, items, total) {
             stripeCart: cart,
             customerId,
             orderId,
-            userId: user?.uid || null
+            userId: user?.uid || null,
         });
 
         if (checkoutSession?.errors) throw new Error("Checkout creation failed. Please try again later.");
@@ -38,12 +39,14 @@ export default async function checkout(user = null, items, total) {
 
         if (order?.errors) throw new Error("Checkout creation failed. Please try again later.");
 
-        return url;
+        return { url };
 
     } catch (err) {
 
         console.error(err);
-        throw new Error("Checkout creation failed. Please try again later.");
+        return {
+            error: "Checkout creation failed. Please try again later."
+        };
 
     };
 

@@ -6,25 +6,25 @@ export const PageContainer = ({ children, className, lang }) => {
 
     return (
 
-        <div className="h-auto w-full relative">
+            <div className="h-auto w-full relative">
 
-            <ClientModals>
-                
-                <header className="z-10 h-auto w-full px-4 fixed top-4">
-                    <NavigationBar lang={lang} />
-                </header>
+                <ClientModals>
 
-                <main className={`z-20 px-4 ${className}`}>
-                    {children}
-                </main>
+                    <header className="z-10 h-auto w-full px-4 fixed top-4">
+                        <NavigationBar lang={lang} />
+                    </header>
 
-                <footer className="px-4 mt-10">
-                    <Footer lang={lang} />
-                </footer>
+                    <main className={`z-20 px-4 ${className}`}>
+                        {children}
+                    </main>
 
-            </ClientModals>
+                    <footer className="px-4 mt-10">
+                        <Footer lang={lang} />
+                    </footer>
 
-        </div>
+                </ClientModals>
+
+            </div>
 
     );
 

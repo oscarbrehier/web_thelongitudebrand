@@ -10,9 +10,9 @@ const fetchFailedError = {
 
 const handleError = () => fetchFailedError;
 
-export default async function getOrderDetails(orderId) {
+export default async function getOrderDetails(orderId, userId) {
 
-    if (!orderId || typeof orderId !== "string") {
+    if (!orderId || typeof orderId !== "string" || !userId || typeof userId !== "string") {
 
         return {
             code: "invalid-parameters",
@@ -23,20 +23,22 @@ export default async function getOrderDetails(orderId) {
 
     try {
 
-        const [order, orderProcess, checkout] = await Promise.all([
-            getOrder(orderId),
-            getOrderProcess(orderId),
-            getCheckoutData(order.stripeCheckoutId)
+        const order = await getOrder(orderId, userId);
+        if (order?.error) return handleError();
+
+        const [orderProcess, checkout] = await Promise.all([
+            getOrderProcess(orderId, userId),
+            getCheckoutData(order.stripeCheckoutId, userId)
         ]);
 
-        if (order?.error || orderProcess?.error || checkout?.error) {
+        if (orderProcess?.error || checkout?.error) {
             return handleError();
         };
 
         return {
             order,
             orderProcess,
-            checkout: stripeSessionData
+            checkout
         }
 
     } catch (err) {

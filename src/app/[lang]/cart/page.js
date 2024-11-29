@@ -1,7 +1,6 @@
 "use client"
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import checkout from "@/lib/checkout";
 import Button from "@/app/components/ui/Button";
 import { useAuthContext } from "@/lib/context/AuthContext";
 import { useCartStore } from "@/lib/stores/useCartStore";
@@ -9,9 +8,11 @@ import Hyperlink from "@/app/components/ui/Hyperlink";
 import { useModalContext } from "@/lib/context/ModalContext";
 import dynamic from "next/dynamic";
 import deleteOrder from "@/lib/firestore/deleteOrder";
-import NoContentLayout from "@/app/components/NoContentLayout";
+import MessageWithAction from "@/app/components/MessageWithAction";
+import checkout from "@/lib/checkout";
+import CartItemSmall from "@/app/components/CartItemSmall";
 
-const CartItemSmall = dynamic(() => import("@/app/components/CartItemSmall"));
+// const CartItemSmall = dynamic(() => import("@/app/components/CartItemSmall"));
 
 export default function Page({
     params: {
@@ -38,18 +39,18 @@ export default function Page({
 
         try {
 
-            const url = await checkout(user, cart, total);
-            console.log(url);
-            if (url) {
-                router.push(url);
-                return;
-            };
+            const currentUser = user ? {
+                uid: user.uid
+            } : null;
 
-            throw new Error("Checkout URL not found");
+            const result = await checkout(currentUser, cart, total);
+
+            if (result?.error) throw result.error;
+            if (result?.url) router.push(result.url);
 
         } catch (err) {
 
-            console.log(err);
+            console.error(err);
             setError("An error occured. Please try again or come back later");
 
         } finally {
@@ -76,7 +77,7 @@ export default function Page({
 
         return (
 
-            <NoContentLayout
+            <MessageWithAction
                 title="Your cart is empty"
                 text="Looks like you haven’t picked anything yet. Let’s change that!"
                 linkTitle="start shopping"

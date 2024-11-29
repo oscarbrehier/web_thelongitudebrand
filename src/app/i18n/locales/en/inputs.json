@@ -1,0 +1,18 @@
+{
+    "save": "save",
+    "password_change": "change password",
+    "password_new": "new password",
+    "password_new_required": "New password is required",
+    "password_new_confirm_required": "Please confirm new password",
+    "password_new_confirm": "confirm new password",
+    "password_current": "current password",
+    "password_current_required": "Current password is required",
+    "password_not_matching": "Passwords don't match",
+    "password_too_weak": "Password is too weak. Choose a password with at least 6 characters, including a mix of letters, numbers, and symbols",
+    "first_name": "First Name",
+    "first_name_required": "First name is required",
+    "last_name": "Last Name",
+    "last_name_required": "Last name is required",
+    "email": "Email",
+    "birth_date": "Date of Birth"
+}

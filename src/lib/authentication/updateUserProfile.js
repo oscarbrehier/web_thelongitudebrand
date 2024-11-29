@@ -1,34 +1,23 @@
 "use server"
-import { getSession } from "./sessionHelpers";
-
-const apiPath = process.env.API_PATH;
+import { adminFirestore } from "../firebase/admin";
 
 export default async function updateUserProfile(userId, data) {
 
     if (!userId || typeof data !== "object") throw new Error("Invalid parameters provided to updateUserProfile");
 
-    const sessionToken = await getSession();
+    try {
 
-    const res = await fetch(`${apiPath}/users`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${sessionToken}`
-        },
-        body: JSON.stringify({
-            userId,
-            data
-        }),
-    });
+        const docRef = adminFirestore
+            .collection("users")
+            .doc(userId);
 
-    
-    if (!res.ok) {
-        
-        const result = await res.json();
+        await docRef.update(data);
 
-        return {
-            errors: result.errors.code,
-        };
+    } catch (err) {
+
+        console.error(`Failed to update information for user with ID: ${userId}`)
+        console.error(err);
+        throw new Error("Failed to update user information");
 
     };
 

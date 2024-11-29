@@ -6,82 +6,55 @@ import Button from "@/app/components/ui/Button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
+import { useTranslation } from "@/app/i18n/client";
 
-const passwordCriteria = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
-const required_error = (fieldName) => `${fieldName} is required`;
-
-const formSchema = z.object({
-    currentPassword: z.string().min(1, { message: required_error("Current password") }),
-    newPassword: z.string()
-        .min(6, { message: "New password" })
+const formSchema = (t) => z.object({
+    currentPassword: z.string().min(1, { message: t("password_current_required") }),
+    newPassword: z.string().min(6, { message: t("password_new_required") })
         .refine(getPasswordStrength, {
-            message: "Password is too weak. Choose a password with at least 6 characters, including a mix of letters, numbers, and symbols"
+            message: t("password_too_weak")
         }),
-    confirmNewPassword: z.string()
-        .min(1, { message: "Please confirm your new password " })
+    confirmNewPassword: z.string().min(1, { message: t("password_new_confirm_required") })
 }).refine((data) => data.newPassword === data.confirmNewPassword, {
-    message: "Passwords don't match",
+    message: t("password_not_matching"),
     path: ["confirmNewPassword"]
 });
 
 export default function Page({ params: { lang } }) {
 
     const router = useRouter();
-
-    const [inputValues, setInputValues] = useState({
-        currentPassword: {
-            value: "",
-            error: null
-        },
-        newPassword: {
-            value: "",
-            error: null
-        },
-        confirmNewPassword: {
-            value: "",
-            error: null
-        }
-    })
+    const { t } = useTranslation(lang, "inputs");
 
     const [form, setForm] = useState({
-        submit: false,
         error: null,
-        hasErrors: false
+        currentPassword: null,
+        newPassword: null,
+        confirmNewPassword: null
     });
 
     const [loading, setLoading] = useState(false);
 
-    const handleInputChange = (e) => {
-
-        const { name, value, type, checked } = e.target;
-
-        setInputValues(prev => ({
-            ...prev,
-            [name]: {
-                ...prev[name],
-                value: type === "checkbox" ? checked : value
-            }
-        }));
-
-    };
-
     const resetErrors = () => {
 
-        setInputValues((prev) => ({
+        setForm((prev) => ({
             ...prev,
-            currentPassword: { ...prev.currentPassword, error: "" },
-            newPassword: { ...prev.newPassword, error: "" },
-            confirmNewPassword: { ...prev.confirmNewPassword, error: "" }
+            currentPassword: "",
+            newPassword: "",
+            confirmNewPassword: "",
         }));
 
     };
 
-    const handleSubmitForm = async (formData) => {
+    const handleSubmitForm = async (event) => {
+
+        event.preventDefault();
 
         resetErrors();
         setLoading(true);
 
         try {
+
+            const formData = new FormData(event.target);
 
             const data = {
                 currentPassword: formData.get("currentPassword"),
@@ -89,14 +62,15 @@ export default function Page({ params: { lang } }) {
                 confirmNewPassword: formData.get("confirmNewPassword"),
             };
 
-            formSchema.parse(data);
+
+            formSchema(t).parse(data);
+
+            if (data.currentPassword == data.newPassword) throw "auth/password-same-as-previous";
 
             await updatePassword(data.currentPassword, data.newPassword);
             router.push("/customer/personal-information");
 
         } catch (error) {
-
-            console.error(error)
 
             if (error.errors) {
 
@@ -107,40 +81,55 @@ export default function Page({ params: { lang } }) {
 
                 }, {});
 
-                setInputValues((prev) => ({
+                setForm((prev) => ({
                     ...prev,
-                    currentPassword: { ...prev.currentPassword, error: errors.currentPassword || "" },
-                    newPassword: { ...prev.newPassword, error: errors.newPassword || "" },
-                    confirmNewPassword: { ...prev.confirmNewPassword, error: errors.confirmNewPassword || "" }
+                    currentPassword: errors.currentPassword || "",
+                    newPassword: errors.newPassword || "",
+                    confirmNewPassword: errors.confirmNewPassword || ""
                 }));
 
                 return;
 
             };
 
-            if (error == "auth/invalid-credential") {
+            switch (error) {
 
-                setInputValues(prev => ({
-                    ...prev,
-                    currentPassword: {
-                        ...prev.currentPassword,
-                        error: "Current password is invalid",
-                    }
-                }));
+                case "auth/invalid-credential":
 
-            } else if (error == "auth/too-many-requests") {
+                    setForm(prev => ({
+                        ...prev,
+                        currentPassword: "Current password is invalid"
+                    }));
 
-                setForm(prev => ({
-                    ...prev,
-                    error: "Too many requests! Please wait a moment before trying again."
-                }))
+                    break;
 
-            } else {
+                case "auth/too-many-requests":
 
-                setForm(prev => ({
-                    ...prev,
-                    error: "An error occured. Please try again later",
-                }));
+                    setForm(prev => ({
+                        ...prev,
+                        error: "Too many requests! Please wait a moment before trying again."
+                    }))
+
+
+                    break;
+
+                case "auth/password-same-as-previous":
+
+                    setForm(prev => ({
+                        ...prev,
+                        newPassword: "The new password must be different from the current password."
+                    }))
+
+                    break;
+
+                default:
+
+                    setForm(prev => ({
+                        ...prev,
+                        error: "An error occured. Please try again later",
+                    }));
+
+                    break;
 
             };
 
@@ -158,39 +147,34 @@ export default function Page({ params: { lang } }) {
 
             <div className="col-start-2 col-span-2 h-auto">
 
-                <form action={handleSubmitForm}>
+                <form onSubmit={handleSubmitForm}>
 
-                    <h1 className="capitalize mx-2 my-1 text-lg">change password</h1>
+                    <h1 className="mx-2 my-1 text-lg">{t("password_change")}</h1>
 
                     <div className="space-y-2">
 
                         <InputWithLabel
-                            title='current password'
-                            value={inputValues.currentPassword.value}
+                            title={t("password_current")}
+                            name="currentPassword"
                             type='password'
-                            onChange={(e) => handleInputChange(e)}
-                            error={inputValues.currentPassword.error}
+                            error={form.currentPassword}
                             required={true}
                         />
 
                         <InputWithLabel
-                            title='new password'
-                            value={inputValues.newPassword.value}
+                            title={t("password_new")}
+                            name="newPassword"
                             type='password'
-                            onChange={(e) => handleInputChange(e)}
-                            error={inputValues.newPassword.error}
+                            error={form.newPassword}
                             required={true}
-                            submit={form.submit}
                         />
 
                         <InputWithLabel
-                            title='confirm new password'
-                            value={inputValues.confirmNewPassword.value}
+                            title={t("password_new_confirm")}
+                            name="confirmNewPassword"
                             type='password'
-                            onChange={(e) => handleInputChange(e)}
-                            error={inputValues.confirmNewPassword.error}
+                            error={form.confirmNewPassword}
                             required={true}
-                            submit={form.submit}
                         />
 
                         {form.error !== "" && (
@@ -205,7 +189,6 @@ export default function Page({ params: { lang } }) {
                         <Button
                             title='save'
                             size='w-full h-14'
-                            // onClick={(e) => handleSubmitForm(e)}
                             type="submit"
                             loading={loading}
                         />

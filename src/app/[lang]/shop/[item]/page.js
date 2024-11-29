@@ -3,6 +3,9 @@ import { Product } from "./product";
 import getProductSlugs from "@/lib/sanity/getProductSlugs";
 import { languages } from "@/app/i18n/settings";
 import { notFound } from "next/navigation";
+import { getCurrentUser } from "@/lib/authentication/sessionHelpers";
+import { adminFirestore } from "@/lib/firebase/admin";
+import { getCache } from "@/lib/redis";
 
 export async function generateMetadata({ params: { lang, item } }) {
 
@@ -69,9 +72,34 @@ export async function generateStaticParams() {
 
 };
 
+async function hasProductInWishlist(userId, productId) {
+
+    console.log('cache not used')
+
+    try {
+
+        const res = await adminFirestore
+            .collection("wishlists")
+            .doc(userId).get();
+
+        const exists = res.exists ? res.data().items.indexOf(productId) !== -1 : false;
+
+        return exists;
+
+    } catch (err) {
+
+        return false;
+
+    };
+
+};
+
 export default async function Page({ params: { item, lang } }) {
 
+    let isProductInUserWishlist = null;
+
     const content = await getProductBySlug(item);
+    const user = await getCurrentUser();
 
     if (!content) notFound();
 
@@ -82,7 +110,7 @@ export default async function Page({ params: { item, lang } }) {
             name: "Longitude",
             url: "https://www.thelongitudebrand.com",
             logo: "https://www.thelongitudebrand.com/logo.png",
-        },  
+        },
         {
             "@context": "https://schema.org",
             "@type": "Product",
@@ -103,6 +131,16 @@ export default async function Page({ params: { item, lang } }) {
         }
     ]);
 
+    if (user?.uid) {
+
+        isProductInUserWishlist = await getCache({
+            key: `wishlist-${item}-${user.uid}`,
+            fn: hasProductInWishlist,
+            params: [user.uid, item],
+        });
+
+    };
+
     return (
 
         <>
@@ -111,7 +149,9 @@ export default async function Page({ params: { item, lang } }) {
 
             <Product
                 lang={lang}
-                content={content}
+                product={content}
+                userId={user?.uid || null}
+                isInWishlist={isProductInUserWishlist?.result || false}
             />
 
 

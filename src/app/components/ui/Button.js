@@ -1,6 +1,7 @@
 "use client"
 import { useEffect, useState } from "react"
 import LoadingSpinner from "./loadingSpinner";
+import { captureEvent } from "@/lib/analytics/client";
 
 export default function Button({
     title,
@@ -11,10 +12,12 @@ export default function Button({
     style = null,
     text = "capitalize",
     disabled = false,
+    event = null,
     ...props
 }) {
 
     const [status, setStatus] = useState(loading);
+
     useEffect(() => {
         setStatus(loading)
     }, [loading]);
@@ -36,11 +39,22 @@ export default function Button({
         ${size} ${style} ${text}
     `;
 
+    async function handleOnClick() {
+
+        if (!onClick) return;
+        onClick();
+
+        if (event?.action) captureEvent(event.action, {
+            propreties: event?.propreties || null
+        });
+
+    } 
+
     return (
 
         <button
             className={buttonClasses}
-            onClick={!disabled ? onClick : undefined}
+            onClick={!disabled ? handleOnClick : undefined}
             disabled={disabled}
             {...props}
         >
@@ -56,7 +70,7 @@ export default function Button({
                         className={border
                             ? (disabled ? "text-neutral-500" : "text-black")
                             : (disabled ? "text-neutral-500" : "text-white hover:text-black")
-                    }>
+                        }>
                         {title}</p>
 
                 )

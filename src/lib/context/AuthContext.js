@@ -12,7 +12,7 @@ export const useAuthContext = () => useContext(AuthContext);
 export default function AuthContextProvider({ children }) {
 
     const [user, setUser] = useState(null);
-    const [isAuth, setIsAuth] = useState(false);
+    const [isAuth, setIsAuth] = useState(null);
     const [loadingCart, setLoadingCart] = useState(true);
 
     const getCart = useCartStore((state) => state.getCart);
@@ -23,7 +23,7 @@ export default function AuthContextProvider({ children }) {
 
             setUser(user);
             setIsAuth(!!user);
-            
+
             setLoadingCart(true);
             await getCart(user?.uid);
             setLoadingCart(false);

@@ -2,18 +2,26 @@
 
 import { adminFirestore } from "../firebase/admin";
 
-export default async function getOrderProcess(orderId) {
+export default async function getOrderProcess(orderId, userId) {
 
     if (!orderId) throw new Error("Invalid parameter provided to orderId");
 
     const docRef = adminFirestore
         .collection("ordersProcess")
         .doc(orderId);
-    
+
     try {
 
         const res = await docRef.get();
         if (!res.exists) return null;
+
+        if (res.data().userId != userId) {
+
+            return {
+                error: "order-fetch/not-found",
+            };
+
+        };
 
         const { shipment, ...data } = res.data();
         const { shipmentId, ...safeShipment } = shipment || {};

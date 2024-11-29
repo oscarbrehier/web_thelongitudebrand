@@ -10,7 +10,7 @@ export default function Layout({
     }
 }) {
 
-    const categories = ["personal-information", "orders", "wishlist"];
+    const categories = ["personal_information", "orders", "wishlist"];
 
     return (
 

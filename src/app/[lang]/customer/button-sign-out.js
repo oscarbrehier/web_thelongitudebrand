@@ -11,19 +11,20 @@ export default function SignOutButton({
 }) {
 
     const router = useRouter();
-
-    const { user } = useAuthContext();
     const { clearCart } = useCartStore((state) => ({ clearCart: state.clearCart }));
 
     const handleSignOut = async () => {
 
-        clearCart(user);
-        localStorage.removeItem(storageKeys.CART);
-
         const res = await signOut();
 
-        if (!res) console.error("error signing out");
+        if (!res) {
+
+            return;
+
+        };
+        
         router.push("/shop");
+        clearCart();
 
     };
 

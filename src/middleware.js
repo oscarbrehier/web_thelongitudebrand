@@ -1,88 +1,179 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, userAgent } from 'next/server';
 import { cookies } from 'next/headers';
 import acceptLanguage from 'accept-language';
 import { fallbackLng, languages, cookieName } from './app/i18n/settings';
 import verifyFirebaseSessionJwt from './lib/authentication/verifyFirebaseJwt';
-import { authRoutes, guestRoutes } from './lib/constants/settings.config';
-import { storageKeys } from './lib/constants/settings.config';
+import { authRoutes, guestRoutes, storageKeys } from './lib/constants/settings.config';
+import { v4 as uuid } from 'uuid';
+import { RequestCookies, ResponseCookies } from 'next/dist/compiled/@edge-runtime/cookies';
+import { Analytics } from './lib/analytics/Analytics';
 
 acceptLanguage.languages(languages);
 
-export async function middleware(request) {
+const analytics = new Analytics({
+    apiKey: process.env.ANALYTICS_API_KEY,
+    baseUrl: process.env.ANALYTICS_API_URL
+});
 
-    let lng;
-    let isAuth = false;
+const isDev = (process.env.NODE_ENV || "production") === "development";
 
-    const cookieStore = cookies();
-    const response = NextResponse.next();
-    const headersList = request.headers;
+// Helper function to check static assets or special paths
+function isStaticPath(pathname) {
 
-    const languageRegex = new RegExp(`^/(${languages.join('|')})`);
-    const fullPathname = request.nextUrl.pathname;
-    const pathname = request.nextUrl.pathname.replace(languageRegex, "");
+    return [
+        '/sitemap.xml',
+        '/robots.txt',
+        '/monitoring',
+    ].some((staticPath) => pathname === staticPath) ||
+        pathname.includes('icon') ||
+        pathname.includes('chrome');
 
-    response.headers.set('x-pathname', pathname || "home");
+};
 
-    const session = cookieStore.get(storageKeys.SESSION)?.value;
+// Helper function to get or set the language cookie
+function resolveLanguage(cookieStore, headers, response) {
 
-    if (fullPathname === "/sitemap.xml" || fullPathname === "/robots.txt" || fullPathname.includes("icon") || fullPathname.includes("chrome") || fullPathname === "/monitoring") {
-        return response;
-    };
-
-    if (pathname.startsWith("/locked")) return NextResponse.redirect(new URL('/shop', request.url));
- 
-    if (cookieStore.has(cookieName)) {
-        lng = acceptLanguage.get(cookieStore.get(cookieName).value);
-    } else {
-        lng = acceptLanguage.get(headersList.get("Accept-Language"));
-    };
+    let lng = cookieStore.has(cookieName)
+        ? acceptLanguage.get(cookieStore.get(cookieName).value)
+        : acceptLanguage.get(headers.get('Accept-Language'));
 
     if (!lng) lng = fallbackLng;
 
-    response.headers.set('x-language', lng);
-
-    if (!cookieStore.get(cookieName)?.value) {
-
+    if (!cookieStore.has(cookieName)) {
         response.cookies.set(cookieName, lng);
-
     };
 
-    // Redirect if the language prefix is missing
-    if (!languages.some(loc => fullPathname.startsWith(`/${loc}`)) && !fullPathname.startsWith("/_next")) {
+    return lng;
+
+};
+
+// Helper function to handle redirects for language prefix
+function handleLanguageRedirect(request, pathname, lng) {
+
+    const fullPathname = request.nextUrl.pathname;
+
+    if (!languages.some((loc) => fullPathname.startsWith(`/${loc}`)) && !fullPathname.startsWith('/_next')) {
         return NextResponse.redirect(new URL(`/${lng}${pathname}${request.nextUrl.search}`, request.url));
     };
 
-    if (headersList.has("referer")) {
+    return null;
 
-        const refererUrl = new URL(headersList.get("referer"));
-        const lngInReferer = languages.find((l) => refererUrl.pathname.startsWith(`/${l}`));
+};
 
-        if (lngInReferer) {
-            response.cookies.set(cookieName, lngInReferer);
-        };
+// Helper function to manage analytics cookies
+function manageAnalyticsCookies(cookieStore, response) {
+
+    let analyticsSessionId = cookieStore.get(storageKeys.ANALYTICS_SESSION_ID)?.value;
+    
+    const lastActive = parseInt(cookieStore.get(storageKeys.ANALYTICS_LAST_ACTIVE)?.value, 10);
+    const now = Date.now();
+    
+    const sessionTimeout = 10 * 60 * 1000;
+
+    if (!analyticsSessionId || !lastActive || now - lastActive > sessionTimeout) {
+        
+        analyticsSessionId = uuid();
+        response.cookies.set(storageKeys.ANALYTICS_SESSION_ID, analyticsSessionId);
 
     };
 
-    if (pathname.startsWith("/shop") || pathname.startsWith("/password")) {
+    response.cookies.set(storageKeys.ANALYTICS_LAST_ACTIVE, now);
+
+    return analyticsSessionId
+
+};
+
+// Helper function to manage session cookies
+function manageSessionCookies(cookieStore, response) {
+
+    const sessionId = cookieStore.get(storageKeys.SESSION_ID)?.value;
+    if (sessionId) return;
+
+    response.cookies.set(storageKeys.SESSION_ID, uuid());
+
+};
+
+// User route tracking function for analytics
+async function handleAnalyticsRouteTracking(data) {
+
+    // if (isDev) return;
+
+    await analytics.captureEventServerSide("page view", {
+        distinctId: data.sessionId,
+        ...data
+    });
+
+};
+
+// Middleware function
+export async function middleware(request) {
+
+    const response = NextResponse.next();
+    const cookieStore = cookies();
+    const now = new Date();
+    const headersList = request.headers;
+
+    const fullPathname = request.nextUrl.pathname;
+    const pathname = fullPathname.replace(new RegExp(`^/(${languages.join('|')})`), '');
+    const userAgents = userAgent(request);
+
+    response.headers.set('x-pathname', pathname || 'home');
+    response.headers.set('x-user-agent', userAgents);
+
+    // Skip static paths
+    if (isStaticPath(fullPathname)) {
         return response;
     };
+
+    // Redirect locked paths
+    if (pathname.startsWith('/locked')) {
+        return NextResponse.redirect(new URL('/shop', request.url));
+    };
+
+    // Resolve language
+    const lng = resolveLanguage(cookieStore, headersList, response);
+    response.headers.set('x-language', lng);
+
+    // Handle language prefix redirects
+    const langRedirect = handleLanguageRedirect(request, pathname, lng);
+    if (langRedirect) return langRedirect;
+
+    // Referer-based language updates
+    const referer = headersList.get('referer');
+
+    if (referer) {
+
+        const refererLng = languages.find((l) => new URL(referer).pathname.startsWith(`/${l}`));
+        if (refererLng) response.cookies.set(cookieName, refererLng);
+
+    };
+
+    // Skip specific routes
+    if (pathname.startsWith('/shop') || pathname.startsWith('/password')) {
+        return response;
+    };
+
+    // Authentication checks
+    const session = cookieStore.get(storageKeys.SESSION)?.value;
+
+    let isAuth = false;
+    let userId = null;
 
     if (session) {
 
         try {
-            
-            await verifyFirebaseSessionJwt(session);
+
+            userId = await verifyFirebaseSessionJwt(session);
             isAuth = true;
-            
-        } catch (err) {
 
-            console.log(err);
+        } catch {
 
-            if (session && !pathname.includes("/auth/sign-out")) {
-                return NextResponse.redirect(new URL("/auth/sign-out", request.url));
+            if (!pathname.includes('/auth/sign-out')) {
+                return NextResponse.redirect(new URL('/auth/sign-out', request.url));
             };
 
         };
+
     };
 
     if (authRoutes.some((route) => pathname.startsWith(route)) && !isAuth) {
@@ -90,12 +181,48 @@ export async function middleware(request) {
     };
 
     if (isAuth && guestRoutes.includes(pathname)) {
-        return NextResponse.redirect(new URL("/customer/personal-information", request.url));
+        return NextResponse.redirect(new URL('/customer/personal-information', request.url));
     };
+
+    // Manage analytics
+    const analyticsSessionId = manageAnalyticsCookies(cookieStore, response);
+
+    // Manage session
+    manageSessionCookies(cookieStore, response);
+
+    applySetCookie(request, response);
+
+    await handleAnalyticsRouteTracking({
+        sessionId: analyticsSessionId, 
+        referer: headersList.get("referer"),
+        userAgent: userAgents.ua,
+        path: pathname,
+        user: {
+            id: userId
+        }
+    });
 
     return response;
 }
 
 export const config = {
     matcher: '/((?!api|_next/static|_next/image|.*\\.png$|password).*)',
+};
+
+
+function applySetCookie(req, res) {
+
+    const setCookies = new ResponseCookies(res.headers);
+    const newReqHeaders = new Headers(req.headers);
+    const newReqCookies = new RequestCookies(newReqHeaders);
+
+    setCookies.getAll().forEach((cookie) => newReqCookies.set(cookie));
+
+    const response = NextResponse.next({ request: { headers: newReqHeaders } });
+    response.headers.forEach((value, key) => {
+        if (key === 'x-middleware-override-headers' || key.startsWith('x-middleware-request-')) {
+            res.headers.set(key, value);
+        }
+    });
+
 };

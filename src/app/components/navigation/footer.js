@@ -49,10 +49,11 @@ export default function Footer({ lang }) {
                 <div className={`sm:flex ${activeMenu === 1 ? 'w-full flex flex-col bg-cream-200 space-y-4 py-4' : 'hidden'}`}>
 
                     <a href="/legal/contact-us"><h2>{t("contact_us")}</h2></a>
-                    <a href="/legal/terms-conditions"><h2>terms & condition</h2></a>
-                    <a href="/legal/customer-service"><h2>customer service</h2></a>
-                    <a href="/legal/privacy-policy"><h2>privacy policy</h2></a>
-                    <a href="/legal/cookie-policy"><h2>cookie policy</h2></a>
+                    <a href="/legal/terms-conditions"><h2>{t("legal")}</h2></a>
+                    {/* <a href="/legal/terms-conditions"><h2>{t("terms-conditions")}</h2></a>
+                    <a href="/legal/customer-service"><h2>{t("customer-service")}</h2></a>
+                    <a href="/legal/privacy-policy"><h2>{t("privacy-policy")}</h2></a>
+                    <a href="/legal/cookie-policy"><h2>{t("cookie-policy")}</h2></a> */}
 
                 </div>
 

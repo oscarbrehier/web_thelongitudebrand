@@ -16,9 +16,14 @@ export function TimelineCard({ data }) {
 
                         <div className="xs:col-span-3 h-full">
                             <p className="font-medium">{item.title}</p>
-                            {item.message.split("</br>").map((line, index) => (
-                                <p key={index} className="text-neutral-600">{line}</p>
-                            ))}
+                            
+                            {
+                                item?.message && item.message.split("</br>").map((line, index) => (
+                                    <p key={index} className="text-neutral-600">{line}</p>
+                                ))
+                                
+                            }
+
                             <p className="text-neutral-600">{formatTimestamp(item.at, "MMMM d, yyyy h:mm a")}</p>
                         </div>
 

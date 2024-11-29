@@ -9,17 +9,12 @@ export default function Layout({
     }
 }) {
 
-    "customer-service", "privacy-policy", "cookie-policy"
-
     const categories = [
-        "contact-us", 
-        {
-            title: "terms-&-conditions",
-            route: "terms-conditions"
-        }, 
-        "customer-service",
-        "privacy-policy",
-        "cookie-policy",
+        "contact_us", 
+        "terms_conditions",
+        "customer_service",
+        "privacy_policy",
+        "cookie_policy",
     ];
 
     return (
