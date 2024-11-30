@@ -27,6 +27,8 @@ export async function POST(req) {
 
             case "checkout.session.completed":
 
+                console.log("(stripe event) checkout.session.completed")
+
                 await handleCheckoutSessionCompleted(event.data.object, headerPayload);
                 break;
 
