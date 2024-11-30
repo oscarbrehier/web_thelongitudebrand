@@ -3,14 +3,12 @@ import { poppins } from "@/styles/fonts";
 import AuthContextProvider from "@/lib/context/AuthContext";
 import ModalProvider from "@/lib/context/ModalContext";
 import { languages, fallbackLng } from "./i18n/settings";
-import { cookies, headers } from "next/headers";
+import { headers } from "next/headers";
 import Head from "next/head";
-import { storageKeys } from "@/lib/constants/settings.config";
-import { getCurrentUser } from "@/lib/authentication/sessionHelpers";
-import { captureException } from "@sentry/nextjs";
-import { captureEvent, captureNavigation } from "@/lib/analytics/client";
+import { captureNavigation } from "@/lib/analytics/client";
 
 const baseUrl = "https://www.thelongitudebrand.com";
+const isDev = (process.env.NODE_ENV || "production") == "development";
 
 export const metadata = {
 
@@ -40,32 +38,6 @@ export async function generateStaticParams() {
 
 };
 
-// async function captureNavigation(headers) {
-
-// 	try {
-
-// 		const cookieStore = cookies();
-
-// 		const payload = {
-// 			path: headers.get("x-pathname"),
-// 			referer: headers.get("referer"),
-// 			userAgent: headers.get("x-user-agent"),
-// 			distinctId: cookieStore.get(storageKeys.ANALYTICS_SESSION_ID),
-// 			propreties: {
-// 				clientIp: headers.get("x-real-ip")
-// 			},
-// 		};
-
-// 		await captureEvent("page view", payload);
-
-// 	} catch (err) {
-
-// 		captureException(err);
-
-// 	};
-
-// };
-
 export default async function RootLayout({
 	children,
 }) {
@@ -83,7 +55,7 @@ export default async function RootLayout({
 
 	// handleNavigationTracking(headersList);
 
-	await captureNavigation();
+	if (!isDev) await captureNavigation();
 
 	return (
 

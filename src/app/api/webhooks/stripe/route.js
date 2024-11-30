@@ -27,7 +27,7 @@ export async function POST(req) {
 
             case "checkout.session.completed":
 
-                await handleCheckoutSessionCompleted(event.data.object);
+                await handleCheckoutSessionCompleted(event.data.object, headerPayload);
                 break;
 
             default:

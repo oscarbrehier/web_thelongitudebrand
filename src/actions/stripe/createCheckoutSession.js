@@ -4,13 +4,13 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY_TEST);
 
 export default async function createCheckoutSession(data) {
 
-	// if (!data || typeof data !== "object" || data.length === 0) {
+	// if (!data || typeof data !== "object" || Object.keys(data || {}).length === 0) {
 	// 	throw new Error("Invalid parameters provided to createCheckoutSession");
 	// };
 
-	const { stripeCart, customerId, orderId, userId } = data;
+	const { stripeCart, customerId, orderId, userId, sessionId } = data;
 
-	const isDev = process.env.NODE_ENV === "development";
+	const isDev = (process.env.NODE_ENV || "production") == "development";
 	const origin = isDev ? "http://localhost:3000" : "https://www.thelongitudebrand.com";
 
 	try {	
@@ -28,6 +28,7 @@ export default async function createCheckoutSession(data) {
 			metadata: {
 				orderId,
 				userId,
+				sessionId
 			}
 		};
 

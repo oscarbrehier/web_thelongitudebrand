@@ -68,8 +68,6 @@ export async function captureNavigation() {
             },
         };
 
-        await captureEvent("page view", payload);
-
     } catch (err) {
 
         captureException(err);

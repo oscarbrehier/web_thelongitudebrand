@@ -13,12 +13,7 @@ export default async function getUserCustomerId(userId) {
 
     try {
 
-        // const user = await getDoc(doc(database, "users", userId));
-        // return user.exists ? user.data().stripeCustomerId : null;
-
         const user = await docRef.get();
-        console.log(user.data())
-
         return user.exists ? user.data().stripeCustomerId : null;
 
     } catch (err) {

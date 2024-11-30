@@ -5,6 +5,8 @@ import getUserCustomerId from "./firestore/getUserCustomerId";
 import createOrder from "./firestore/createOrder";
 import generateOrderId from "./utils/generateOrderId";
 import { v4 as uuid } from "uuid";
+import { cookies } from "next/headers";
+import { storageKeys } from "./constants/settings.config";
 
 export default async function checkout(user = null, items, total) {
 
@@ -13,6 +15,8 @@ export default async function checkout(user = null, items, total) {
     };
 
     try {
+
+        const cookieStore = cookies();
 
         const { cart } = createCart(items);
         const customerId = user ? await getUserCustomerId(user?.uid) : null;
@@ -23,6 +27,7 @@ export default async function checkout(user = null, items, total) {
             customerId,
             orderId,
             userId: user?.uid || null,
+            sessionId: cookieStore.get(storageKeys.ANALYTICS_SESSION_ID)?.value || null,
         });
 
         if (checkoutSession?.errors) throw new Error("Checkout creation failed. Please try again later.");

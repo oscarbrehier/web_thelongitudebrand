@@ -68,8 +68,6 @@ export class Analytics {
 
         try {
 
-            // console.log(`Capturing event ${eventType} with payload`, payload);
-
             const result = await this.makeRequest("/events", {
                 method: "POST",
                 body: JSON.stringify({
@@ -93,3 +91,8 @@ export class Analytics {
     };
 
 };
+
+export const analyticsServer = new Analytics({
+    apiKey: process.env.ANALYTICS_API_KEY,
+    baseUrl: process.env.ANALYTICS_API_URL
+});
