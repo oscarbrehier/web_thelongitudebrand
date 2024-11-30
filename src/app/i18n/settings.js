@@ -8,6 +8,7 @@ export const languageMap = {
     en: "english",
     fr: "français"
 };
+export const localeRegex = new RegExp(`^/(${languages.join('|')})(/|$)`);
 
 export function getOptions(lng = fallbackLng, ns = defaultNS) {
 

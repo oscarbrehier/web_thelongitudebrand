@@ -82,13 +82,20 @@ async function deleteUserCart(userId) {
 
 export default async function handleCheckoutSessionCompleted(data, headers) {
 
-    if (!data?.metadata || !data.metadata?.orderId || !data.metadata?.userId) return;
-    let { orderId, userId, sessionId } = data.metadata;
+    console.log("function handleCheckoutSessionCompleted called")
+
+    if (!data?.metadata || !data.metadata?.orderId) return;
+
+    let {
+        orderId,
+        userId = null,
+        sessionId } = data.metadata;
 
     await updateOrderDetails(orderId, data.customer_details);
     await setupOrderProcess(orderId);
 
     try {
+
 
         const payload = {
             distinctId: sessionId,

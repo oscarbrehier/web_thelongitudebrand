@@ -159,7 +159,9 @@ export async function middleware(request) {
             userId = await verifyFirebaseSessionJwt(session);
             isAuth = true;
 
-        } catch {
+        } catch (err) {
+
+            console.log("middleware error", err);
 
             if (!pathname.includes('/auth/sign-out')) {
                 return NextResponse.redirect(new URL('/auth/sign-out', request.url));

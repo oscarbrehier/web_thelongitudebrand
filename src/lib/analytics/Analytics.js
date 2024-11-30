@@ -76,13 +76,9 @@ export class Analytics {
                 }),
             });
 
-            console.log(`event (${eventType}) logged with payload:`, payload);
-
             return result;
 
         } catch (err) {
-
-            console.log(err);
 
             captureException(err);
 

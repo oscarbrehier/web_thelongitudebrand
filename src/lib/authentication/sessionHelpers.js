@@ -2,6 +2,7 @@ import "server-only";
 import { cookies } from "next/headers";
 import { adminAuth } from "../firebase/admin";
 import { storageKeys } from "../constants/settings.config";
+import { deleteCookie } from "@/actions/deleteCookie";
 
 export async function isUserAuthenticated(session) {
 
@@ -14,6 +15,8 @@ export async function isUserAuthenticated(session) {
         return !isRevoked;
 
     } catch (error) {
+
+        await deleteCookie(storageKeys.SESSION);
 
         console.log(error);
         return false;
