@@ -8,7 +8,6 @@ import Head from "next/head";
 import { captureNavigation } from "@/lib/analytics/client";
 
 const baseUrl = "https://www.thelongitudebrand.com";
-const isDev = (process.env.NODE_ENV || "production") == "development";
 
 export const metadata = {
 
@@ -55,7 +54,7 @@ export default async function RootLayout({
 
 	// handleNavigationTracking(headersList);
 
-	if (!isDev) await captureNavigation();
+	await captureNavigation();
 
 	return (
 
