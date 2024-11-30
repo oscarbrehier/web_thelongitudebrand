@@ -2,7 +2,6 @@ import "server-only";
 import { cookies } from "next/headers";
 import { adminAuth } from "../firebase/admin";
 import { storageKeys } from "../constants/settings.config";
-import { deleteAuthCookie } from "@/actions/handleAuthCookie";
 
 export async function isUserAuthenticated(session) {
 

@@ -1,9 +1,10 @@
 "use server";
 
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { getCurrentUser } from "../authentication/sessionHelpers";
 import { Analytics } from "./Analytics";
 import { captureException } from "@sentry/nextjs";
+import { storageKeys } from "../constants/settings.config";
 
 const client = new Analytics({
     apiKey: process.env.ANALYTICS_API_KEY,
@@ -30,22 +31,44 @@ export async function captureEvent(eventType, payload) {
 
         const sendPayload = {
             eventType,
-            propreties: payload.propreties,
+            propreties: payload.propreties || {},
             ...payload,
             path: get("x-pathname") || null,
             referer: get("referer") || null,
-            userAgent: get("user-agent"),
+            userAgent: get("x-user-agent") || null,
             ...(currentUser?.uid && {
-                user: {
-                    id: currentUser.uid
-                },
+                user: { id: currentUser.uid },
             }),
         };
 
-        const result = await client.makeRequest("/events", {
+        await client.makeRequest("/events", {
             method: "POST",
             body: JSON.stringify(sendPayload),
         });
+
+    } catch (err) {
+
+        captureException(err);
+
+    };
+
+};
+
+export async function captureNavigation() {
+
+    const cookieStore = cookies();
+    const headersList = headers();
+
+    try {
+
+        const payload = {
+            distinctId: cookieStore.get(storageKeys.ANALYTICS_SESSION_ID)?.value,
+            propreties: {
+                clientIp: headersList.get("x-real-ip")
+            },
+        };
+
+        await captureEvent("page view", payload);
 
     } catch (err) {
 

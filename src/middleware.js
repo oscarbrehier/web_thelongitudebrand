@@ -139,9 +139,7 @@ export async function middleware(request) {
     const userAgents = userAgent(request);
 
     response.headers.set('x-pathname', pathname || 'home');
-    response.headers.set('x-user-agent', userAgents);
-
-    console.log("Navigation to", pathname);
+    response.headers.set('x-user-agent', userAgents.ua);
 
     // Skip static paths
     if (isStaticPath(fullPathname)) {
@@ -182,24 +180,24 @@ export async function middleware(request) {
     // Manage analytics
     const analyticsSessionId = manageAnalyticsCookies(cookieStore, response);
 
-    try {
+    // try {
 
-        await handleAnalyticsRouteTracking({
-            sessionId: analyticsSessionId,
-            referer: headersList.get("referer"),
-            userAgent: userAgents.ua,
-            path: pathname,
-            user: {
-                id: userId
-            }
-        }, request, headersList);
+    //     await handleAnalyticsRouteTracking({
+    //         sessionId: analyticsSessionId,
+    //         referer: headersList.get("referer"),
+    //         userAgent: userAgents.ua,
+    //         path: pathname,
+    //         user: {
+    //             id: userId
+    //         }
+    //     }, request, headersList);
 
-    } catch (err) {
+    // } catch (err) {
 
-        console.log(err);
-        captureException(err);
+    //     console.log(err);
+    //     captureException(err);
 
-    };
+    // };
 
     // Redirect locked paths
     if (pathname.startsWith('/locked')) {
