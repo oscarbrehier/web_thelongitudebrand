@@ -18,11 +18,12 @@ async function updateOrderDetails(orderId, customerDetails) {
 
     } catch (err) {
 
+        console.log(err)
         captureException(err);
         return;
 
     };
- 
+
 };
 
 async function setupOrderProcess(orderId) {
@@ -47,6 +48,7 @@ async function setupOrderProcess(orderId) {
 
     } catch (err) {
 
+        console.log(err)
         captureException(err);
         return;
 
@@ -70,6 +72,7 @@ async function deleteUserCart(userId) {
 
     } catch (err) {
 
+        console.log(err)
         captureException(err);
         return;
 
@@ -102,6 +105,7 @@ export default async function handleCheckoutSessionCompleted(data, headers) {
 
     } catch (err) {
 
+        console.log(err)
         captureException(err);
 
     };
