@@ -39,6 +39,9 @@ export class Analytics {
                     };
 
                 };
+
+                const responseBody = await response.text();
+                console.log("API response", response.status, responseBody);
         
                 return {
                     success: !!response.ok,
