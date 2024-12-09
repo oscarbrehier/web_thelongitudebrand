@@ -46,6 +46,8 @@ export class Analytics {
 
             } catch (err) {
 
+                console.error(err);
+
                 attempts++;
 
                 if (attempts === this.config.maxRetries) {
