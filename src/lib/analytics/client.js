@@ -46,7 +46,11 @@ export async function captureEvent(eventType, payload) {
             body: JSON.stringify(sendPayload),
         });
 
+        console.log("logged and made request for event", eventType);
+
     } catch (err) {
+
+        console.log(err);
 
         captureException(err);
 
@@ -64,13 +68,17 @@ export async function captureNavigation() {
         const payload = {
             distinctId: cookieStore.get(storageKeys.ANALYTICS_SESSION_ID)?.value,
             propreties: {
-                clientIp: headersList.get("x-real-ip")
+                clientIp: headersList.get("x-real-ip"),
             },
         };
 
         await captureEvent("page view", payload);
 
+        console.log("logged event");
+
     } catch (err) {
+
+        console.log(err);
 
         captureException(err);
 

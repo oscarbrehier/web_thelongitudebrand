@@ -8,6 +8,7 @@ import { v4 as uuid } from 'uuid';
 import { RequestCookies, ResponseCookies } from 'next/dist/compiled/@edge-runtime/cookies';
 import { Analytics } from './lib/analytics/Analytics';
 import { captureException } from '@sentry/nextjs';
+import { handleAnalyticsSession } from './lib/middleware/handleAnalyticsSession';
 
 acceptLanguage.languages(languages);
 
@@ -73,29 +74,6 @@ function handleLanguageRedirect(request, pathname, lng) {
     };
 
     return null;
-
-};
-
-// Helper function to manage analytics cookies
-function manageAnalyticsCookies(cookieStore, response) {
-
-    let analyticsSessionId = cookieStore.get(storageKeys.ANALYTICS_SESSION_ID)?.value;
-
-    const lastActive = parseInt(cookieStore.get(storageKeys.ANALYTICS_LAST_ACTIVE)?.value, 10);
-    const now = Date.now();
-
-    const sessionTimeout = 10 * 60 * 1000;
-
-    if (!analyticsSessionId || !lastActive || now - lastActive > sessionTimeout) {
-
-        analyticsSessionId = uuid();
-        response.cookies.set(storageKeys.ANALYTICS_SESSION_ID, analyticsSessionId);
-
-    };
-
-    response.cookies.set(storageKeys.ANALYTICS_LAST_ACTIVE, now);
-
-    return analyticsSessionId
 
 };
 
@@ -180,26 +158,7 @@ export async function middleware(request) {
     };
 
     // Manage analytics
-    const analyticsSessionId = manageAnalyticsCookies(cookieStore, response);
-
-    // try {
-
-    //     await handleAnalyticsRouteTracking({
-    //         sessionId: analyticsSessionId,
-    //         referer: headersList.get("referer"),
-    //         userAgent: userAgents.ua,
-    //         path: pathname,
-    //         user: {
-    //             id: userId
-    //         }
-    //     }, request, headersList);
-
-    // } catch (err) {
-
-    //     console.log(err);
-    //     captureException(err);
-
-    // };
+    handleAnalyticsSession(cookieStore, response);
 
     // Redirect locked paths
     if (pathname.startsWith('/locked')) {
