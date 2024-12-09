@@ -50,7 +50,7 @@ export async function captureEvent(eventType, payload) {
 
     } catch (err) {
 
-        console.log(err);
+        console.error(err);
 
         captureException(err);
 
