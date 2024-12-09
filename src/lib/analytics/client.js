@@ -35,7 +35,7 @@ export async function captureEvent(eventType, payload) {
             ...payload,
             path: get("x-pathname") || null,
             referer: get("referer") || null,
-            userAgent: get("x-user-agent") || null,
+            userAgent: get("x-user-agent").trim() || null,
             ...(currentUser?.uid && {
                 user: { id: currentUser.uid },
             }),
@@ -45,8 +45,6 @@ export async function captureEvent(eventType, payload) {
             method: "POST",
             body: JSON.stringify(sendPayload),
         });
-
-        console.log("logged and made request for event", eventType);
 
     } catch (err) {
 
@@ -73,8 +71,6 @@ export async function captureNavigation() {
         };
 
         await captureEvent("page view", payload);
-
-        console.log("logged event");
 
     } catch (err) {
 
