@@ -1,4 +1,4 @@
-const isDev = process.env.NODE_ENV === "development" || !process.env.NODE_ENV;
+export const isDev = (process.env.NODE_ENV || "production") === "development";
 
 export const authRoutes = [
     "/customer",

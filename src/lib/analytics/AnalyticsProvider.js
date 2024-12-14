@@ -4,10 +4,13 @@ import { localeRegex } from "@/app/i18n/settings";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { captureNavigation } from "./client";
+import { useAnalyticsSession } from "@/hooks/useAnalyticsSession";
 
 export default function AnalyticsProvider({ children }) {
 
     const pathname = usePathname();
+
+    useAnalyticsSession();  
 
     useEffect(() => {
 
