@@ -1,8 +1,6 @@
 import { captureException } from "@sentry/nextjs";
 import { adminFirestore } from "@/lib/firebase/admin";
 import admin from "firebase-admin";
-import { analyticsServer } from "@/lib/analytics/Analytics";
-
 async function updateOrderDetails(orderId, customerDetails) {
 
     const orderRef = adminFirestore
@@ -107,8 +105,6 @@ export default async function handleCheckoutSessionCompleted(data, headers) {
                 user: { id: userId },
             }),
         };
-
-        await analyticsServer.captureEventServerSide("checkout completed", payload);
 
     } catch (err) {
 

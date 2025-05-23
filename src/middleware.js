@@ -6,16 +6,9 @@ import verifyFirebaseSessionJwt from './lib/authentication/verifyFirebaseJwt';
 import { authRoutes, guestRoutes, storageKeys } from './lib/constants/settings.config';
 import { v4 as uuid } from 'uuid';
 import { RequestCookies, ResponseCookies } from 'next/dist/compiled/@edge-runtime/cookies';
-import { Analytics } from './lib/analytics/Analytics';
 import { captureException } from '@sentry/nextjs';
-import { handleAnalyticsSession } from './lib/middleware/handleAnalyticsSession';
 
 acceptLanguage.languages(languages);
-
-const analytics = new Analytics({
-    apiKey: process.env.ANALYTICS_API_KEY,
-    baseUrl: process.env.ANALYTICS_API_URL
-});
 
 const isDev = (process.env.NODE_ENV || "production") === "development";
 
@@ -157,8 +150,6 @@ export async function middleware(request) {
         return NextResponse.redirect(new URL('/customer/personal-information', request.url));
     };
 
-    // Manage analytics
-    handleAnalyticsSession(cookieStore, response);
 
     // Redirect locked paths
     if (pathname.startsWith('/locked')) {
