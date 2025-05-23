@@ -27,7 +27,7 @@ export default async function checkout(user = null, items, total) {
             customerId,
             orderId,
             userId: user?.uid || null,
-            sessionId: cookieStore.get(storageKeys.ANALYTICS_SESSION_ID)?.value || null,
+            sessionId: null,
         });
 
         if (checkoutSession?.errors) throw new Error("Checkout creation failed. Please try again later.");

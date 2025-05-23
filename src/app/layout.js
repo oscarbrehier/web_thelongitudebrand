@@ -5,8 +5,6 @@ import ModalProvider from "@/lib/context/ModalContext";
 import { languages, fallbackLng } from "./i18n/settings";
 import { headers } from "next/headers";
 import Head from "next/head";
-import { captureNavigation } from "@/lib/analytics/client";
-import AnalyticsProvider from "@/lib/analytics/AnalyticsProvider";
 
 const baseUrl = "https://www.thelongitudebrand.com";
 
@@ -65,14 +63,10 @@ export default async function RootLayout({
 
 				<ModalProvider>
 
-					<AnalyticsProvider>
-
 						<body className={poppins.className}>
 							{children}
 							{/* <SpeedInsights /> */}
 						</body>
-
-					</AnalyticsProvider>
 
 				</ModalProvider>
 

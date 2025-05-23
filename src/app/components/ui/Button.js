@@ -1,7 +1,6 @@
 "use client"
 import { useEffect, useState } from "react"
 import LoadingSpinner from "./loadingSpinner";
-import { captureEvent } from "@/lib/analytics/client";
 
 export default function Button({
     title,
