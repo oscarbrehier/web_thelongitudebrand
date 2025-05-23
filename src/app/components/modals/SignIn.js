@@ -33,6 +33,8 @@ export default function SignInModal() {
 
         try {
 
+            console.log("attempting to sign in");
+
             const formData = new FormData(event.target);
 
             const data = {
@@ -43,6 +45,8 @@ export default function SignInModal() {
             signInSchema.parse(data);
 
             await signIn(data.email, data.password);
+
+            console.log("successfully logged in");
             
             closeModal();
             router.push("/customer/personal-information");

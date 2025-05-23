@@ -1,6 +1,7 @@
 import firebase_app from "../firebase/client";
 import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
 import setSessionCookie from "./setSessionCookie";
+import { captureException } from "@sentry/nextjs";
 
 const auth = getAuth(firebase_app);
 
@@ -16,6 +17,8 @@ export default async function signIn(email, password) {
 
     } catch (err) {
 
+        captureException(err);
+        console.error(err);
         throw err;
 
     };
