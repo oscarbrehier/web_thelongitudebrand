@@ -24,7 +24,7 @@ export default function Page({
                         <h3 className="capitalize text-sm underline">email</h3>
                         <p className="text-sm">
                             Send us a message below or email &nbsp;
-                            <a className="underline" href="mailto:support@thelongitudebrand.com">support@thelongitudebrand.com</a>. 
+                            <a className="underline" href="mailto:support@longitudebrand.com">support@longitudebrand.com</a>. 
                             We’ll reply within 24 hours. </p>
                     </div>
 

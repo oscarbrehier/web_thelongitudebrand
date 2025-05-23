@@ -3,7 +3,7 @@ import { languages } from "./i18n/settings";
 
 export default async function sitemap() {
 
-    const baseUrl = "https://www.thelongitudebrand.com";
+    const baseUrl = "https://www.longitudebrand.com";
     const staticRoutes = ["", "cart"];
 
     const response = await getProductSlugs();

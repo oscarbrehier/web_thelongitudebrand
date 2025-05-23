@@ -11,7 +11,7 @@ export default async function createCheckoutSession(data) {
 	const { stripeCart, customerId, orderId, userId } = data;
 
 	const isDev = process.env.NODE_ENV === "development";
-	const origin = isDev ? "http://localhost:3000" : "https://www.thelongitudebrand.com";
+	const origin = isDev ? "http://localhost:3000" : "https://www.longitudebrand.com";
 
 	try {	
 

@@ -48,7 +48,7 @@ export default async function Page({
                 <div className="space-y-2 text-sm mt-4">
 
                     <p>
-                        Welcome to Longitude! These terms and conditions outline the rules and regulations for using Longitude’s website, located at thelongitudebrand.com.
+                        Welcome to Longitude! These terms and conditions outline the rules and regulations for using Longitude’s website, located at longitudebrand.com.
                     </p>
 
                     <p>

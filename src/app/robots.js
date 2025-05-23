@@ -1,6 +1,6 @@
 export default async function robots() {
 
-    const baseUrl = "https://www.thelongitudebrand.com";
+    const baseUrl = "https://www.longitudebrand.com";
 
     return {
         rules: {

@@ -6,7 +6,7 @@ import { languages, fallbackLng } from "./i18n/settings";
 import { headers } from "next/headers";
 import Head from "next/head";
 
-const baseUrl = "https://www.thelongitudebrand.com";
+const baseUrl = "https://www.longitudebrand.com";
 
 export const metadata = {
 

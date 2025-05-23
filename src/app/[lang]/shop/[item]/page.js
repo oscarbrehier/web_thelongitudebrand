@@ -19,7 +19,7 @@ export async function generateMetadata({ params: { lang, item } }) {
 
         };
 
-        const url = `https://www.thelongitudebrand.com/${lang}/shop/${item}`;
+        const url = `https://www.longitudebrand.com/${lang}/shop/${item}`;
 
         return {
             title: response.title,
@@ -80,8 +80,8 @@ export default async function Page({ params: { item, lang } }) {
             "@context": "https://schema.org",
             "@type": "Organization",
             name: "Longitude",
-            url: "https://www.thelongitudebrand.com",
-            logo: "https://www.thelongitudebrand.com/logo.png",
+            url: "https://www.longitudebrand.com",
+            logo: "https://www.longitudebrand.com/logo.png",
         },  
         {
             "@context": "https://schema.org",
@@ -89,7 +89,7 @@ export default async function Page({ params: { item, lang } }) {
             name: content.title,
             description: content.description,
             image: Array.isArray(content.cover) ? content.cover : [content.cover],
-            url: `https://www.thelongitudebrand.com/${lang}/shop/${item}`,
+            url: `https://www.longitudebrand.com/${lang}/shop/${item}`,
             brand: {
                 "@type": "Brand",
                 name: "Longitude",
