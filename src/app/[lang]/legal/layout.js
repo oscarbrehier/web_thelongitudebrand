@@ -2,12 +2,16 @@ import { Suspense } from "react";
 import LoadingPanel from "@/app/components/LoadingPanel";
 import SubMenu from "@/app/components/navigation/SubMenu";
 
-export default function Layout({
-    children,
-    params: {
+export default async function Layout(props) {
+    const params = await props.params;
+
+    const {
         lang
-    }
-}) {
+    } = params;
+
+    const {
+        children
+    } = props;
 
     "customer-service", "privacy-policy", "cookie-policy"
 
@@ -45,5 +49,4 @@ export default function Layout({
         </div>
 
     );
-
 };

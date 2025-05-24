@@ -5,7 +5,7 @@ import { storageKeys } from "@/lib/constants/settings.config";
 
 export async function GET() {
 
-    const sessionCookie = cookies().get(storageKeys.SESSION)?.value;
+    const sessionCookie = (await cookies()).get(storageKeys.SESSION)?.value;
 
     if (!sessionCookie) {
 
@@ -16,7 +16,7 @@ export async function GET() {
 
     };
 
-    cookies().delete(storageKeys.SESSION);
+    (await cookies()).delete(storageKeys.SESSION);
 
     await revokeAllSessions(sessionCookie);
 

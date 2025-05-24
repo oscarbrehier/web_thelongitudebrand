@@ -3,12 +3,16 @@ import LoadingPanel from "@/app/components/LoadingPanel";
 import SubMenu from "@/app/components/navigation/SubMenu";
 import SignOutButton from "./button-sign-out";
 
-export default function Layout({
-    children,
-    params: {
+export default async function Layout(props) {
+    const params = await props.params;
+
+    const {
         lang
-    }
-}) {
+    } = params;
+
+    const {
+        children
+    } = props;
 
     const categories = ["personal-information", "orders", "wishlist"];
 
@@ -42,5 +46,4 @@ export default function Layout({
         </div>
 
     );
-
 };

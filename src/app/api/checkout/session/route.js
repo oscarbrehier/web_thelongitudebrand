@@ -34,7 +34,7 @@ export async function POST(request, response) {
 
 export async function GET(request, response) {
 
-	const headersList = headers();
+	const headersList = await headers();
 	const session_id = headersList.get('session-id');
 
 	try {

@@ -42,7 +42,7 @@ export default async function RootLayout({
 
 	let lang;
 
-	const headersList = headers();
+	const headersList = await headers();
 
 	lang = headersList.has("x-language") ? headersList.get("x-languge") : fallbackLng;
 

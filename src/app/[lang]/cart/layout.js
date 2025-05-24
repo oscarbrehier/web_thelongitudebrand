@@ -1,8 +1,12 @@
-"use client"
+"use client";
 import { useAuthContext } from "@/lib/context/AuthContext";
 import LoadingPanel from "@/app/components/LoadingPanel";
 
-export default function Layout({ children, params: { lang } }) {
+export default function Layout(props) {
+
+    const {
+        children
+    } = props;
 
     const { loadingCart } = useAuthContext();
 
@@ -37,5 +41,4 @@ export default function Layout({ children, params: { lang } }) {
             </div>
 
     );
-
-};
+}

@@ -27,11 +27,12 @@ function parseMarkdown(markdownText) {
     return sections;
 };
 
-export default async function Page({
-    params: {
+export default async function Page(props) {
+    const params = await props.params;
+
+    const {
         lang
-    }
-}) {
+    } = params;
 
     const QUERY = `*[_type == "legal" && title == "terms-conditions"]`;
     const res = await client.fetch(QUERY, { cache: "no-store" });
@@ -76,5 +77,4 @@ export default async function Page({
         </div>
 
     )
-
 }

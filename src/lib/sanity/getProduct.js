@@ -2,7 +2,9 @@ import { client } from "./client";
 
 async function getProduct(query) {
 
-    const product = await client.fetch(query);
+    const product = await client.fetch(query, {
+        cache: process.env.NODE_ENV === "development" ? "no-store" : "force-cache"
+    });
 
     if (product.length == 0 || !product) return null;
     

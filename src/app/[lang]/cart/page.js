@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import checkout from "@/lib/checkout";
 import Button from "@/app/components/ui/Button";
@@ -10,17 +10,17 @@ import { useModalContext } from "@/lib/context/ModalContext";
 import dynamic from "next/dynamic";
 import deleteOrder from "@/lib/firestore/deleteOrder";
 import NoContentLayout from "@/app/components/NoContentLayout";
+import { useTranslation } from "@/app/i18n/client";
 
 const CartItemSmall = dynamic(() => import("@/app/components/CartItemSmall"));
 
-export default function Page({
-    params: {
-        lang
-    }
-}) {
+export default function Page(props) {
 
     const router = useRouter();
-    const params = useSearchParams();
+    const params = use(props.params);
+    const { lang } = params;
+
+    const { t } = useTranslation(lang, "shop");
 
     const { user } = useAuthContext();
     const { openModal } = useModalContext();
@@ -155,7 +155,7 @@ export default function Page({
                 <div className="space-y-2">
 
                     <Button
-                        title="proceed to checkout"
+                        title={t('cta_checkout')}
                         onClick={getCheckout}
                         size="w-full lg:h-14 h-10"
                         loading={loading}

@@ -4,7 +4,13 @@ import getProductSlugs from "@/lib/sanity/getProductSlugs";
 import { languages } from "@/app/i18n/settings";
 import { notFound } from "next/navigation";
 
-export async function generateMetadata({ params: { lang, item } }) {
+export async function generateMetadata(props) {
+    const params = await props.params;
+
+    const {
+        lang,
+        item
+    } = params;
 
     try {
 
@@ -52,8 +58,7 @@ export async function generateMetadata({ params: { lang, item } }) {
 
         console.log(err)
 
-    };
-
+    }
 };
 
 export async function generateStaticParams() {
@@ -69,7 +74,13 @@ export async function generateStaticParams() {
 
 };
 
-export default async function Page({ params: { item, lang } }) {
+export default async function Page(props) {
+    const params = await props.params;
+
+    const {
+        item,
+        lang
+    } = params;
 
     const content = await getProductBySlug(item);
 
@@ -118,5 +129,4 @@ export default async function Page({ params: { item, lang } }) {
         </>
 
     );
-
 };

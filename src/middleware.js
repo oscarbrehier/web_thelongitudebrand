@@ -13,7 +13,7 @@ export async function middleware(request) {
     let lng;
     let isAuth = false;
 
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const response = NextResponse.next();
     const headersList = request.headers;
 

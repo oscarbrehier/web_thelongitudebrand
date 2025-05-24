@@ -4,7 +4,7 @@ import InputWithLabel from "@/app/components/ui/InputWithLabel";
 import getPasswordStrength from "@/lib/utils/getPasswordStrength";
 import Button from "@/app/components/ui/Button";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, use } from "react";
 import { z } from "zod";
 
 const passwordCriteria = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
@@ -24,7 +24,12 @@ const formSchema = z.object({
     path: ["confirmNewPassword"]
 });
 
-export default function Page({ params: { lang } }) {
+export default function Page(props) {
+    const params = use(props.params);
+
+    const {
+        lang
+    } = params;
 
     const router = useRouter();
 
@@ -219,5 +224,4 @@ export default function Page({ params: { lang } }) {
         </div>
 
     );
-
 };

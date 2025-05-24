@@ -1,3 +1,5 @@
+"use server"
+
 import { headers } from "next/headers";
 import { PageContainer } from "../components/container/PageContainer";
 import { languages } from "../i18n/settings";
@@ -8,22 +10,25 @@ export async function generateStaticParams() {
 
 };
 
-export default function Layout({
-    children, 
-    params: {
-        lang
-    }
-}) {
+export default async function Layout(props) {
+    const params = await props.params;
 
-    const pathname = headers().get("x-pathname");
+    const {
+        lang
+    } = params;
+
+    const {
+        children
+    } = props;
+
+    const pathname = (await headers()).get("x-pathname");
     if (pathname == "home") return children;
 
     return (
 
         <PageContainer lang={lang}>
-            {children}
+           {children}
         </PageContainer>
 
     );
-
 };

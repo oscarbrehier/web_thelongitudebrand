@@ -2,11 +2,12 @@ import { getCurrentUser } from "@/lib/authentication/sessionHelpers";
 import Content from "./content";
 import { adminFirestore } from "@/lib/firebase/admin";
 
-export default async function Page({
-    params: {
+export default async function Page(props) {
+    const params = await props.params;
+
+    const {
         lang
-    }
-}) {
+    } = params;
 
     const user = await getCurrentUser();
     const firestoreUser = await adminFirestore
@@ -31,5 +32,4 @@ export default async function Page({
         </div>
 
     );
-
 };

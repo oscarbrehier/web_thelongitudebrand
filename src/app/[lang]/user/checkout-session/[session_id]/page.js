@@ -1,16 +1,17 @@
 'use client'
-import { useEffect, useState } from "react";
+import { useEffect, useState, use } from "react";
 import { client } from "@/lib/sanity/client";
 import { getImage } from "@/lib/sanity/getImage";
 import { usePathname } from "next/navigation";
 
-export default function Page({ params }) {
+export default function Page(props) {
+    const params = use(props.params);
 
     let { session_id } = params;
     const [data, setData] = useState({ session: null, order: null });
-    
+
     const pathname = usePathname();
-    
+
     useEffect(() => {
 
         console.log(pathname);
@@ -122,5 +123,4 @@ export default function Page({ params }) {
         </main>
 
     );
-
 };

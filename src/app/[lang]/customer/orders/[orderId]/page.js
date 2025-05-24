@@ -7,14 +7,19 @@ import { DownloadReceiptButton } from "./button-download-receipt";
 import catchError from "@/lib/catchErrors";
 import orderStatus from "@/lib/constants/orderStatus";
 
-export default async function Page({ params: { orderId } }) {
+export default async function Page(props) {
+    const params = await props.params;
+
+    const {
+        orderId
+    } = params;
 
     const [error, data] = await catchError(getOrderDetails(orderId));
 
     if (error) return;
 
     const { order, orderProcess, checkout } = data;
- 
+
     return data && (
 
         <div className="h-auto w-full mt-16 sm:space-y-8 space-y-12">
@@ -116,5 +121,4 @@ export default async function Page({ params: { orderId } }) {
         </div>
 
     );
-
 };
