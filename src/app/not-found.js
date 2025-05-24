@@ -1,7 +1,4 @@
-import Link from "next/link";
 import { PageContainer } from "./components/container/PageContainer";
-import Button from "./components/ui/Button";
-import Hyperlink from "./components/ui/Hyperlink";
 import NoContentLayout from "./components/NoContentLayout";
 
 export default function NotFound() {

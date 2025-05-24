@@ -3,7 +3,7 @@ import { create } from "zustand";
 import getCartFromDb from "../firestore/getCartFromDb";
 import updateCartInFirestore from "@/actions/updateCartInFirestore";
 
-const updateError = () => console.error('Failed to update cart in Firebase.');
+const throwUpdateError = () => console.error('Failed to update cart in Firebase.');
 
 export const useCartStore = create(
     persist(
@@ -20,7 +20,7 @@ export const useCartStore = create(
 
                     const result = await updateCartInFirestore([], user.uid);
 
-                    if (result?.errors) updateError();
+                    if (result?.errors) throwUpdateError();
 
                 };
 
@@ -28,23 +28,39 @@ export const useCartStore = create(
 
             },
 
-            getCart: async (user) => {
+            getCart: async (user, force = false) => {
 
                 set({ loadingCart: true });
+                force && console.log("force loading cart");
 
                 if (user) {
 
                     try {
+                        
+                        // const { items } = await getCartFromDb(user);
+                        // set({ cart: items.length !== 0 ? items : [] });
 
-                        const { items } = await getCartFromDb(user);
-                        set({ cart: items.length !== 0 ? items : [] });
+                        const { items: dbCart } = await getCartFromDb(user);
+                        const localCart = get().cart;
+
+                        if (force && dbCart.length == 0)
+                        {
+                            const result = await updateCartInFirestore(localCart, user);
+                            if (result?.errors) throwUpdateError();
+                            
+                        }
+                        else
+                        {
+                            set({ cart: dbCart.length !== 0 ? dbCart : [] });
+                        }
 
                     } catch (err) {
 
                         throw err;
 
-                    };
-                };
+                    }
+
+                }
 
                 set({ loadingCart: false });
                 get().calculateTotal();
@@ -71,7 +87,7 @@ export const useCartStore = create(
                 if (user) {
 
                     const result = await updateCartInFirestore(cart, user);
-                    if (result?.errors) updateError();
+                    if (result?.errors) throwUpdateError();
 
                 };
 
@@ -79,7 +95,6 @@ export const useCartStore = create(
             },
 
             removeFromCart: async (productId, user) => {
-
                 const updatedCart = get().cart.filter(
                     (cartItem) => cartItem.productId !== productId
                 );
@@ -88,13 +103,9 @@ export const useCartStore = create(
                 get().calculateTotal();
 
                 if (user) {
-
-                    const result = await updateCartInFirestore(cart, user);
-                    if (result?.errors) updateError();
-
-                };
-
-
+                    const result = await updateCartInFirestore(updatedCart, user.uid);
+                    if (result?.errors) throwUpdateError();
+                }
             },
 
             editItemQuantity: async (productId, direction, user) => {
@@ -116,7 +127,7 @@ export const useCartStore = create(
                 if (user) {
 
                     const result = await updateCartInFirestore(cart, user);
-                    if (result?.errors) updateError();
+                    if (result?.errors) throwUpdateError();
                     
                 };
 

@@ -2,5 +2,8 @@
     "shop": "boutique",
     "view_all": "afficher tout",
     "t_shirt": "t-shirts",
-    "tank_top": "débardeurs"
+    "tank_top": "débardeurs",
+    "preorder": "précommander",
+    "in_stock": "ajouter au panier",
+    "out_of_stock": "en rupture de stock"
 }

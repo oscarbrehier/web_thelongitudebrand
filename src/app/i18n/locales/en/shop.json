@@ -2,5 +2,8 @@
     "shop": "shop",
     "view_all": "view all",
     "t_shirts": "t-shirts",
-    "tank_tops": "tank tops"
+    "tank_tops": "tank tops",
+    "preorder": "pre order",
+    "in_stock": "add to cart",
+    "out_of_stock": "out of stock"
 }

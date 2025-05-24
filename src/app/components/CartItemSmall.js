@@ -38,7 +38,7 @@ export default function CartItemSmall({
     const resetModalTimeout = () => {
 
         if (timeoutId) clearTimeout(timeoutId);
-        const id = setTimeout(() => closeModal(), 5000);
+        const id = setTimeout(() => closeModal("added_cart"), 5000);
         setTimeoutId(id);
 
     };
@@ -72,7 +72,7 @@ export default function CartItemSmall({
             setLoading(true);
             await delay(1000);
             setLoading(false);
-            closeModal();
+            closeModal("added_cart");
 
         };
 
@@ -83,11 +83,9 @@ export default function CartItemSmall({
 
     useEffect(() => {
 
-        const handleCloseModal = () => {
-            closeModal();
-        };
-
-        const id = setTimeout(handleCloseModal, 5000);
+        const id = setTimeout(() => {
+            closeModal("added_cart");
+        }, 5000);
         setTimeoutId(id);
 
         return () => clearTimeout(id);

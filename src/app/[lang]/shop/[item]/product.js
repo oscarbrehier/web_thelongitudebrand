@@ -8,12 +8,14 @@ import isProductInWishlist from "@/lib/firestore/wishlist/isProductInWishlist";
 import SanityImage from "@/app/components/ui/SanityImage";
 import { useCartStore } from "@/lib/stores/useCartStore";
 import Button from "@/app/components/ui/Button";
+import { useTranslation } from "@/app/i18n/client";
 
 export function Product({
     lang,
     content,
-    auth,
 }) {
+
+    const { t } = useTranslation(lang, 'shop');
 
     const [size, setSize] = useState(null);
     const [wishlist, setWishlist] = useState(false);
@@ -25,31 +27,36 @@ export function Product({
             error: false,
             errorMessage: 'please select your size first'
         },
+        availability: {
+            error: false,
+            errorMessage: ''
+        }
     });
 
     const addToCartRefBtn = useRef(null);
-    const sizeMenuRef = useRef(null);
-
     const { openModal } = useModalContext();
     const { user, isAuth } = useAuthContext();
     const { addToCart } = useCartStore();
 
-    const setSizeError = (errorState) => {
-
-        setLabels(prevLabels => ({
-            ...prevLabels,
-            size: {
-                ...prevLabels.size,
-                error: errorState,
+    const toggleLabelError = (attr, message) => {
+        setLabels(prev => ({
+            ...prev,
+            [attr]: {
+                ...prev[attr],
+                error: !prev[attr].error,
+                errorMessage: message ?? prev[attr].errorMessage
             }
         }));
-
     };
 
     const addItemToCart = async () => {
 
 
-        if (size == null) return setSizeError(true);
+        if (size == null) return toggleLabelError('size');
+        if (content.availability == "out_of_stock") {
+            toggleLabelError('availability', 'item is out of stock')
+            return;
+        }
 
         openModal("added_cart");
 
@@ -95,7 +102,7 @@ export function Product({
 
     useEffect(() => {
 
-        if (size !== 4 && labels.size.error == true) setSizeError(false);
+        if (size !== 4 && labels.size.error == true) toggleLabelError('size');
 
     }, [size]);
 
@@ -154,11 +161,20 @@ export function Product({
                         style="xs:w-[85%] w-full"
                     />
 
+                    {
+                        labels.availability.error && (
+                            <div className="xs:w-[85%] w-full">
+                                <p className="text-xs capitalize text-red-600">{labels.availability.errorMessage}</p>
+                            </div>
+                        )
+                    }
+
                     <Button
-                        title="add to cart"
+                        title={t(content.availability)}
                         size="xs:w-[85%] w-full h-10"
                         text="uppercase"
                         onClick={addItemToCart}
+                        disabled={content.availability == "out_of_stock"}
                     />
 
                 </div>
@@ -235,12 +251,19 @@ export function Product({
 
                     <div className="flex flex-col space-y-2">
 
+                        {
+                            labels.availability.error && (
+                                <p className="text-xs capitalize text-red-600">{labels.availability.errorMessage}</p>
+                            )
+                        }
+
                         <div ref={addToCartRefBtn}>
                             <Button
-                                title="add to cart"
+                                title={t(content.availability)}
                                 size="w-full h-10"
                                 text="uppercase"
                                 onClick={addItemToCart}
+                                disabled={content.availability == "out_of_stock"}
                             />
                         </div>
 
