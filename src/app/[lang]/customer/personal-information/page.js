@@ -3,6 +3,7 @@ import Content from "./content";
 import { adminFirestore } from "@/lib/firebase/admin";
 
 export default async function Page(props) {
+
     const params = await props.params;
 
     const {
@@ -20,16 +21,22 @@ export default async function Page(props) {
 
     return (
 
-        <div className="w-full mt-16 2md:grid grid-cols-4 gap-2">
+        <div className="flex-1 w-full flex flex-col">
 
-            <div className="col-start-2 col-span-2 h-auto">
+            <h1 className="capitalize font-playfair text-5xl italic">personal information</h1>
 
-                <h1 className="capitalize mx-2 my-1 text-lg">personal information</h1>
+            <div className="w-full mt-14 2md:grid grid-cols-4 gap-2">
 
-                {content && <Content content={content} lang={lang} />}
+                <div className="col-start-2 col-span-2 h-auto">
+
+                    {content && <Content content={content} lang={lang} />}
+
+                </div>
 
             </div>
+
         </div>
+
 
     );
 };

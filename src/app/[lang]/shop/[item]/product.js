@@ -9,6 +9,7 @@ import SanityImage from "@/app/components/ui/SanityImage";
 import { useCartStore } from "@/lib/stores/useCartStore";
 import Button from "@/app/components/ui/Button";
 import { useTranslation } from "@/app/i18n/client";
+import posthog from "posthog-js";
 
 export function Product({
     lang,
@@ -51,13 +52,17 @@ export function Product({
 
     const addItemToCart = async () => {
 
-
         if (size == null) return toggleLabelError('size');
         if (content.availability == "out_of_stock") {
             toggleLabelError('availability', 'item is out of stock')
             return;
         }
 
+        posthog.capture('add to cart', {
+            productId: `${content._id}`,
+            name: content.title,
+            size: size,
+        });
         openModal("added_cart");
 
         await addToCart({

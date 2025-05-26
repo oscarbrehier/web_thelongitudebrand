@@ -9,9 +9,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, use } from "react";
 import { signInSchema } from "@/lib/constants/zodSchema";
 import SignInForm from "@/app/components/forms/SignInForm";
+import { useCartStore } from "@/lib/stores/useCartStore";
 
 export default function Page(props) {
     const params = use(props.params);
+
+    const setCartSync = useCartStore((state) => state.setSynced);
 
     const {
         lang
@@ -44,7 +47,7 @@ export default function Page(props) {
             };
 
             signInSchema.parse(data);
-            await signIn(data.email, data.password);
+            await signIn(data.email, data.password, setCartSync);
             
             setStatus("success");
             router.push("/customer/personal-information");

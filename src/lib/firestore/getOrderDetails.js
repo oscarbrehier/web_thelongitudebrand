@@ -23,11 +23,12 @@ export default async function getOrderDetails(orderId) {
 
     try {
 
-        const [order, orderProcess, checkout] = await Promise.all([
+        const [order, orderProcess] = await Promise.all([
             getOrder(orderId),
             getOrderProcess(orderId),
-            getCheckoutData(order.stripeCheckoutId)
         ]);
+
+        const checkout = await getCheckoutData(order.stripeCheckoutId);
 
         if (order?.error || orderProcess?.error || checkout?.error) {
             return handleError();
@@ -36,7 +37,7 @@ export default async function getOrderDetails(orderId) {
         return {
             order,
             orderProcess,
-            checkout: stripeSessionData
+            checkout
         }
 
     } catch (err) {

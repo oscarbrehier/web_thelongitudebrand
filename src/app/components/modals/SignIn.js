@@ -9,6 +9,7 @@ import handleFirebaseError from "@/lib/firebase/handleFirebaseError";
 import ModalContainer from "./ModalContainer";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useCartStore } from "@/lib/stores/useCartStore";
 
 const FORM_DEFAULT = {
     submit: false,
@@ -24,6 +25,8 @@ export default function SignInModal() {
 
     const [form, setForm] = useState(FORM_DEFAULT);
     const [loading, setLoading] = useState(false);
+
+    const setCartSync = useCartStore((state) => state.setSynced);
 
     const handleFormSubmit = async (event) => {
 
@@ -44,7 +47,7 @@ export default function SignInModal() {
 
             signInSchema.parse(data);
 
-            await signIn(data.email, data.password);
+            await signIn(data.email, data.password, setCartSync);
 
             console.log("successfully logged in");
             

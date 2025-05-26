@@ -4,6 +4,7 @@ import SubMenu from "@/app/components/navigation/SubMenu";
 import SignOutButton from "./button-sign-out";
 
 export default async function Layout(props) {
+
     const params = await props.params;
 
     const {
@@ -14,36 +15,41 @@ export default async function Layout(props) {
         children
     } = props;
 
-    const categories = ["personal-information", "orders", "wishlist"];
+    const customerPages = ["personal-information", "orders", "wishlist"];
+
 
     return (
 
-        <div className="min-h-screen w-full pt-16 flex flex-col">
+        <Suspense fallback={<LoadingUI />}>
 
-            <Suspense fallback={<LoadingPanel />}>
+            <div className="mt-16">
+                <SubMenu
+                    baseRoute="/customer"
+                    items={customerPages}
+                    lang={lang}
+                >
 
-                <div className="w-full flex-1 flex flex-col items-start">
+                    <SignOutButton
+                        title="sign out"
+                        className="text-sm hover:bg-neon-green"
+                    />
 
-                    <SubMenu
-                        baseRoute="/customer"
-                        items={categories}
-                        lang={lang}
-                    >
-                        
-                        <SignOutButton
-                            title="sign out"
-                            className="text-sm hover:bg-neon-green"
-                        />
+                </SubMenu>
+            </div>
 
-                    </SubMenu>
+            <div className={`w-full flex flex-col flex-1`}>
+                {children}
+            </div>
 
-                    {children}
+        </Suspense>
 
-                </div>
+    );
+};
 
-            </Suspense>
-
+function LoadingUI() {
+    return (
+        <div className="w-full pt-16 flex flex-col min-h-screen">
+            <LoadingPanel />
         </div>
-
     );
 };

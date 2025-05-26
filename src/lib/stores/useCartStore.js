@@ -10,6 +10,7 @@ export const useCartStore = create(
         (set, get) => ({
             cart: [],
             total: 0,
+            synced: false,
             loadingCart: true,
 
             cartLength: () => get().cart.length,
@@ -40,19 +41,33 @@ export const useCartStore = create(
                         // const { items } = await getCartFromDb(user);
                         // set({ cart: items.length !== 0 ? items : [] });
 
-                        const { items: dbCart } = await getCartFromDb(user);
                         const localCart = get().cart;
+                        const { items: dbCart } = await getCartFromDb(user);
 
-                        if (force && dbCart.length == 0)
+                        if (dbCart.length === 0 && localCart.length != 0)
                         {
-                            const result = await updateCartInFirestore(localCart, user);
-                            if (result?.errors) throwUpdateError();
+                            if (force) {
+                                const result = await updateCartInFirestore(localCart, user);
+                                if (result?.errors) throwUpdateError(); 
+                            }
+                            else
+                            {
+                                set({ cart: [] });
+                            }
+                        } else {
+                            set({ cart: dbCart });
+                        }
+
+                        // if (force && dbCart.length == 0)
+                        // {
+                        //     const result = await updateCartInFirestore(localCart, user);
+                        //     if (result?.errors) throwUpdateError();
                             
-                        }
-                        else
-                        {
-                            set({ cart: dbCart.length !== 0 ? dbCart : [] });
-                        }
+                        // }
+                        // else
+                        // {
+                        //     set({ cart: dbCart.length !== 0 ? dbCart : [] });
+                        // }
 
                     } catch (err) {
 
@@ -144,6 +159,10 @@ export const useCartStore = create(
                 set({ total });
 
             },
+
+            setSynced: (state) => {
+                set({ synced: state });
+            }
         }),
         {
             name: "cart-storage", // Key for local storage

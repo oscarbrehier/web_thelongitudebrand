@@ -5,12 +5,15 @@ export default function NoContentLayout({
     text,
     linkTitle,
     link,
-    children
+    height,
+    children,
 }) {
 
+    if (!height) height = "h-screen";
+    
     return (
 
-        <div className="h-screen w-full lg:grid grid-cols-4 gap-2 flex items-center justify-center">
+        <div className={`w-full lg:grid grid-cols-4 gap-2 flex items-center justify-center ${height}`}>
 
             <div className="col-span-2 col-start-2 lg:w-full md:w-2/3 w-full md:p-0 sm:px-8 flex flex-col justify-center space-y-4">
 

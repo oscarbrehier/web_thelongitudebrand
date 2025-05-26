@@ -27,7 +27,7 @@ export default async function Layout(props) {
     return (
 
         <PageContainer lang={lang}>
-           {children}
+            {children}
         </PageContainer>
 
     );
