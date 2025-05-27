@@ -22,23 +22,27 @@ export default async function Layout(props) {
 
         <Suspense fallback={<LoadingUI />}>
 
-            <div className="mt-16">
-                <SubMenu
-                    baseRoute="/customer"
-                    items={customerPages}
-                    lang={lang}
-                >
+            <div className="min-h-screen flex flex-col">
 
-                    <SignOutButton
-                        title="sign out"
-                        className="text-sm hover:bg-neon-green"
-                    />
+                <div className="mt-16">
+                    <SubMenu
+                        baseRoute="/customer"
+                        items={customerPages}
+                        lang={lang}
+                    >
 
-                </SubMenu>
-            </div>
+                        <SignOutButton
+                            title="sign out"
+                            className="text-sm hover:bg-neon-green"
+                        />
 
-            <div className={`w-full flex flex-col flex-1`}>
-                {children}
+                    </SubMenu>
+                </div>
+
+                <div className={`w-full flex flex-col flex-1`}>
+                    {children}
+                </div>
+
             </div>
 
         </Suspense>

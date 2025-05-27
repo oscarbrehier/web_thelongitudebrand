@@ -56,7 +56,7 @@ export default function Button({
                         className={border
                             ? (disabled ? "text-neutral-500" : "text-black")
                             : (disabled ? "text-neutral-500" : "text-white hover:text-black")
-                    }>
+                        }>
                         {title}</p>
 
                 )

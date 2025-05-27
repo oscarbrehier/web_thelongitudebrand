@@ -19,15 +19,16 @@ export default function NoContentLayout({
 
                 <div className="w-full flex flex-col space-y-2">
                     <h1 className="text-4xl">{title}</h1>
-                    <p className="lg:w-2/3">{text}</p>
+                    {text && <p className="lg:w-2/3">{text}</p>}
                     {children}
                 </div>
 
                 <Hyperlink
-                    title={linkTitle}
                     size="h-14 lg:w-2/3"
                     to={link}
-                />
+                >
+                    {linkTitle}
+                </Hyperlink>
 
             </div>
 

@@ -12,11 +12,9 @@ export default async function Page() {
             {
                 orders.length === 0 ? (
 
-                    <div className="flex-1 w-full grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-2">
+                    <div className="flex-1 w-full mt-16 flex justify-center">
 
-                        <div className="col-span-2 col-start-2 flex flex-col items-center justify-center pb-16">
-                            <p className="text-3xl">You don't have any orders</p>
-                        </div>
+                        <p className="font-playfair text-5xl italic mt-14">no orders.</p>
 
                     </div>
 

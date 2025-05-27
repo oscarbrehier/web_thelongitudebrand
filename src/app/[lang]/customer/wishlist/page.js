@@ -2,8 +2,6 @@ import { adminFirestore } from "@/lib/firebase/admin";
 import { getProductById } from "@/lib/sanity/getProduct";
 import { StoreItem } from "@/app/components/store/StoreItem";
 import { getCurrentUser } from "@/lib/authentication/sessionHelpers";
-import Hyperlink from "@/app/components/ui/Hyperlink";
-import NoContentLayout from "@/app/components/NoContentLayout";
 
 export default async function Page() {
 
@@ -38,21 +36,25 @@ export default async function Page() {
     return (
 
         <div className="flex-1 w-full mt-16 flex flex-col">
-            <h1 className="capitalize font-playfair text-5xl italic">wishlist</h1>
+            {/* <h1 className="capitalize font-playfair text-5xl italic">wishlist</h1> */}
             {
                 data.length > 0 ? (
 
-                    <div className="h-auto w-full grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-2">
+                    <>
+                        <h1 className="capitalize mx-2 my-1 text-lg">wishlist</h1>
 
-                        {data && data.map((item, index) => (
-                            <StoreItem key={index} data={item} />
-                        ))}
+                        <div className="h-auto w-full grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-2">
 
-                    </div>
+                            {data && data.map((item, index) => (
+                                <StoreItem key={index} data={item} />
+                            ))}
+
+                        </div>
+                    </>
 
                 ) : (
                     <div className="flex-1 flex flex-col items-center mt-14 text-sm space-y-2">
-                        <p>You have no items in your wishlist.</p>
+                        <p className="font-playfair text-5xl italic">empty.</p>
                     </div>
                 )
             }

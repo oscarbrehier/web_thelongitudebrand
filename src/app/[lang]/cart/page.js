@@ -1,18 +1,17 @@
 "use client"
-import { use, useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { use, useState } from "react";
+import { useRouter } from "next/navigation";
 import checkout from "@/lib/checkout";
 import Button from "@/app/components/ui/Button";
 import { useAuthContext } from "@/lib/context/AuthContext";
 import { useCartStore } from "@/lib/stores/useCartStore";
-import Hyperlink from "@/app/components/ui/Hyperlink";
 import { useModalContext } from "@/lib/context/ModalContext";
 import dynamic from "next/dynamic";
-import deleteOrder from "@/lib/firestore/deleteOrder";
-import NoContentLayout from "@/app/components/NoContentLayout";
 import { useTranslation } from "@/app/i18n/client";
+import ProductSuggestion from "@/app/components/ProductSuggestion";
+import Hyperlink from "@/app/components/ui/Hyperlink";
 
-const CartItemSmall = dynamic(() => import("@/app/components/CartItemSmall"));
+const CartItemSmall = dynamic(() => import("@/app/components/cart/CartItemSmall"));
 
 export default function Page(props) {
 
@@ -59,29 +58,32 @@ export default function Page(props) {
         };
 
     };
-
-    // useEffect(() => {
-
-    //     if (params.has("checkout") && params.has("order_id")) {
-
-    //         const orderId = params.get("order_id");
-    //         if (user) deleteOrder(orderId);
-    //         router.push("/cart");
-
-    //     };
-
-    // }, [params]);
-
     if (!cart || cart.length === 0) {
 
         return (
 
-            <NoContentLayout
-                title="Your cart is empty"
-                text="Looks like you haven’t picked anything yet. Let’s change that!"
-                linkTitle="start shopping"
-                link="/shop"
-            />
+            <div className="h-auto w-full lg:grid grid-cols-4 gap-4 pb-10">
+
+                <div className="h-[50vh] w-full col-start-2 col-span-2 flex flex-col pt-24">
+
+                    <div>
+                        <h1 className="text-lg capitalize mx-2">cart ({cart?.length} items)</h1>
+                    </div>
+
+                    <div className="w-full flex-1 flex items-center justify-center flex-col space-y-2">
+                        <p>your cart is empty</p>
+                        <Hyperlink to="/shop" size="h-10 px-10" text="uppercase">
+                            continue shopping
+                        </Hyperlink>
+                    </div>
+
+                </div>
+
+                <div className="col-span-4">
+                    <ProductSuggestion lang={lang} />
+                </div>
+
+            </div>
 
         );
 

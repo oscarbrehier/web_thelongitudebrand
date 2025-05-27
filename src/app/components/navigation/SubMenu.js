@@ -14,8 +14,6 @@ export default function SubMenu({
     const routeRegex = new RegExp(`^\/[a-zA-Z]{2}${escapedBaseRoute}(\/.*)?$`);
     const doesMatchBaseRoute = routeRegex.test(pathname);
 
-    console.log(pathname);
-
     if (!doesMatchBaseRoute) return null;
 
     return (
