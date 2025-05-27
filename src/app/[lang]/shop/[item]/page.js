@@ -1,4 +1,4 @@
-import { getProductBySlug } from "@/lib/sanity/getProduct";
+import { getProductBySlug } from "@/lib/sanity/product";
 import { Product } from "./product";
 import getProductSlugs from "@/lib/sanity/getProductSlugs";
 import { languages } from "@/app/i18n/settings";

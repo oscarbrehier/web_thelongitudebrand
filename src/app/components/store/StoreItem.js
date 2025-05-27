@@ -1,6 +1,12 @@
 import SanityImage from "../ui/SanityImage";
+import { VariantQuickAdd } from "./VariantQuickAdd";
 
-export function StoreItem({ data: content, lang }) {
+export function StoreItem({
+    data: content,
+    lang,
+    variant = "basic",
+    ...props
+}) {
 
     const structuredData = JSON.stringify({
         "@context": "https://schema.org",
@@ -21,8 +27,18 @@ export function StoreItem({ data: content, lang }) {
         },
     })
 
-    return (
+    switch (variant) {
+        case "quick-add":
+            return (<VariantQuickAdd content={content} lang={lang} structuredData={structuredData} {...props} />);
+        default:
+            return (<VariantBasic content={content} lang={lang} structuredData={structuredData} />);
+    };
 
+};
+
+function VariantBasic({ content, lang, structuredData }) {
+
+    return (
         <>
 
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: structuredData }} />
@@ -51,7 +67,5 @@ export function StoreItem({ data: content, lang }) {
             </article>
 
         </>
-
     );
-
 };

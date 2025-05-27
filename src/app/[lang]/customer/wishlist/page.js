@@ -1,5 +1,5 @@
 import { adminFirestore } from "@/lib/firebase/admin";
-import { getProductById } from "@/lib/sanity/getProduct";
+import { getProductById } from "@/lib/sanity/product";
 import { StoreItem } from "@/app/components/store/StoreItem";
 import { getCurrentUser } from "@/lib/authentication/sessionHelpers";
 
