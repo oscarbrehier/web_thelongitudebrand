@@ -1,25 +1,23 @@
 "use client"
-import Button from "@/app/components/ui/Button";
-import InputWithLabel from "@/app/components/ui/InputWithLabel";
-import signIn from "@/lib/authentication/signIn";
-import { useAuthContext } from "@/lib/context/AuthContext";
 import handleFirebaseError from "@/lib/firebase/handleFirebaseError";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { signInSchema } from "@/lib/constants/zodSchema";
 import SignInForm from "@/app/components/forms/SignInForm";
+import { signInSchema } from "@/lib/constants/zodSchema";
+import { useCartStore } from "@/lib/stores/useCartStore";
+import signIn from "@/lib/authentication/signIn";
+import { useState, use } from "react";  
 
-export default function Page({
-    params: {
+export default function Page(props) {
+    const params = use(props.params);
+
+    const setCartSync = useCartStore((state) => state.setSynced);
+
+    const {
         lang
-    }
-}) {
+    } = params;
 
     const query = useSearchParams();
     const router = useRouter();
-    const { isAuth } = useAuthContext();
-
     const [status, setStatus] = useState("idle");
     const [form, setForm] = useState({
         error: null,
@@ -43,7 +41,7 @@ export default function Page({
             };
 
             signInSchema.parse(data);
-            await signIn(data.email, data.password);
+            await signIn(data.email, data.password, setCartSync);
             
             setStatus("success");
             router.push("/customer/personal-information");
@@ -163,5 +161,4 @@ export default function Page({
             </div>
 
     );
-
 };

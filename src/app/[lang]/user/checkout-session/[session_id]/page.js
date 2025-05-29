@@ -1,16 +1,17 @@
 'use client'
-import { useEffect, useState } from "react";
+import { useEffect, useState, use } from "react";
 import { client } from "@/lib/sanity/client";
-import { getImage } from "@/lib/sanity/getImage";
+import { parseSanityImage } from "@/lib/sanity/parseSanityImage";
 import { usePathname } from "next/navigation";
 
-export default function Page({ params }) {
+export default function Page(props) {
+    const params = use(props.params);
 
     let { session_id } = params;
     const [data, setData] = useState({ session: null, order: null });
-    
+
     const pathname = usePathname();
-    
+
     useEffect(() => {
 
         console.log(pathname);
@@ -89,7 +90,7 @@ export default function Page({ params }) {
                             {data.order && data.order.products.map((item, index) => (
 
                                 <div className={`flex py-2 space-x-4 z-10`}>
-                                    <img className="h-28 bg-neutral-300 p-2" src={getImage(item.product.images[0].asset._ref)} alt="" />
+                                    <img className="h-28 bg-neutral-300 p-2" src={parseSanityImage(item.product.images[0].asset._ref)} alt="" />
                                     <div>
                                         <p className="font-helvetica uppercase text-black font-bold text-lg">{item.product.title} - {item.size}</p>
                                         <p>x {item.quantity}</p>
@@ -122,5 +123,4 @@ export default function Page({ params }) {
         </main>
 
     );
-
 };

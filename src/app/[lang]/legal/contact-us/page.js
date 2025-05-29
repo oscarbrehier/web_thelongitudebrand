@@ -1,12 +1,9 @@
-import InputWithLabel from "@/app/components/ui/InputWithLabel";
-import Button from "@/app/components/ui/Button";
-import Hyperlink from "@/app/components/ui/Hyperlink";
+export default async function Page(props) {
+    const params = await props.params;
 
-export default function Page({
-    params: {
+    const {
         lang
-    }
-}) {
+    } = params;
 
     return (
 
@@ -35,5 +32,4 @@ export default function Page({
         </div>
 
     );
-
 };

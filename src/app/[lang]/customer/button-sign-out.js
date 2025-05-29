@@ -13,7 +13,7 @@ export default function SignOutButton({
     const router = useRouter();
 
     const { user } = useAuthContext();
-    const { clearCart } = useCartStore((state) => ({ clearCart: state.clearCart }));
+    const { clearCart, setCartSync } = useCartStore((state) => ({ clearCart: state.clearCart, setCartSync: state.setSynced }));
 
     const handleSignOut = async () => {
 
@@ -22,9 +22,12 @@ export default function SignOutButton({
 
         const res = await signOut();
 
-        if (!res) console.error("error signing out");
+        if (!res) {
+            console.error("error signing out");
+        } else {
+            setCartSync(false);
+        }
         router.push("/shop");
-
     };
 
     return (

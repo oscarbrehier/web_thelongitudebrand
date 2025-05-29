@@ -4,12 +4,13 @@ import { notFound, redirect } from "next/navigation";
 import NoContentLayout from "@/app/components/NoContentLayout";
 
 
-export default async function Page({
-    params: {
+export default async function Page(props) {
+    const params = await props.params;
+
+    const {
         lang,
         id
-    }
-}) {
+    } = params;
 
     const user = await getCurrentUser();
     const checkout = await getOrderByCheckoutId(id, user?.uid || null);
@@ -26,7 +27,7 @@ export default async function Page({
 
         return redirect(user ? `/customer/orders/${checkout.id}` : "/shop");
 
-    };
+    }
 
     const orderId = checkout?.id;
 
@@ -42,5 +43,4 @@ export default async function Page({
         </NoContentLayout>
 
     );
-
 };

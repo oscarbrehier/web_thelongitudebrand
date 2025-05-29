@@ -5,6 +5,7 @@ import ModalProvider from "@/lib/context/ModalContext";
 import { languages, fallbackLng } from "./i18n/settings";
 import { headers } from "next/headers";
 import Head from "next/head";
+import { PostHogProvider } from "@/lib/providers/posthog";
 
 const baseUrl = "https://www.longitudebrand.com";
 
@@ -42,7 +43,7 @@ export default async function RootLayout({
 
 	let lang;
 
-	const headersList = headers();
+	const headersList = await headers();
 
 	lang = headersList.has("x-language") ? headersList.get("x-languge") : fallbackLng;
 
@@ -63,7 +64,9 @@ export default async function RootLayout({
 			</Head>
 
 
-			<AuthContextProvider>
+			<PostHogProvider>
+
+				<AuthContextProvider>
 
 					<ModalProvider>
 
@@ -74,7 +77,10 @@ export default async function RootLayout({
 
 					</ModalProvider>
 
-			</AuthContextProvider>
+				</AuthContextProvider>
+				
+			</PostHogProvider>
+
 
 		</html>
 

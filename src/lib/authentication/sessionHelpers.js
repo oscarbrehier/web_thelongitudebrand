@@ -42,7 +42,7 @@ export async function getSession() {
 
     try {
 
-        return cookies().get(storageKeys.SESSION)?.value;
+        return (await cookies()).get(storageKeys.SESSION)?.value;
 
     } catch (error) {
 

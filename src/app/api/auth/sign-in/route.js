@@ -34,7 +34,7 @@ export async function POST(request) {
         };
 
         console.log("Setting cookie with options:", cookieOptions);
-        cookies().set(storageKeys.SESSION, sessionCookie, cookieOptions);
+        (await cookies()).set(storageKeys.SESSION, sessionCookie, cookieOptions);
         console.log("Cookie set successfully");
 
         return NextResponse.json({

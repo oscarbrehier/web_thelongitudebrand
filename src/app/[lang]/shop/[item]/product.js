@@ -9,6 +9,8 @@ import SanityImage from "@/app/components/ui/SanityImage";
 import { useCartStore } from "@/lib/stores/useCartStore";
 import Button from "@/app/components/ui/Button";
 import { useTranslation } from "@/app/i18n/client";
+import posthog from "posthog-js";
+import SizeSelector from "@/app/components/store/SizeSelector";
 
 export function Product({
     lang,
@@ -51,13 +53,17 @@ export function Product({
 
     const addItemToCart = async () => {
 
-
         if (size == null) return toggleLabelError('size');
         if (content.availability == "out_of_stock") {
             toggleLabelError('availability', 'item is out of stock')
             return;
         }
 
+        posthog.capture('add to cart', {
+            productId: `${content._id}`,
+            name: content.title,
+            size: size,
+        });
         openModal("added_cart");
 
         await addToCart({
@@ -286,34 +292,6 @@ export function Product({
             </div>
 
         </section>
-
-    );
-
-};
-
-function SizeSelector({ available, current, label, setSize, style }) {
-
-    return (
-
-        <div className={"space-y-2" + " " + style}>
-
-            <p className={`text-xs capitalize ${label.error && 'text-red-600'}`}>{label.error ? label.errorMessage : label.text}</p>
-
-            <div className="grid grid-cols-4 gap-2">
-
-                {available.map((item, index) => (
-                    <button
-                        key={index}
-                        onClick={(e) => setSize(item.size)}
-                        className={`${current == item.size && 'bg-neon-green text-black'} flex items-center justify-center uppercase text-sm border-[1px] border-neutral-900`}>
-                        {item.size}
-                    </button>
-                ))}
-
-
-            </div>
-
-        </div>
 
     );
 

@@ -5,17 +5,18 @@ import { useAuthContext } from "@/lib/context/AuthContext";
 import handleFirebaseError from "@/lib/firebase/handleFirebaseError";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, use } from "react";
 import { signUpSchema } from "@/lib/constants/zodSchema";
 import signUp from "@/lib/authentication/signUp";
 import Checkbox from "@/app/components/ui/Checkbox";
 import SignUpForm from "@/app/components/forms/SignUpForm";
 
-export default function Page({
-    params: {
+export default function Page(props) {
+    const params = use(props.params);
+
+    const {
         lang
-    }
-}) {
+    } = params;
 
     const query = useSearchParams();
     const router = useRouter();
@@ -133,5 +134,4 @@ export default function Page({
             </div>
 
     );
-
 };

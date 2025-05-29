@@ -1,30 +1,43 @@
-import { IoClose } from "react-icons/io5";
 import { useModalContext } from "@/lib/context/ModalContext";
-import Button from "../ui/Button";
-import { useCartStore } from "@/lib/stores/useCartStore";
-import CartItemSmall from "../CartItemSmall";
-import Hyperlink from "../ui/Hyperlink";
-import { useMemo } from "react";
 import { useAuthContext } from "@/lib/context/AuthContext";
+import { useCartStore } from "@/lib/stores/useCartStore";
+import CartItemSmall from "../cart/CartItemSmall";
+import { IoClose } from "react-icons/io5";
+import Hyperlink from "../ui/Hyperlink";
+import Button from "../ui/Button";
+import checkout from "@/lib/checkout";
+import { usePathname, useRouter } from "next/navigation";
+import { captureException } from "@sentry/nextjs";
 
 export default function AddedToCart() {
 
+    const router = useRouter();
+	const pathname = usePathname();
     const { closeModal } = useModalContext();
-
-    const { isAuth } = useAuthContext();
-
-    const { cart, cartLength, total } = useCartStore(state => ({
+    const { isAuth, user } = useAuthContext();
+    const { cart, cartLength, cartTotal } = useCartStore(state => ({
         cart: state.cart,
         cartLength: state.cart.length,
-        total: state.total,
+        cartTotal: state.total
     }));
+    const cartLastItem = cartLength > 0 ? cart[cartLength - 1] : null;
 
-    const reversedCart = useMemo(() => [...cart].reverse(), [cart]);
+    const redirectToCheckout = async () => {
+        try {
+            const url = await checkout(user, cart, cartTotal, pathname);
+            if (!url) throw new Error("checkout creation failure");
+            router.push(url);
+            closeModal();
+        } catch (err) {
+			console.log(err);
+            captureException(err);
+        }
+    };
 
     return (
 
         <div className="
-            xl:w-1/2 lg:w-1/3 xl:pl-4 lg:pl-3 lg:h-auto fixed z-20 lg:bottom-4 lg:right-4 flex flex-col justify-between space-y-4
+            xl:w-1/2 lg:w-1/3 xl:pl-4 lg:pl-3 lg:h-auto fixed z-40 lg:bottom-4 lg:right-4 flex flex-col justify-between space-y-4
             w-full h-auto bottom-0 right-0
         ">
 
@@ -44,7 +57,7 @@ export default function AddedToCart() {
 
                     <>
                         <div className="w-full space-y-2">
-                            <CartItemSmall content={reversedCart[0]} single />
+                            <CartItemSmall content={cartLastItem} single />
                         </div>
 
                         <div className="h-auto flex flex-col space-y-4">
@@ -52,19 +65,19 @@ export default function AddedToCart() {
                             <div className="space-y-0 grid sm:grid-cols-2 gap-2">
 
                                 <Button
-                                    title="continue shopping"
+                                    title="checkout"
+                                    onClick={redirectToCheckout}
                                     size="h-10 w-full"
                                     border
                                 />
 
                                 <Hyperlink
-                                    title="view shopping bag"
                                     to="/cart"
                                     size="h-10 w-full"
                                     onClick={() => closeModal()}
-                                />
-
-
+                                >
+                                    view shopping bag
+                                </Hyperlink>
 
                             </div>
 
@@ -86,18 +99,20 @@ export default function AddedToCart() {
                         <div className="space-y-2">
 
                             <Hyperlink
-                                title="continue shopping"
                                 size="h-10 w-full"
                                 to="/shop"
-                            />
+                            >
+                                continue shopping
+                            </Hyperlink>
 
                             <Hyperlink
-                                title={isAuth ? "view your wishlist" : "sign in"}
                                 size="h-10 w-full"
                                 to={isAuth ? "/customer/wishlist" : "/auth/sign-in"}
                                 border
                                 margin={false}
-                            />
+                            >
+                                {isAuth ? "view your wishlist" : "sign in"}
+                            </Hyperlink>
 
                         </div>
 

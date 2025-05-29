@@ -1,8 +1,14 @@
 import { spaceGrotesk } from "@/styles/fonts";
 
-export default function Page({ params: { lang } }) {
+export default async function Page(props) {
+    
+    const params = await props.params;
 
-	return (
+    const {
+        lang
+    } = params;
+
+    return (
 
 		<div className="h-screen w-full flex items-center justify-center">
 
@@ -11,5 +17,4 @@ export default function Page({ params: { lang } }) {
 		</div>
 
 	);
-	
 };

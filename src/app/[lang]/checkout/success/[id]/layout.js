@@ -1,20 +1,17 @@
 "use client"
-
+import { useAuthContext } from "@/lib/context/AuthContext";
 import { useCartStore } from "@/lib/stores/useCartStore";
-import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
 export default function Layout({ children }) {
 
-    const query = useSearchParams();
+    const { user } = useAuthContext();
     const { clearCart } = useCartStore((state) => ({ clearCart: state.clearCart }));
-
+    
     useEffect(() => {
+        clearCart(user, true);
+    }, [user]);
 
-        if (query.has("cart")) clearCart();
-
-    }, [query]);
-
-    return children;
+    return (children);
 
 };

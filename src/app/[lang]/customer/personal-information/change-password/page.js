@@ -4,8 +4,8 @@ import InputWithLabel from "@/app/components/ui/InputWithLabel";
 import getPasswordStrength from "@/lib/utils/getPasswordStrength";
 import Button from "@/app/components/ui/Button";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { z } from "zod";
+import { useState, use } from "react";
+import { z, ZodError } from "zod";
 
 const passwordCriteria = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
 const required_error = (fieldName) => `${fieldName} is required`;
@@ -13,9 +13,9 @@ const required_error = (fieldName) => `${fieldName} is required`;
 const formSchema = z.object({
     currentPassword: z.string().min(1, { message: required_error("Current password") }),
     newPassword: z.string()
-        .min(6, { message: "New password" })
+        .min(6, { message: "Password must be at least 6 characters long" })
         .refine(getPasswordStrength, {
-            message: "Password is too weak. Choose a password with at least 6 characters, including a mix of letters, numbers, and symbols"
+            message: "Password is too weak. Include letters, numbers, and symbols"
         }),
     confirmNewPassword: z.string()
         .min(1, { message: "Please confirm your new password " })
@@ -24,125 +24,104 @@ const formSchema = z.object({
     path: ["confirmNewPassword"]
 });
 
-export default function Page({ params: { lang } }) {
+export default function Page(props) {
+
+    const params = use(props.params);
+
+    const {
+        lang
+    } = params;
 
     const router = useRouter();
 
-    const [inputValues, setInputValues] = useState({
-        currentPassword: {
-            value: "",
-            error: null
-        },
-        newPassword: {
-            value: "",
-            error: null
-        },
-        confirmNewPassword: {
-            value: "",
-            error: null
-        }
-    })
-
-    const [form, setForm] = useState({
-        submit: false,
-        error: null,
-        hasErrors: false
+    const [values, setValues] = useState({
+        currentPassword: "",
+        newPassword: "",
+        confirmNewPassword: "",
     });
 
+    const [errors, setErrors] = useState({
+        currentPassword: "",
+        newPassword: "",
+        confirmNewPassword: "",
+    });
+
+    const [formError, setFormError] = useState("");
     const [loading, setLoading] = useState(false);
 
     const handleInputChange = (e) => {
 
-        const { name, value, type, checked } = e.target;
-
-        setInputValues(prev => ({
-            ...prev,
-            [name]: {
-                ...prev[name],
-                value: type === "checkbox" ? checked : value
-            }
-        }));
-
+        const { name, value } = e.target;
+        setValues((prev) => ({ ...prev, [name]: value }));
+        setErrors((prev) => ({ ...prev, [name]: "" }));
+        setFormError("");
     };
 
-    const resetErrors = () => {
+    const isFormIncomplete = !values.currentPassword || !values.newPassword || !values.confirmNewPassword;
 
-        setInputValues((prev) => ({
-            ...prev,
-            currentPassword: { ...prev.currentPassword, error: "" },
-            newPassword: { ...prev.newPassword, error: "" },
-            confirmNewPassword: { ...prev.confirmNewPassword, error: "" }
-        }));
+    // const resetErrors = () => {
 
-    };
+    //     setInputValues((prev) => ({
+    //         ...prev,
+    //         currentPassword: { ...prev.currentPassword, error: "" },
+    //         newPassword: { ...prev.newPassword, error: "" },
+    //         confirmNewPassword: { ...prev.confirmNewPassword, error: "" }
+    //     }));
 
-    const handleSubmitForm = async (formData) => {
+    // };
 
-        resetErrors();
+    const handleSubmitForm = async () => {
+
         setLoading(true);
+        setErrors({ currentPassword: "", newPassword: "", confirmNewPassword: "" });
+        setFormError("");
 
         try {
 
-            const data = {
-                currentPassword: formData.get("currentPassword"),
-                newPassword: formData.get("newPassword"),
-                confirmNewPassword: formData.get("confirmNewPassword"),
-            };
+            // const data = {
+            //     currentPassword: formData.get("currentPassword"),
+            //     newPassword: formData.get("newPassword"),
+            //     confirmNewPassword: formData.get("confirmNewPassword"),
+            // };
 
-            formSchema.parse(data);
+            formSchema.parse(values);
 
             await updatePassword(data.currentPassword, data.newPassword);
             router.push("/customer/personal-information");
 
         } catch (error) {
 
-            console.error(error)
+            if (error instanceof ZodError) {
 
-            if (error.errors) {
-
-                const errors = error.errors.reduce((acc, curr) => {
-
-                    acc[curr.path[0]] = curr.message;
-                    return acc;
-
-                }, {});
-
-                setInputValues((prev) => ({
-                    ...prev,
-                    currentPassword: { ...prev.currentPassword, error: errors.currentPassword || "" },
-                    newPassword: { ...prev.newPassword, error: errors.newPassword || "" },
-                    confirmNewPassword: { ...prev.confirmNewPassword, error: errors.confirmNewPassword || "" }
-                }));
-
+                const formatted = error.flatten().fieldErrors;
+                console.log(formatted)
+                setErrors({
+                    currentPassword: formatted.currentPassword?.[0] || "",
+                    newPassword: formatted.newPassword?.[0] || "",
+                    confirmNewPassword: formatted.confirmNewPassword?.[0] || "",
+                });
                 return;
 
-            };
+            }
 
-            if (error == "auth/invalid-credential") {
-
-                setInputValues(prev => ({
-                    ...prev,
-                    currentPassword: {
-                        ...prev.currentPassword,
-                        error: "Current password is invalid",
+            switch (error) {
+                case "auth/invalid-credential":
+                    {
+                        setErrors((prev) => ({
+                            ...prev,
+                            currentPassword: "Current password is invalid",
+                        }));
+                        break;
                     }
-                }));
-
-            } else if (error == "auth/too-many-requests") {
-
-                setForm(prev => ({
-                    ...prev,
-                    error: "Too many requests! Please wait a moment before trying again."
-                }))
-
-            } else {
-
-                setForm(prev => ({
-                    ...prev,
-                    error: "An error occured. Please try again later",
-                }));
-
-            };
+                case "auth/too-many-requests":
+                    {
+                        setFormError("Too many requests. Try again later.");
+                        break ;
+                    }
+                default:
+                    setFormError("An unexpected error occurred.");
+                    break;
+            }
 
         } finally {
 
@@ -154,7 +133,7 @@ export default function Page({ params: { lang } }) {
 
     return (
 
-        <div className="w-full mt-16 2md:grid grid-cols-4 gap-2">
+        <div className="w-full mt-16 pt-14 2md:grid grid-cols-4 gap-2">
 
             <div className="col-start-2 col-span-2 h-auto">
 
@@ -166,35 +145,33 @@ export default function Page({ params: { lang } }) {
 
                         <InputWithLabel
                             title='current password'
-                            value={inputValues.currentPassword.value}
+                            value={values.currentPassword}
                             type='password'
-                            onChange={(e) => handleInputChange(e)}
-                            error={inputValues.currentPassword.error}
+                            onChange={handleInputChange}
+                            error={errors.currentPassword}
                             required={true}
                         />
 
                         <InputWithLabel
                             title='new password'
-                            value={inputValues.newPassword.value}
+                            value={values.newPassword}
                             type='password'
-                            onChange={(e) => handleInputChange(e)}
-                            error={inputValues.newPassword.error}
+                            onChange={handleInputChange}
+                            error={errors.newPassword}
                             required={true}
-                            submit={form.submit}
                         />
 
                         <InputWithLabel
                             title='confirm new password'
-                            value={inputValues.confirmNewPassword.value}
+                            value={values.confirmNewPassword}
                             type='password'
-                            onChange={(e) => handleInputChange(e)}
-                            error={inputValues.confirmNewPassword.error}
+                            onChange={handleInputChange}
+                            error={errors.confirmNewPassword}
                             required={true}
-                            submit={form.submit}
                         />
 
-                        {form.error !== "" && (
-                            <p className="text-sm text-error-red">{form.error}</p>
+                        {formError !== "" && (
+                            <p className="text-sm text-error-red">{formError}</p>
                         )}
 
                     </div>
@@ -208,6 +185,7 @@ export default function Page({ params: { lang } }) {
                             // onClick={(e) => handleSubmitForm(e)}
                             type="submit"
                             loading={loading}
+                            disabled={isFormIncomplete}
                         />
 
                     </div>
@@ -219,5 +197,4 @@ export default function Page({ params: { lang } }) {
         </div>
 
     );
-
 };

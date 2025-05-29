@@ -1,26 +1,21 @@
-"use client"
+"use client";
 import { useAuthContext } from "@/lib/context/AuthContext";
 import LoadingPanel from "@/app/components/LoadingPanel";
+import { useCartStore } from "@/lib/stores/useCartStore";
 
-export default function Layout({ children, params: { lang } }) {
+export default function Layout(props) {
 
-    const { loadingCart } = useAuthContext();
+    const {
+        children
+    } = props;
+
+    const { loadingCart } = useCartStore((state) => ({ loadingCart: state.loadingCart }));
 
     return (
 
             <div className={`min-h-screen w-full ${loadingCart && "grid"}`}>
 
                 <section className={`w-full min-h-screen flex flex-col ${loadingCart && "col-start-1 row-start-1"}`}>
-
-                    {/* <div className="h-40 w-full md:grid grid-cols-4 gap-4 flex flex-col justify-center md:items-end items-center space-y-3 my-10">
-
-                        <div className="h-full flex justify-start items-center col-start-2">
-                            <div className="bg-neon-green">
-                                <h1 className="capitalize font-playfair italic font-medium text-6xl">cart</h1>
-                            </div>
-                        </div>
-
-                    </div> */}
 
                     {!loadingCart && children}
 
@@ -37,5 +32,4 @@ export default function Layout({ children, params: { lang } }) {
             </div>
 
     );
-
-};
+}

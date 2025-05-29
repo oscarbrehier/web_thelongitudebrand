@@ -10,7 +10,7 @@ const endpointSecret = process.env.WEBHOOK_SECRET;
 export async function POST(req) {
 
     const rawBody = await req.text();
-    const sig = headers().get("stripe-signature");
+    const sig = (await headers()).get("stripe-signature");
 
     let event;
 
@@ -28,10 +28,10 @@ export async function POST(req) {
     switch (event.type) {
 
         case "checkout.session.completed":
-
+            
             handleCheckoutSuccess(event);
             break;
-
+            
         default:
             break;
 

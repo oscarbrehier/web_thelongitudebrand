@@ -1,10 +1,10 @@
 import { DIRECTION, MIN_QUANTITY, MAX_QUANTITY } from "@/lib/constants/cart.config";
-import SanityImage from "./ui/SanityImage";
+import SanityImage from "@/app/components/ui/SanityImage";
 import { useCartStore } from "@/lib/stores/useCartStore";
 import { useAuthContext } from "@/lib/context/AuthContext";
 import { useModalContext } from "@/lib/context/ModalContext";
 import { useEffect, useState } from "react";
-import LoadingSpinner from "./ui/loadingSpinner";
+import LoadingSpinner from "@/app/components/ui/loadingSpinner";
 import delay from "@/lib/utils/delay";
 import Link from "next/link";
 

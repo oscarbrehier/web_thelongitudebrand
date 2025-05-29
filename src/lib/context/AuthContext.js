@@ -16,23 +16,17 @@ export default function AuthContextProvider({ children }) {
     const [loadingCart, setLoadingCart] = useState(true);
 
     const getCart = useCartStore((state) => state.getCart);
-    const hasMountedRef = useRef(null);
 
     useEffect(() => {
 
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
 
-            const isFirstMount = hasMountedRef.current;
-            hasMountedRef.current = true;
-
             setUser(user);
             setIsAuth(!!user);
 
-            const force = !isFirstMount && user;
-            
-            setLoadingCart(true);
-            await getCart(user?.uid, !!force);
-            setLoadingCart(false);
+            // setLoadingCart(true);
+            await getCart(user?.uid);
+            // setLoadingCart(false);
 
         });
 

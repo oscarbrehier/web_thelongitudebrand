@@ -25,6 +25,31 @@ async function deleteUserCart(userId) {
 
 };
 
+async function createOrderProcess(orderId) {
+
+    const timeline = [];
+    const timelineItem = {
+        title: "order placed",
+        message: "Thanks for your order! We're getting it ready — processing is usually completed within 24 hours.",
+        customerView: true,
+        at: admin.firestore.Timestamp.now(),
+    };
+
+    timeline.push(timelineItem);
+
+    try {
+        await adminFirestore
+            .collection("ordersProcess")
+            .doc(orderId)
+            .set({
+                timeline
+            });
+    } catch (err) {
+        throw err;
+    };
+
+}
+
 export default async function handleCheckoutSuccess(event) {
 
     const data = event.data.object;
@@ -45,10 +70,11 @@ export default async function handleCheckoutSuccess(event) {
             });
 
         if (userId) await deleteUserCart(userId);
+        await createOrderProcess(orderId);
 
     } catch (err) {
 
-        console.error(err);
+        console.error(err); // remove_prod
         Sentry.captureException(err);
 
     };

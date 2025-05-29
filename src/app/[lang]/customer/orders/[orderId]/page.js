@@ -7,14 +7,20 @@ import { DownloadReceiptButton } from "./button-download-receipt";
 import catchError from "@/lib/catchErrors";
 import orderStatus from "@/lib/constants/orderStatus";
 
-export default async function Page({ params: { orderId } }) {
+export default async function Page(props) {
+    const params = await props.params;
+
+    const {
+        orderId
+    } = params;
 
     const [error, data] = await catchError(getOrderDetails(orderId));
 
     if (error) return;
 
     const { order, orderProcess, checkout } = data;
- 
+    console.log(orderProcess)
+
     return data && (
 
         <div className="h-auto w-full mt-16 sm:space-y-8 space-y-12">
@@ -103,9 +109,13 @@ export default async function Page({ params: { orderId } }) {
 
                 <div className="h-auto w-full grid lg:grid-cols-3 md:grid-cols-2 gap-2">
 
-                    <TimelineCard data={orderProcess.timeline} />
-                    <CarrierInfoCard data={orderProcess.shipment} />
-                    <DeliveryInfoCard data={orderProcess.shipment} />
+                    {orderProcess?.timeline.length > 0 && <TimelineCard data={orderProcess.timeline} />}
+                    {orderProcess?.shipment.length > 0 && (
+                        <>
+                            <CarrierInfoCard data={orderProcess.shipment} />
+                            <DeliveryInfoCard data={orderProcess.shipment} />
+                        </>
+                    )}
 
                 </div>
 
@@ -116,5 +126,4 @@ export default async function Page({ params: { orderId } }) {
         </div>
 
     );
-
 };

@@ -8,8 +8,8 @@ export default function ModalContainer({ children, title, modal }) {
     return (
 
         <div
-            className={`h-screen w-full fixed p-4 z-20 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 bg-black bg-opacity-20`}
-            onClick={closeModal}
+            className={`h-screen w-full fixed p-4 z-40 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 bg-black bg-opacity-20`}
+            onClick={() => closeModal()}
         >
 
             <div
@@ -23,7 +23,7 @@ export default function ModalContainer({ children, title, modal }) {
 
                         <p className="text-sm capitalize">{title}</p>
 
-                        <button onClick={closeModal} className="h-full bg-neon-green p-1">
+                        <button onClick={() => closeModal()} className="h-full bg-neon-green p-1 z-50">
                             <IoClose />
                         </button>
 

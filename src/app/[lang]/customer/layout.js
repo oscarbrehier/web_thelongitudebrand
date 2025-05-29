@@ -3,44 +3,57 @@ import LoadingPanel from "@/app/components/LoadingPanel";
 import SubMenu from "@/app/components/navigation/SubMenu";
 import SignOutButton from "./button-sign-out";
 
-export default function Layout({
-    children,
-    params: {
-        lang
-    }
-}) {
+export default async function Layout(props) {
 
-    const categories = ["personal-information", "orders", "wishlist"];
+    const params = await props.params;
+
+    const {
+        lang
+    } = params;
+
+    const {
+        children
+    } = props;
+
+    const customerPages = ["personal-information", "orders", "wishlist"];
+
 
     return (
 
-        <div className="min-h-screen w-full pt-16 flex flex-col">
+        <Suspense fallback={<LoadingUI />}>
 
-            <Suspense fallback={<LoadingPanel />}>
+            <div className="min-h-screen flex flex-col">
 
-                <div className="w-full flex-1 flex flex-col items-start">
-
+                <div className="mt-16">
                     <SubMenu
                         baseRoute="/customer"
-                        items={categories}
+                        items={customerPages}
                         lang={lang}
                     >
-                        
+
                         <SignOutButton
                             title="sign out"
                             className="text-sm hover:bg-neon-green"
                         />
 
                     </SubMenu>
-
-                    {children}
-
                 </div>
 
-            </Suspense>
+                <div className={`w-full flex flex-col flex-1`}>
+                    {children}
+                </div>
 
-        </div>
+            </div>
+
+        </Suspense>
 
     );
+};
 
+function LoadingUI() {
+    return (
+        <div className="w-full pt-16 flex flex-col min-h-screen">
+            <LoadingPanel />
+        </div>
+    );
 };

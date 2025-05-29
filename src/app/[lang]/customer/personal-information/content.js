@@ -222,10 +222,11 @@ export default function Content({ content, lang }) {
 
                     <Hyperlink
                         to="/customer/personal-information/change-password"
-                        title='change password'
                         size='w-full h-14'
                         border={true}
-                    />
+                    >
+                        change password
+                    </Hyperlink>
 
                 </div>
 

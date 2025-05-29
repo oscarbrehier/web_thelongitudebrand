@@ -31,7 +31,6 @@ export default function Footer({ lang }) {
 
         <div className="h-auto w-full mb-4">
 
-
             <section className="h-auto w-full py-2 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 sm:gap-2 gap-x-0 gap-y-2">
 
                 <Newsletter lang={lang} />

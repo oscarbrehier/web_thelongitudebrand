@@ -10,6 +10,11 @@ export default function SubMenu({
 }) {
 
     const pathname = usePathname();
+    const escapedBaseRoute = baseRoute.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const routeRegex = new RegExp(`^\/[a-zA-Z]{2}${escapedBaseRoute}(\/.*)?$`);
+    const doesMatchBaseRoute = routeRegex.test(pathname);
+
+    if (!doesMatchBaseRoute) return null;
 
     return (
 
