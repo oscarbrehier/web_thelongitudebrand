@@ -19,6 +19,7 @@ export default async function Page(props) {
     if (error) return;
 
     const { order, orderProcess, checkout } = data;
+    console.log(orderProcess)
 
     return data && (
 
@@ -108,9 +109,13 @@ export default async function Page(props) {
 
                 <div className="h-auto w-full grid lg:grid-cols-3 md:grid-cols-2 gap-2">
 
-                    <TimelineCard data={orderProcess.timeline} />
-                    <CarrierInfoCard data={orderProcess.shipment} />
-                    <DeliveryInfoCard data={orderProcess.shipment} />
+                    {orderProcess?.timeline.length > 0 && <TimelineCard data={orderProcess.timeline} />}
+                    {orderProcess?.shipment.length > 0 && (
+                        <>
+                            <CarrierInfoCard data={orderProcess.shipment} />
+                            <DeliveryInfoCard data={orderProcess.shipment} />
+                        </>
+                    )}
 
                 </div>
 

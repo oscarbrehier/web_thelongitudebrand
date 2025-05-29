@@ -28,10 +28,10 @@ export async function POST(req) {
     switch (event.type) {
 
         case "checkout.session.completed":
-
+            
             handleCheckoutSuccess(event);
             break;
-
+            
         default:
             break;
 

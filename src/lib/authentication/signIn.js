@@ -13,7 +13,7 @@ export default async function signIn(email, password, setCartSync) {
         const userCreds = await signInWithEmailAndPassword(auth, email, password);
         const idToken = await userCreds.user.getIdToken();
 
-        setCartSync(false);
+        setCartSync(true);
 
         const response = await setSessionCookie(idToken);
         return response;

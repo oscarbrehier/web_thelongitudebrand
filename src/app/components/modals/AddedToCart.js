@@ -1,25 +1,38 @@
-import { IoClose } from "react-icons/io5";
 import { useModalContext } from "@/lib/context/ModalContext";
-import Button from "../ui/Button";
+import { useAuthContext } from "@/lib/context/AuthContext";
 import { useCartStore } from "@/lib/stores/useCartStore";
 import CartItemSmall from "../cart/CartItemSmall";
+import { IoClose } from "react-icons/io5";
 import Hyperlink from "../ui/Hyperlink";
-import { useMemo } from "react";
-import { useAuthContext } from "@/lib/context/AuthContext";
+import Button from "../ui/Button";
+import checkout from "@/lib/checkout";
+import { usePathname, useRouter } from "next/navigation";
+import { captureException } from "@sentry/nextjs";
 
 export default function AddedToCart() {
 
+    const router = useRouter();
+	const pathname = usePathname();
     const { closeModal } = useModalContext();
-
-    const { isAuth } = useAuthContext();
-
-    const { cart, cartLength, total } = useCartStore(state => ({
+    const { isAuth, user } = useAuthContext();
+    const { cart, cartLength, cartTotal } = useCartStore(state => ({
         cart: state.cart,
         cartLength: state.cart.length,
-        total: state.total,
+        cartTotal: state.total
     }));
+    const cartLastItem = cartLength > 0 ? cart[cartLength - 1] : null;
 
-    const reversedCart = useMemo(() => [...cart].reverse(), [cart]);
+    const redirectToCheckout = async () => {
+        try {
+            const url = await checkout(user, cart, cartTotal, pathname);
+            if (!url) throw new Error("checkout creation failure");
+            router.push(url);
+            closeModal();
+        } catch (err) {
+			console.log(err);
+            captureException(err);
+        }
+    };
 
     return (
 
@@ -44,7 +57,7 @@ export default function AddedToCart() {
 
                     <>
                         <div className="w-full space-y-2">
-                            <CartItemSmall content={reversedCart[0]} single />
+                            <CartItemSmall content={cartLastItem} single />
                         </div>
 
                         <div className="h-auto flex flex-col space-y-4">
@@ -52,7 +65,8 @@ export default function AddedToCart() {
                             <div className="space-y-0 grid sm:grid-cols-2 gap-2">
 
                                 <Button
-                                    title="continue shopping"
+                                    title="checkout"
+                                    onClick={redirectToCheckout}
                                     size="h-10 w-full"
                                     border
                                 />
@@ -64,8 +78,6 @@ export default function AddedToCart() {
                                 >
                                     view shopping bag
                                 </Hyperlink>
-
-
 
                             </div>
 

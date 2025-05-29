@@ -18,7 +18,6 @@ export default function ProductSuggestion({ lang }) {
 					maxItems: 4,
 					filters: [`availability != "out_of_stock"`]
 				});
-				console.log(res);
 				setProducts(res);
 			} catch (err) {
 				captureException(err);

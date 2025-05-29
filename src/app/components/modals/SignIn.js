@@ -36,23 +36,15 @@ export default function SignInModal() {
 
         try {
 
-            console.log("attempting to sign in");
-
             const formData = new FormData(event.target);
-
             const data = {
                 email: formData.get("email"),
                 password: formData.get("password"),
             };
 
             signInSchema.parse(data);
-
             await signIn(data.email, data.password, setCartSync);
-
-            console.log("successfully logged in");
-            
             closeModal();
-            router.push("/customer/personal-information");
 
         } catch (error) {
 

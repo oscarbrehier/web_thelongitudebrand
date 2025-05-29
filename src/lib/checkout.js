@@ -5,7 +5,7 @@ import createOrder from "./firestore/createOrder";
 import generateOrderId from "./utils/generateOrderId";
 import { v4 as uuid } from "uuid";
 
-export default async function checkout(user = null, items, total) {
+export default async function checkout(user = null, items, total, cancelURL) {
 
     if (!Array.isArray(items) || items.length === 0 || typeof total !== "number") {
         throw new Error("Invalid parameters provided to checkout");
@@ -17,11 +17,14 @@ export default async function checkout(user = null, items, total) {
         const customerId = user ? await getUserCustomerId(user?.uid) : null;
         const orderId = generateOrderId(user?.uid || uuid());
 
+        console.log(cancelURL)
+
         const checkoutSession = await createCheckoutSession({
             stripeCart: cart,
             customerId,
             orderId,
-            userId: user?.uid || null
+            userId: user?.uid || null,
+            cancelURL
         });
 
         if (checkoutSession?.errors) throw new Error("Checkout creation failed. Please try again later.");
@@ -41,10 +44,7 @@ export default async function checkout(user = null, items, total) {
         return url;
 
     } catch (err) {
-
-        console.error(err);
         throw new Error("Checkout creation failed. Please try again later.");
-
     };
 
 };

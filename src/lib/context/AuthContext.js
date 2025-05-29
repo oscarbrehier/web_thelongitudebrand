@@ -24,9 +24,9 @@ export default function AuthContextProvider({ children }) {
             setUser(user);
             setIsAuth(!!user);
 
-            setLoadingCart(true);
+            // setLoadingCart(true);
             await getCart(user?.uid);
-            setLoadingCart(false);
+            // setLoadingCart(false);
 
         });
 

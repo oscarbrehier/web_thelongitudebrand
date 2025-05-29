@@ -18,33 +18,29 @@ export const useCartStore = create(
             clearCart: async (user, database = false) => {
 
                 if (user && database) {
-
                     const result = await updateCartInFirestore([], user.uid);
-
                     if (result?.errors) throwUpdateError();
-
                 };
 
                 set({ cart: [], total: 0 })
 
             },
 
-            getCart: async (user, force = false) => {
+            getCart: async (user) => {
 
                 set({ loadingCart: true });
-                force && console.log("force loading cart");
+
+                let force = false;
+                if (!get().synced) force = true;
 
                 if (user) {
 
                     try {
-                        
-                        // const { items } = await getCartFromDb(user);
-                        // set({ cart: items.length !== 0 ? items : [] });
 
                         const localCart = get().cart;
                         const { items: dbCart } = await getCartFromDb(user);
 
-                        if (dbCart.length === 0 && localCart.length != 0)
+                        if (!dbCart || dbCart?.length === 0 && localCart.length != 0)
                         {
                             if (force) {
                                 const result = await updateCartInFirestore(localCart, user);
@@ -57,22 +53,8 @@ export const useCartStore = create(
                         } else {
                             set({ cart: dbCart });
                         }
-
-                        // if (force && dbCart.length == 0)
-                        // {
-                        //     const result = await updateCartInFirestore(localCart, user);
-                        //     if (result?.errors) throwUpdateError();
-                            
-                        // }
-                        // else
-                        // {
-                        //     set({ cart: dbCart.length !== 0 ? dbCart : [] });
-                        // }
-
                     } catch (err) {
-
                         throw err;
-
                     }
 
                 }
