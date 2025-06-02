@@ -9,6 +9,7 @@ const modals = {
     sign_in: dynamic(() => import("./SignIn")),
     sign_up: dynamic(() => import("./SignUp")),
     newsletter: dynamic(() => import("./Newsletter")),
+    cookie_preferences: dynamic(() => import("./CookiePreferences")),
     added_cart: AddedToCart,
 };
 

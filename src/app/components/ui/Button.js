@@ -1,6 +1,83 @@
 "use client"
 import { useEffect, useState } from "react"
-import LoadingSpinner from "./loadingSpinner";
+import { tv } from "tailwind-variants"
+import LoadingSpinner from "./loadingSpinner"
+
+const buttonVariants = tv({
+    base: "select-none flex items-center justify-center text-sm transition-all duration-300 ease-in-out box-border",
+    variants: {
+        variant: {
+            fill: "",
+            outline: "bg-transparent border-[1px]"
+        },
+        disabled: {
+            true: "",
+            false: ""
+        },
+        loading: {
+            true: "cursor-not-allowed",
+            false: ""
+        }
+    },
+    compoundVariants: [
+        // Fill variant styles
+        {
+            variant: "fill",
+            disabled: true,
+            class: "bg-cream-400"
+        },
+        {
+            variant: "fill",
+            disabled: false,
+            class: "bg-black"
+        },
+        // Outline variant styles
+        {
+            variant: "outline",
+            disabled: true,
+            class: "border-cream-400"
+        },
+        {
+            variant: "outline",
+            disabled: false,
+            class: "border-black"
+        },
+        // Hover states (only when not loading and not disabled)
+        {
+            loading: false,
+            disabled: false,
+            class: "hover:bg-neon-green"
+        }
+    ]
+})
+
+const textVariants = tv({
+    base: "",
+    variants: {
+        variant: {
+            fill: "",
+            outline: ""
+        },
+        disabled: {
+            true: "text-neutral-500",
+            false: ""
+        }
+    },
+    compoundVariants: [
+        // Fill variant text colors
+        {
+            variant: "fill",
+            disabled: false,
+            class: "text-white hover:text-black"
+        },
+        // Outline variant text colors
+        {
+            variant: "outline",
+            disabled: false,
+            class: "text-black"
+        }
+    ]
+})
 
 export default function Button({
     title,
@@ -13,57 +90,40 @@ export default function Button({
     disabled = false,
     ...props
 }) {
+    const [status, setStatus] = useState(loading)
 
-    const [status, setStatus] = useState(loading);
     useEffect(() => {
         setStatus(loading)
-    }, [loading]);
+    }, [loading])
 
-    const btnOutline = `
-        bg-transparent border-[1px] ${" "}
-        ${disabled ? "border-cream-400" : "border-black"}
-    `;
+    const variant = border ? "outline" : "fill"
 
-    const btnFill = `
-        ${disabled ? "bg-cream-400" : "bg-black"}
-    `;
+    const buttonClasses = buttonVariants({
+        variant,
+        disabled,
+        loading: status,
+        className: `${size} ${style} ${text}`
+    })
 
-    const buttonClasses = `
-        ${border ? btnOutline : btnFill}
-        ${(!loading && !disabled) && "hover:bg-neon-green"}
-        ${loading ? "cursor-not-allowed" : ""}
-        select-none flex items-center justify-center text-sm transition-all duration-300 ease-in-out box-border	
-        ${size} ${style} ${text}
-    `;
+    const textClasses = textVariants({
+        variant,
+        disabled
+    })
 
     return (
-
         <button
             className={buttonClasses}
             onClick={!disabled ? onClick : undefined}
             disabled={disabled}
             {...props}
         >
-
-            {
-                status ? (
-
-                    <LoadingSpinner />
-
-                ) : (
-
-                    <p
-                        className={border
-                            ? (disabled ? "text-neutral-500" : "text-black")
-                            : (disabled ? "text-neutral-500" : "text-white hover:text-black")
-                        }>
-                        {title}</p>
-
-                )
-            }
-
+            {status ? (
+                <LoadingSpinner />
+            ) : (
+                <p className={textClasses}>
+                    {title}
+                </p>
+            )}
         </button>
-
     )
-
-};
+}

@@ -1,11 +1,13 @@
 "use client"
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { Cookies } from "react-cookie";
 
 export const ModalContext = createContext();
 export const useModalContext = () => useContext(ModalContext);
 
 export default function ModalProvider({ children }) {
 
+    const cookies = new Cookies();
     const [activeModal, setActiveModal] = useState(null);
     const [value, setValue] = useState(null);
 
@@ -13,7 +15,7 @@ export default function ModalProvider({ children }) {
 
     const closeModal = (modalName) => {
         if (modalName && activeModal != modalName)
-            return ;
+            return;
         setActiveModal(null);
         setValue(null);
     };

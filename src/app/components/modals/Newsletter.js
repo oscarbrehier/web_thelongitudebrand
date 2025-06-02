@@ -160,7 +160,7 @@ export default function NewsletterModal() {
 
         <ModalContainer title="newsletter">
 
-            <form onSubmit={handleFormSubmit} className={`space-y-4 mt-4 ${form.success && 'hidden'}`}>
+            <form onSubmit={handleFormSubmit} className={`space-y-4 ${form.success && 'hidden'}`}>
 
                 <p className="text-sm">Sign up to receive news about Longitude collections, Longitude Paper, events and sales.</p>
 

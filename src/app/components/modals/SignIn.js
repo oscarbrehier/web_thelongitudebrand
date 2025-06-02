@@ -103,7 +103,7 @@ export default function SignInModal() {
 
         <ModalContainer title="sign in">
 
-            <form onSubmit={handleFormSubmit} className="space-y-4 mt-4">
+            <form onSubmit={handleFormSubmit} className="space-y-4">
 
                 <div className="space-y-2 mt-8">
 
