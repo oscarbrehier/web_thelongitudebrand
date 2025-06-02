@@ -11,6 +11,7 @@ import Button from "@/app/components/ui/Button";
 import { useTranslation } from "@/app/i18n/client";
 import posthog from "posthog-js";
 import SizeSelector from "@/app/components/store/SizeSelector";
+import { trackEvent } from "@/lib/analytics/analytics";
 
 export function Product({
     lang,
@@ -59,11 +60,13 @@ export function Product({
             return;
         }
 
-        posthog.capture('add to cart', {
+        trackEvent('add_to_cart', {
+            method: "product_page",
             productId: `${content._id}`,
             name: content.title,
             size: size,
         });
+
         openModal("added_cart");
 
         await addToCart({
@@ -74,7 +77,6 @@ export function Product({
             cover: content.cover,
             image_ref: content.image_ref,
         }, user?.uid);
-
 
     };
 
@@ -88,8 +90,15 @@ export function Product({
         };
 
         const action = wishlist ? removeFromWishlist : addToWishlist;
-
         await action(content._id, user.uid);
+
+        if (!wishlist)
+        {
+            trackEvent("add_to_wishlist", {
+                productId: content._id,
+                name: content.title
+            });
+        }
         setWishlist(!wishlist);
 
     };

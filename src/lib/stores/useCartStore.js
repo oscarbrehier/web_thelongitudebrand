@@ -2,6 +2,8 @@ import { persist } from "zustand/middleware";
 import { create } from "zustand";
 import getCartFromDb from "../firestore/getCartFromDb";
 import updateCartInFirestore from "@/actions/updateCartInFirestore";
+import { trackEvent } from "../analytics/analytics";
+import { DIRECTION } from "../constants/cart.config";
 
 const throwUpdateError = () => console.error('Failed to update cart in Firebase.');
 
@@ -112,11 +114,11 @@ export const useCartStore = create(
                     (cartItem) => cartItem.productId === productId
                 );
 
-                if (direction === 'up') {
+                if (direction === DIRECTION.INCREASE) {
                     cart[itemIndex].quantity += 1;
-                } else if (direction === 'down' && cart[itemIndex].quantity > 1) {
+                } else if (DIRECTION.DECREASE && cart[itemIndex].quantity > 1) {
                     cart[itemIndex].quantity -= 1;
-                };
+                }
 
                 set({ cart });
                 get().calculateTotal();
@@ -128,6 +130,7 @@ export const useCartStore = create(
                     
                 };
 
+                return cart[itemIndex].quantity;
 
             },
 

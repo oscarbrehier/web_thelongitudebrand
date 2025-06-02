@@ -1,13 +1,19 @@
 "use client"
 import { languageMap } from "../i18n/settings";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
+import { trackEvent } from "@/lib/analytics/analytics";
 
 export default function LanguageSelector({
     lang
 }) {
 
     const pathname = usePathname();
+    const captureLanguageChange = () => {
+        if (typeof window !== 'undefined') {
+            sessionStorage.setItem("flag_langChangeMethod", "button");
+        }
+    };
 
     return (
 
@@ -17,7 +23,9 @@ export default function LanguageSelector({
                     <Link
                         key={code}
                         href={`/${code}${pathname.replace(`/${lang}`, "")}`}
-                        className={lang == code ? "bg-neon-green" : "hover:bg-cream-400"}>
+                        className={lang == code ? "bg-neon-green" : "hover:bg-cream-400"}
+                        onClick={captureLanguageChange}
+                    >
                         {name}
                     </Link>
                 ))}

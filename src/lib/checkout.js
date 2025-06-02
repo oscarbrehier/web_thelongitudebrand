@@ -17,8 +17,6 @@ export default async function checkout(user = null, items, total, cancelURL) {
         const customerId = user ? await getUserCustomerId(user?.uid) : null;
         const orderId = generateOrderId(user?.uid || uuid());
 
-        console.log(cancelURL)
-
         const checkoutSession = await createCheckoutSession({
             stripeCart: cart,
             customerId,

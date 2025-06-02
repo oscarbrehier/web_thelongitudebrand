@@ -4,18 +4,12 @@ import { auth } from "../firebase/client";
 export default async function reauthenticateUser(password) {
 
     const user = auth.currentUser;
-
     const crendential = EmailAuthProvider.credential(user.email, password);
 
     try {
-
         await reauthenticateWithCredential(user, crendential);
-        console.log("user reauthenticated");
-
     } catch (err) {
-
         throw err.code;
-
     };
 
 };

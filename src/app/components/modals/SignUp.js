@@ -9,6 +9,7 @@ import handleFirebaseError from "@/lib/firebase/handleFirebaseError";
 import ModalContainer from "./ModalContainer";
 import Link from "next/link";
 import Checkbox from "../ui/Checkbox";
+import { trackEvent } from "@/lib/analytics/analytics";
 
 const FORM_DEFAULT = {
     submit: false,
@@ -53,6 +54,13 @@ export default function SignUpModal() {
             signUpSchema.parse(data);
 
             await signUp(data);
+
+            trackEvent("sign_up", {
+                method: "email",
+                newsletterSubscriber: data.newsletter,
+                source: "modal",
+            });
+
             closeModal();
             window.location.reload();
 

@@ -5,7 +5,9 @@ import SignInForm from "@/app/components/forms/SignInForm";
 import { signInSchema } from "@/lib/constants/zodSchema";
 import { useCartStore } from "@/lib/stores/useCartStore";
 import signIn from "@/lib/authentication/signIn";
-import { useState, use } from "react";  
+import { useState, use } from "react";
+import posthog from "posthog-js";
+import { trackEvent } from "@/lib/analytics/analytics";
 
 export default function Page(props) {
     const params = use(props.params);
@@ -34,6 +36,8 @@ export default function Page(props) {
 
         try {
 
+            trackEvent("sign_in_click", { source: "modal" });
+
             const formData = new FormData(event.target);
             const data = {
                 email: formData.get("email"),
@@ -41,10 +45,15 @@ export default function Page(props) {
             };
 
             signInSchema.parse(data);
-            await signIn(data.email, data.password, setCartSync);
-            
-            setStatus("success");
-            router.push("/customer/personal-information");
+            const { result, user } = await signIn(data.email, data.password, setCartSync);
+
+            if (result) {
+                posthog.identify(user.uid, {
+                    email: user.email
+                });
+                setStatus("success");
+                router.push("/customer/personal-information");
+            }
 
         } catch (error) {
 
@@ -84,17 +93,17 @@ export default function Page(props) {
 
     return (
 
-            <div className="h-screen w-full mt-16 pt-16 2md:grid grid-cols-4 gap-2">
+        <div className="h-screen w-full mt-16 pt-16 2md:grid grid-cols-4 gap-2">
 
-                <div className="col-start-2 col-span-2 h-auto">
+            <div className="col-start-2 col-span-2 h-auto">
 
-                    <div className="mx-2 mb-4">
+                <div className="mx-2 mb-4">
 
-                        <p className="capitalize text-lg">sign in</p>
+                    <p className="capitalize text-lg">sign in</p>
 
-                    </div>
+                </div>
 
-                    {/* <form onSubmit={handleForm}>
+                {/* <form onSubmit={handleForm}>
 
                         <div className="space-y-2">
 
@@ -143,22 +152,22 @@ export default function Page(props) {
 
                     </form> */}
 
-                    <SignInForm
-                        lang={lang}
-                        handleForm={handleForm}
-                        errors={{
-                            email: inputErrors.email,
-                            password: inputErrors.password,
-                            form: form.error
-                        }}
-                        status={status}
-                        email={query.get("email") || null}
-                    />
-
-                </div>
-
+                <SignInForm
+                    lang={lang}
+                    handleForm={handleForm}
+                    errors={{
+                        email: inputErrors.email,
+                        password: inputErrors.password,
+                        form: form.error
+                    }}
+                    status={status}
+                    email={query.get("email") || null}
+                />
 
             </div>
+
+
+        </div>
 
     );
 };

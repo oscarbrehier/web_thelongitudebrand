@@ -5,7 +5,8 @@ import ModalProvider from "@/lib/context/ModalContext";
 import { languages, fallbackLng } from "./i18n/settings";
 import { headers } from "next/headers";
 import Head from "next/head";
-import { PostHogProvider } from "@/lib/providers/posthog";
+import { PostHogProvider } from "@/lib/analytics/client";
+import LocaleTracker from "./i18n/LocaleTracker";
 
 const baseUrl = "https://www.longitudebrand.com";
 
@@ -71,6 +72,7 @@ export default async function RootLayout({
 					<ModalProvider>
 
 						<body className={poppins.className}>
+							<LocaleTracker />
 							{children}
 							{/* <SpeedInsights /> */}
 						</body>

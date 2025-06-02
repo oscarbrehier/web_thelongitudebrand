@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import LoadingSpinner from "@/app/components/ui/loadingSpinner";
 import delay from "@/lib/utils/delay";
 import Link from "next/link";
+import { trackEvent } from "@/lib/analytics/analytics";
 
 export default function CartItemSmall({
     lang,
@@ -47,19 +48,26 @@ export default function CartItemSmall({
 
         event.preventDefault();
 
-        if (direction == DIRECTION.DOWN && quantity === MIN_QUANTITY) {
-
+        if (direction == DIRECTION.DECREASE && quantity === MIN_QUANTITY) {
             resetModalTimeout();
             handleRemoveItem();
-
-        } else if (direction === DIRECTION.UP && quantity === MAX_QUANTITY) {
-
+        } else if (direction === DIRECTION.INCREASE && quantity === MAX_QUANTITY) {
             return;
-
         } else {
 
             resetModalTimeout();
-            editItemQuantity(productId, direction, user);
+
+            const previousQuantity = quantity;
+            const newQuantity = editItemQuantity(productId, direction, user);
+
+            trackEvent("cart_quantity_updated", {
+                productId,
+                name,
+                size,
+                previousQuantity,
+                newQuantity,
+                changeType: direction
+            })
 
         };
 
@@ -68,15 +76,19 @@ export default function CartItemSmall({
     const handleRemoveItem = async () => {
 
         if (single) {
-
+            // simulate loading
             setLoading(true);
             await delay(1000);
             setLoading(false);
             closeModal("added_cart");
-
         };
-
         await removeFromCart(productId, user);
+        trackEvent("remove_from_cart", {
+            productId,
+            name,
+            size,
+            price
+        });
 
     };
 
@@ -152,7 +164,7 @@ export default function CartItemSmall({
                                         allowModifications && (
                                             <button
                                                 className="2md:bg-transparent bg-cream-400 2md:size-auto size-6 2md:block flex items-center justify-center"
-                                                onClick={(event) => handleItemUpdate(event, DIRECTION.DOWN)}>-</button>
+                                                onClick={(event) => handleItemUpdate(event, DIRECTION.DECREASE)}>-</button>
                                         )
                                     }
 
@@ -162,7 +174,7 @@ export default function CartItemSmall({
                                         allowModifications && (
                                             <button
                                                 className="2md:bg-transparent bg-cream-400 2md:size-auto size-6 2md:block flex items-center justify-center"
-                                                onClick={(event) => handleItemUpdate(event, DIRECTION.UP)}>+</button>
+                                                onClick={(event) => handleItemUpdate(event, DIRECTION.INCREASE)}>+</button>
                                         )
                                     }
 

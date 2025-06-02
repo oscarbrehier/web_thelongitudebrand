@@ -10,6 +10,7 @@ import { signUpSchema } from "@/lib/constants/zodSchema";
 import signUp from "@/lib/authentication/signUp";
 import Checkbox from "@/app/components/ui/Checkbox";
 import SignUpForm from "@/app/components/forms/SignUpForm";
+import { trackEvent } from "@/lib/analytics/analytics";
 
 export default function Page(props) {
     const params = use(props.params);
@@ -56,6 +57,12 @@ export default function Page(props) {
 
             signUpSchema.parse(data);
             await signUp(data);
+
+            trackEvent("sign_up", {
+                method: "email",
+                newsletterSubscriber: data.newsletter,
+                source: "auth_page",
+            });
 
             router.push("/customer/personal-information");
         

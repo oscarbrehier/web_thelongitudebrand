@@ -9,6 +9,7 @@ import { newsletterSchema } from "@/lib/constants/zodSchema";
 import handleFirebaseError from "@/lib/firebase/handleFirebaseError";
 import ModalContainer from "./ModalContainer";
 import Checkbox from "../ui/Checkbox";
+import { trackEvent } from "@/lib/analytics/analytics";
 
 const FORM_DEFAULT = {
     error: "",
@@ -97,6 +98,11 @@ export default function NewsletterModal() {
             });
 
             setForm(prev => ({ ...prev, success: true }));
+
+            trackEvent("newsletter_subscribed", {
+                email: data.email,
+                source: "footer"
+            });
 
         } catch (error) {
 

@@ -1,5 +1,4 @@
 "use client";
-import { useAuthContext } from "@/lib/context/AuthContext";
 import LoadingPanel from "@/app/components/LoadingPanel";
 import { useCartStore } from "@/lib/stores/useCartStore";
 

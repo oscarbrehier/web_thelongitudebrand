@@ -17,11 +17,11 @@ export default function CartItemBig({ index, item }) {
 
         event.preventDefault();
 
-        if (direction == DIRECTION.DOWN && quantity === MIN_QUANTITY) {
+        if (direction == DIRECTION.DECREASE && quantity === MIN_QUANTITY) {
 
             handleRemoveItem();
 
-        } else if (direction === DIRECTION.UP && quantity === MAX_QUANTITY) {
+        } else if (direction === DIRECTION.INCREASE && quantity === MAX_QUANTITY) {
 
             return;
 
@@ -74,13 +74,13 @@ export default function CartItemBig({ index, item }) {
 
                             <button
                                 className="2md:bg-transparent bg-cream-400 2md:size-auto size-6 2md:block flex items-center justify-center"
-                                onClick={(event) => handleItemUpdate(event, DIRECTION.DOWN)}>-</button>
+                                onClick={(event) => handleItemUpdate(event, DIRECTION.DECREASE)}>-</button>
 
                             <button>{quantity}</button>
 
                             <button
                                 className="2md:bg-transparent bg-cream-400 2md:size-auto size-6 2md:block flex items-center justify-center"
-                                onClick={(event) => handleItemUpdate(event, DIRECTION.UP)}>+</button>
+                                onClick={(event) => handleItemUpdate(event, DIRECTION.INCREASE)}>+</button>
 
                         </div>
 

@@ -18,14 +18,12 @@ export const formSchema = z.object({
         .min(1, { message: "Last name is required" }),
 });
 
-export default function Content({ content, lang }) {
+export function PersonalInformationForm({ content, lang }) {
 
-    const [form, setForm] = useState({
-        error: null,
-        inputErrors: {
-            firstName: null,
-            lastName: null
-        }
+    const [error, setError] = useState({
+        form: null,
+        inputFirstName: null,
+        inputLastName: null,
     });
 
     const [loading, setLoading] = useState(false);
@@ -57,13 +55,10 @@ export default function Content({ content, lang }) {
 
                 }, {});
 
-                setForm(prev => ({
+                setError(prev => ({
                     ...prev,
-                    inputErrors: {
-                        ...prev.error,
-                        firstName: errors.firstName,
-                        lastName: errors.lastName
-                    }
+                    inputFirstName: errors.firstName,
+                    inputLastName: errors.lastName
                 }));
 
             };
@@ -88,9 +83,8 @@ export default function Content({ content, lang }) {
     const handleSubmitForm = async (event) => {
 
         event.preventDefault();
-
         setLoading(true);
-        setForm(prev => ({ ...prev, error: null, inputErrors: { firstName: "", lastName: "" } }));
+        setError({ form: null, inputFirstName: "", inputLastName: "" });
 
         const formData = new FormData(event.target);
         const data = Object.fromEntries(formData.entries());
@@ -113,7 +107,7 @@ export default function Content({ content, lang }) {
 
             if (result?.errors) {
 
-                setForm(prev => ({ ...prev, error: "An error occured. Please try again or come back later." }));
+                setError(prev => ({ ...prev, form: "An error occured. Please try again or come back later." }));
                 Sentry.captureException(result.errors);
                 return;
 
@@ -123,7 +117,7 @@ export default function Content({ content, lang }) {
 
         } catch (err) {
             console.error(err);
-            setForm(prev => ({ ...prev, error: "An unexpected error occurred." }));
+            setError(prev => ({ ...prev, form: "An unexpected error occurred." }));
             Sentry.captureException(err);
 
         } finally {
@@ -147,7 +141,7 @@ export default function Content({ content, lang }) {
                         value={content.firstName}
                         type='text'
                         onChange={(e) => handleInputChange(e)}
-                        error={form.inputErrors?.firstName}
+                        error={error?.inputFirstName}
                     />
 
                     <InputWithLabel
@@ -155,7 +149,7 @@ export default function Content({ content, lang }) {
                         value={content.lastName}
                         type='text'
                         onChange={(e) => handleInputChange(e)}
-                        error={form.inputErrors?.lastName}
+                        error={error?.inputLastName}
                     />
 
                     <InputWithLabel
@@ -208,8 +202,8 @@ export default function Content({ content, lang }) {
 
                 <div className="space-y-2">
 
-                    {form.error !== "" && (
-                        <p className="text-sm text-error-red">{form.error}</p>
+                    {error.form !== "" && (
+                        <p className="text-sm text-error-red">{error.form}</p>
                     )}
 
                     <Button

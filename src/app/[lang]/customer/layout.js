@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import LoadingPanel from "@/app/components/LoadingPanel";
 import SubMenu from "@/app/components/navigation/SubMenu";
-import SignOutButton from "./button-sign-out";
+import SignOutButton from "./SignOutButton";
 
 export default async function Layout(props) {
 

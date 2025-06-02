@@ -1,5 +1,5 @@
 "use client"
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import checkout from "@/lib/checkout";
 import Button from "@/app/components/ui/Button";
@@ -8,6 +8,8 @@ import { useCartStore } from "@/lib/stores/useCartStore";
 import { useModalContext } from "@/lib/context/ModalContext";
 import dynamic from "next/dynamic";
 import { useTranslation } from "@/app/i18n/client";
+import { captureException } from "@sentry/nextjs";
+import { trackEvent } from "@/lib/analytics/analytics";
 
 const CartItemSmall = dynamic(() => import("@/app/components/cart/CartItemSmall"));
 
@@ -34,15 +36,22 @@ export function Cart({ lang }) {
 
 			const url = await checkout(user, cart, total, "/cart");
 			if (url) {
+
+				trackEvent("start_checkout", {
+					currency: "EUR",
+					cartTotal: total,
+					cartItems: cart
+				});
 				router.push(url);
 				return;
+
 			};
 
 			throw new Error("Checkout URL not found");
 
 		} catch (err) {
 
-			console.log(err);
+			captureException(err);
 			setError("An error occured. Please try again or come back later");
 
 		} finally {
@@ -55,10 +64,10 @@ export function Cart({ lang }) {
 
 	useEffect(() => {
 
+		// toggle between (empty cart -> suggestions) and cart preview
 		const suggestions = document.getElementById("cart-suggestions");
 		if (!suggestions) return;
 
-		// suggestions.style.display = cart.length === 0 ? "block" : "none";
 		if (cart.length === 0) {
 			suggestions.classList.remove("hidden");
 			suggestions.classList.add("lg:grid");

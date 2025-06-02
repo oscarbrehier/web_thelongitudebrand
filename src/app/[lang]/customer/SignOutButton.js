@@ -4,6 +4,9 @@ import { useRouter } from "next/navigation";
 import { storageKeys } from "@/lib/constants/settings.config";
 import signOut from "@/lib/authentication/signOut";
 import { useAuthContext } from "@/lib/context/AuthContext";
+import { captureException } from "@sentry/nextjs";
+import debugLog from "@/lib/utils/debugLog";
+import posthog from "posthog-js";
 
 export default function SignOutButton({
     title,
@@ -17,17 +20,29 @@ export default function SignOutButton({
 
     const handleSignOut = async () => {
 
-        clearCart(user);
-        localStorage.removeItem(storageKeys.CART);
+        try {
 
-        const res = await signOut();
+            const currentUser = user;
+            const res = await signOut();
 
-        if (!res) {
-            console.error("error signing out");
-        } else {
-            setCartSync(false);
+            if (!res) {
+                const error = new Error("API sign-out failed");
+                captureException(error);
+            } else {
+
+                setCartSync(false);
+                clearCart(currentUser);
+                posthog.reset();
+                localStorage.removeItem(storageKeys.CART);
+                router.push("/shop");
+
+            }
+
+        } catch (err) {
+            debugLog(err);
+            captureException(err);
         }
-        router.push("/shop");
+
     };
 
     return (

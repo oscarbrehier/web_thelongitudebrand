@@ -10,6 +10,8 @@ import ModalContainer from "./ModalContainer";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/lib/stores/useCartStore";
+import posthog from "posthog-js";
+import { trackEvent } from "@/lib/analytics/analytics";
 
 const FORM_DEFAULT = {
     submit: false,
@@ -36,6 +38,8 @@ export default function SignInModal() {
 
         try {
 
+            trackEvent("sign_in", { source: "modal" });
+
             const formData = new FormData(event.target);
             const data = {
                 email: formData.get("email"),
@@ -43,8 +47,14 @@ export default function SignInModal() {
             };
 
             signInSchema.parse(data);
-            await signIn(data.email, data.password, setCartSync);
-            closeModal();
+            const { result, user } = await signIn(data.email, data.password, setCartSync);
+            
+            if (result) {
+                posthog.identify(user.uid, {
+                    email: user.email
+                });
+                closeModal();
+            }
 
         } catch (error) {
 

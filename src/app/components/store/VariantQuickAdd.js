@@ -3,9 +3,9 @@ import { useState } from "react";
 import SanityImage from "../ui/SanityImage";
 import Button from "../ui/Button";
 import { useCartStore } from "@/lib/stores/useCartStore";
-import posthog from "posthog-js";
 import { useAuthContext } from "@/lib/context/AuthContext";
 import SizeSelector from "./SizeSelector";
+import { trackEvent } from "@/lib/analytics/analytics";
 
 export function VariantQuickAdd({ content, lang, structuredData, ...props }) {
 
@@ -17,7 +17,8 @@ export function VariantQuickAdd({ content, lang, structuredData, ...props }) {
 
         if (size == null) return;
 
-        posthog.capture('add to cart', {
+        trackEvent('add_to_cart', {
+            method: "quick_add",
             productId: `${content._id}`,
             name: content.title,
             size: size,
