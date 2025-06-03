@@ -2,10 +2,12 @@
 import { useEffect, useState } from "react";
 import Button from "../ui/Button";
 import ModalContainer from "./ModalContainer";
-import { IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
+import { IoIosArrowForward } from "react-icons/io";
 import Toggle from "../ui/Toggle";
 import clsx from "clsx";
 import setCookieConsent from "@/actions/setCookieConsent";
+import { useModalContext } from "@/lib/context/ModalContext";
+import { captureException } from "@sentry/nextjs";
 
 const cookieCategories = [
 	{
@@ -13,11 +15,11 @@ const cookieCategories = [
 		description: "Required for the website to function properly (e.g., cart, login). These cannot be disabled.",
 		disabled: true
 	},
-	{
-		id: "preferences",
-		title: "preferences cookies",
-		description: "Stores settings like language and currency.",
-	},
+	// {
+	// 	id: "preferences",
+	// 	title: "preferences cookies",
+	// 	description: "Stores settings like language and currency.",
+	// },
 	{
 		id: "analytics",
 		title: "analytics cookies",
@@ -25,24 +27,35 @@ const cookieCategories = [
 	},
 ];
 
+function getDefaultConsent(acceptAll = true) {
+	return Object.fromEntries(
+		cookieCategories
+			.filter(cat => !cat.disabled && cat.id)
+			.map(cat => [cat.id, acceptAll])
+	);
+};
 
-export default function CookiePreferences() {
+export default function CookieConsent() {
 
 	const [customizationPanel, setCustomizationPanel] = useState(false);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const { activeModal } = useModalContext();
 
-	const submitCookieConsent = async (value) => {
+	if (activeModal != "cookie_consent") return null;
 
-		const consentCookieValue = [];
+	const submitCookieConsent = async (preferences) => {
 
-		if (!value) {
-			cookieCategories.forEach(cat => {
-				if (!cat?.disabled) consentCookieValue.push({
-					[cat.id]: true
-				});
-			});
+		if (isSubmitting) return;
+
+		try {
+			setIsSubmitting(true);
+			await setCookieConsent(preferences);
+			window.location.reload();
+		} catch (err) {
+			captureException(err);
+		} finally {
+			setIsSubmitting(false);
 		}
-
-		await setCookieConsent(consentCookieValue);
 
 	};
 
@@ -56,7 +69,7 @@ export default function CookiePreferences() {
 		>
 
 			{
-				customizationPanel ? <CookiePrerenceCustomization onSubmit={(value) => submitCookieConsent(value)} /> : (
+				customizationPanel ? <CookiePreferenceCustomization onSubmit={(preferences) => submitCookieConsent(preferences)} /> : (
 
 					<div className="space-y-4">
 
@@ -65,13 +78,15 @@ export default function CookiePreferences() {
 						<div className="space-y-2">
 							<div className="w-full flex justify-end text-xs space-x-8 children:underline">
 								<button onClick={() => setCustomizationPanel(true)}>cookie preferences</button>
-								<button>accept essential cookies</button>
+								<button onClick={() => submitCookieConsent(getDefaultConsent(false))}>
+									accept essential cookies
+								</button>
 							</div>
 
 							<Button
 								title="accept all"
 								size="h-10 w-full"
-								onClick={submitCookieConsent}
+								onClick={() => submitCookieConsent(getDefaultConsent(true))}
 							/>
 						</div>
 
@@ -86,7 +101,7 @@ export default function CookiePreferences() {
 
 };
 
-function CookiePrerenceCustomization({ onSubmit }) {
+function CookiePreferenceCustomization({ onSubmit }) {
 
 	const [expandedIndex, setExpandedIndex] = useState(null);
 	const [cookiePreferences, setCookiePreferences] = useState({});
@@ -114,6 +129,7 @@ function CookiePrerenceCustomization({ onSubmit }) {
 			<p className="text-sm">We use cookies to enhance your experience, analyze site usage, and personalize content. You can accept all, reject non-essential, or customize your preferences.</p>
 
 			<Button
+				onClick={() => onSubmit(getDefaultConsent(true))}
 				title="accept all"
 				size="h-10 w-full"
 			/>
@@ -128,7 +144,7 @@ function CookiePrerenceCustomization({ onSubmit }) {
 
 							return (
 								(
-									<CookiePrerenceCustomizationRow
+									<CookiePreferenceCustomizationRow
 										key={i}
 										index={i}
 										isExpanded={expandedIndex === i}
@@ -161,7 +177,7 @@ function CookiePrerenceCustomization({ onSubmit }) {
 
 };
 
-function CookiePrerenceCustomizationRow({ title, description, toggle, isExpanded, onExpandToggle }) {
+function CookiePreferenceCustomizationRow({ title, description, toggle, isExpanded, onExpandToggle }) {
 
 	return (
 		<div className="h-auto w-full space-y-2">

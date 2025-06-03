@@ -3,11 +3,11 @@ import { poppins } from "@/styles/fonts";
 import AuthContextProvider from "@/lib/context/AuthContext";
 import ModalProvider from "@/lib/context/ModalContext";
 import { languages, fallbackLng } from "./i18n/settings";
-import { cookies, headers } from "next/headers";
+import { headers } from "next/headers";
 import Head from "next/head";
 import { PostHogProvider } from "@/lib/analytics/client";
 import LocaleTracker from "./i18n/LocaleTracker";
-import CookieConsentProvider from "@/lib/context/CookieConsentContext";
+import CookieConsentTrigger from "./components/CookieConsentTrigger";
 
 const baseUrl = "https://www.longitudebrand.com";
 
@@ -46,7 +46,7 @@ export default async function RootLayout({
 	let lang;
 
 	const headersList = await headers();
-	const cookieStore = await cookies();
+	// const cookieStore = await cookies();
 
 	lang = headersList.has("x-language") ? headersList.get("x-languge") : fallbackLng;
 
@@ -67,29 +67,22 @@ export default async function RootLayout({
 			</Head>
 
 
-			<PostHogProvider>
-
+			<PostHogProvider
+				posthogKey={process.env.NEXT_PUBLIC_POSTHOG_KEY}
+				posthogHost={process.env.NEXT_PUBLIC_POSTHOG_HOST}
+			>
 				<AuthContextProvider>
-
 					<ModalProvider>
-						
-						<CookieConsentProvider consent={cookieStore.get("cookie_consent")?.value}>
-
 
 							<body className={poppins.className}>
+								<CookieConsentTrigger />
 								<LocaleTracker />
 								{children}
 								{/* <SpeedInsights /> */}
 							</body>
 
-
-						</CookieConsentProvider>
-
 					</ModalProvider>
-
-
 				</AuthContextProvider>
-
 			</PostHogProvider>
 
 

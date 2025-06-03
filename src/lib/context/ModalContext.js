@@ -14,7 +14,7 @@ export default function ModalProvider({ children }) {
     const openModal = (modalName) => setActiveModal(modalName);
 
     const closeModal = (modalName) => {
-        if (modalName && activeModal != modalName)
+        if (modalName && activeModal !== modalName)
             return;
         setActiveModal(null);
         setValue(null);

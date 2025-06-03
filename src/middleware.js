@@ -39,7 +39,7 @@ export async function middleware(request) {
 
     if (!lng) lng = fallbackLng;
 
-    response.headers.set('x-language', lng);
+    response.headers.set("x-language", lng);
 
     if (!cookieStore.get(cookieName)?.value) {
 

@@ -10,13 +10,13 @@ export default function Page() {
 
 	// useEffect(() => {
 	// 	const cookieConsent = cookies.get("cookie_consent");
-	// 	if (!cookieConsent) openModal("cookie_preferences");
+	// 	if (!cookieConsent) openModal("cookie_consent");
 	// }, []);
 
 	return (
 
 		<div className="h-screen w-full flex items-center justify-center">
-			<button onClick={() => openModal("cookie_preferences")}>open modal</button>
+			<button onClick={() => openModal("cookie_consent")}>open modal</button>
 		</div>
 
 	)

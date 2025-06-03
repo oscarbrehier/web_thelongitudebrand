@@ -2,23 +2,56 @@
 'use client'
 
 import { usePathname, useSearchParams } from "next/navigation"
-import { useEffect, Suspense } from "react"
+import { useEffect, Suspense, useState } from "react"
 import { usePostHog } from 'posthog-js/react'
-
-import posthog from 'posthog-js'
 import { PostHogProvider as PHProvider } from 'posthog-js/react'
+import { cookieConsentGiven } from "../cookies/consent"
+import { captureException } from "@sentry/nextjs"
 
-export function PostHogProvider({ children }) {
+export function PostHogProvider({ children, posthogKey, posthogHost }) {
+
+	const [posthogClient, setPosthogClient] = useState(null);
+
 	useEffect(() => {
-		posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
-			api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://eu.i.posthog.com',
-			person_profiles: 'identified_only', // or 'always' to create profiles for anonymous users as well
-			capture_pageview: false // Disable automatic pageview capture, as we capture manually
-		})
-	}, [])
+
+		const consent = cookieConsentGiven();
+		if (!consent) return ;
+
+		let parsedConsent;
+
+		try {
+			parsedConsent = JSON.parse(consent);
+		} catch (err) {
+			captureException(err);
+		}
+
+		
+		if (!parsedConsent?.analytics) return ;
+		console.log(parsedConsent)
+
+		import("posthog-js").then((mod) => {
+
+			const posthog = mod.default;
+
+			posthog.init(posthogKey, {
+				api_host: posthogHost || 'https://eu.i.posthog.com',
+				person_profiles: 'identified_only', // or 'always' to create profiles for anonymous users as well
+				capture_pageview: false, // Disable automatic pageview capture, as we capture manually,
+				persistence: "localStorage+cookie",
+			});
+			
+			posthog.opt_in_capturing();
+			setPosthogClient(posthog);
+
+		});
+
+
+	}, [posthogKey, posthogHost])
+
+	if (!posthogClient) return (children);
 
 	return (
-		<PHProvider client={posthog}>
+		<PHProvider client={posthogClient}>
 			<SuspendedPostHogPageView />
 			{children}
 		</PHProvider>
