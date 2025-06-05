@@ -1,8 +1,14 @@
-import zxcvbn from "zxcvbn";
+export default async function getPasswordStrength(password) {
 
-export default function getPasswordStrength(password) {
+    const response = await fetch("/api/auth/password-strength", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ password }),
+    });
 
-    const {score} = zxcvbn(password);
-    return score >= 4; 
+    const data = response.json();
+    return data.score >= 4;
 
 };

@@ -6,10 +6,11 @@ export function DownloadReceiptButton() {
     return (
 
         <Button
-            title="download receipt"
             size="h-10 px-4"
             border={true}
-        />
+        >
+            download receipt
+        </Button>
 
     );
 

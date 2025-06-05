@@ -207,12 +207,13 @@ export function PersonalInformationForm({ content, lang }) {
                     )}
 
                     <Button
-                        title='save'
                         size='w-full h-14'
                         type="submit"
                         loading={loading}
                         disabled={!isModified}
-                    />
+                    >
+                        save
+                    </Button>
 
                     <Hyperlink
                         to="/customer/personal-information/change-password"

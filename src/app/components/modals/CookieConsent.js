@@ -84,10 +84,11 @@ export default function CookieConsent() {
 							</div>
 
 							<Button
-								title="accept all"
 								size="h-10 w-full"
 								onClick={() => submitCookieConsent(getDefaultConsent(true))}
-							/>
+							>
+								accept all
+							</Button>
 						</div>
 
 					</div>
@@ -130,9 +131,10 @@ function CookiePreferenceCustomization({ onSubmit }) {
 
 			<Button
 				onClick={() => onSubmit(getDefaultConsent(true))}
-				title="accept all"
 				size="h-10 w-full"
-			/>
+			>
+				accept all
+			</Button>
 
 			<div className="space-y-4">
 
@@ -166,10 +168,11 @@ function CookiePreferenceCustomization({ onSubmit }) {
 
 			<Button
 				border
-				title="confirm selection"
 				size="h-10 w-full"
 				onClick={() => onSubmit(cookiePreferences)}
-			/>
+			>
+				confirm selection
+			</Button>
 
 		</div>
 

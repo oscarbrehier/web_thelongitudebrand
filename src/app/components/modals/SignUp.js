@@ -51,8 +51,7 @@ export default function SignUpModal() {
                 terms: formData.get("terms") !== null
             };
 
-            signUpSchema.parse(data);
-
+            await signUpSchema.parseAsync(data);
             await signUp(data);
 
             trackEvent("sign_up", {
@@ -193,11 +192,12 @@ export default function SignUpModal() {
                 <div className="mt-4 space-y-2 w-full">
 
                     <Button
-                        title="sign up"
                         type="submit"
                         size="w-full h-10"
                         loading={loading}
-                    />
+                    >
+                        sign up
+                    </Button>
 
                     <>
                         {

@@ -1,9 +1,9 @@
 import getOrderDetails from "@/lib/firestore/getOrderDetails";
-import { CarrierInfoCard } from "./card-carrier-info";
-import { TimelineCard } from "./card-timeline";
-import { DeliveryInfoCard } from "./card-delivery-info";
-import { ItemsSection } from "./section-items";
-import { DownloadReceiptButton } from "./button-download-receipt";
+import { CarrierInfoCard } from "./CardCarrierInfo";
+import { TimelineCard } from "./CartTimeline";
+import { DeliveryInfoCard } from "./CardDeliveryInfo";
+import { ItemsSection } from "./SectionItems";
+import { DownloadReceiptButton } from "./ButtonDownloadReceipt";
 import catchError from "@/lib/catchErrors";
 import orderStatus from "@/lib/constants/orderStatus";
 

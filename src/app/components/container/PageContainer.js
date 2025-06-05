@@ -2,7 +2,7 @@ import NavigationBar from "../navigation/navbar/NavigationBar";
 import Footer from "../navigation/footer";
 import ClientModals from "../modals/ClientModals";
 
-export const dynamic = 'force-dynamic'
+export const dynamic = 'force-dynamic';
 
 export function PageContainer({ children, lang }) {
 

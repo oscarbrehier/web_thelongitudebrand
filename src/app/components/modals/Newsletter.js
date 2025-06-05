@@ -212,11 +212,12 @@ export default function NewsletterModal() {
                 <div className="mt-4 space-y-4">
 
                     <Button
-                        title="subscribe"
                         type={"submit"}
                         size="w-full h-10"
                         loading={loading}
-                    />
+                    >
+                        subscribe
+                    </Button>
 
                     <>
                         {

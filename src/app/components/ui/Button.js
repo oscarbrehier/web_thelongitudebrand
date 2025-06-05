@@ -80,7 +80,7 @@ const textVariants = tv({
 })
 
 export default function Button({
-    title,
+    children,
     size,
     border = false,
     loading,
@@ -121,7 +121,7 @@ export default function Button({
                 <LoadingSpinner />
             ) : (
                 <p className={textClasses}>
-                    {title}
+                    {children}
                 </p>
             )}
         </button>

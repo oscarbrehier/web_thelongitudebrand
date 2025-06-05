@@ -99,11 +99,12 @@ export default function SignUpForm({
             <div className="mt-4 space-y-2">
 
                 <Button
-                    title="sign up"
                     size="w-full h-14"
                     type="submit"
                     loading={loading}
-                />
+                >
+                    sign up
+                </Button>
 
                 <div className="text-sm flex">
 

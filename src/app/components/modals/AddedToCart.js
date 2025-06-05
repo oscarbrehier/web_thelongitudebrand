@@ -65,11 +65,12 @@ export default function AddedToCart() {
                             <div className="space-y-0 grid sm:grid-cols-2 gap-2">
 
                                 <Button
-                                    title="checkout"
                                     onClick={redirectToCheckout}
                                     size="h-10 w-full"
                                     border
-                                />
+                                >
+                                    checkout
+                                </Button>
 
                                 <Hyperlink
                                     to="/cart"

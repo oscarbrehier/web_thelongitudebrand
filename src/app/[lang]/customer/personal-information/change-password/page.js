@@ -14,7 +14,7 @@ const formSchema = z.object({
     currentPassword: z.string().min(1, { message: required_error("Current password") }),
     newPassword: z.string()
         .min(6, { message: "Password must be at least 6 characters long" })
-        .refine(getPasswordStrength, {
+        .refine(async (val) => await getPasswordStrength(val), {
             message: "Password is too weak. Include letters, numbers, and symbols"
         }),
     confirmNewPassword: z.string()
@@ -59,17 +59,6 @@ export default function Page(props) {
 
     const isFormIncomplete = !values.currentPassword || !values.newPassword || !values.confirmNewPassword;
 
-    // const resetErrors = () => {
-
-    //     setInputValues((prev) => ({
-    //         ...prev,
-    //         currentPassword: { ...prev.currentPassword, error: "" },
-    //         newPassword: { ...prev.newPassword, error: "" },
-    //         confirmNewPassword: { ...prev.confirmNewPassword, error: "" }
-    //     }));
-
-    // };
-
     const handleSubmitForm = async () => {
 
         setLoading(true);
@@ -78,14 +67,7 @@ export default function Page(props) {
 
         try {
 
-            // const data = {
-            //     currentPassword: formData.get("currentPassword"),
-            //     newPassword: formData.get("newPassword"),
-            //     confirmNewPassword: formData.get("confirmNewPassword"),
-            // };
-
             formSchema.parse(values);
-
             await updatePassword(data.currentPassword, data.newPassword);
             router.push("/customer/personal-information");
 
@@ -94,7 +76,6 @@ export default function Page(props) {
             if (error instanceof ZodError) {
 
                 const formatted = error.flatten().fieldErrors;
-                console.log(formatted)
                 setErrors({
                     currentPassword: formatted.currentPassword?.[0] || "",
                     newPassword: formatted.newPassword?.[0] || "",
@@ -180,13 +161,13 @@ export default function Page(props) {
                     <div className="mt-4 space-y-2">
 
                         <Button
-                            title='save'
                             size='w-full h-14'
-                            // onClick={(e) => handleSubmitForm(e)}
                             type="submit"
                             loading={loading}
                             disabled={isFormIncomplete}
-                        />
+                        >
+                            save
+                        </Button>
 
                     </div>
 

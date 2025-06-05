@@ -88,7 +88,7 @@ export default function Page({ params: { lang } }) {
                                             </p>
 
                                             <p className="text-sm text-neutral-600">
-                                                It looks like the link you clicked is no longer active. Don’t worry, you can request a new password reset link by entering your email below.
+                                                It looks like the link you clicked is no longer active. Don't worry, you can request a new password reset link by entering your email below.
                                             </p>
                                         </div>
 
@@ -125,11 +125,12 @@ export default function Page({ params: { lang } }) {
                                 <div className="mt-4 space-y-2">
 
                                     <Button
-                                        title="send reset link"
                                         size="w-full h-14"
                                         type="submit"
                                         loading={status == "loading"}
-                                    />
+                                    >
+                                        send reset link
+                                    </Button>
 
                                 </div>
 
@@ -175,9 +176,10 @@ function SuccessMessage({ email }) {
             <div className="space-y-2">
 
                 <Button
-                    title="sign in"
                     size="w-full h-14"
-                />
+                >
+                    sign in
+                </Button>
 
 
                 <div>

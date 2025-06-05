@@ -160,11 +160,12 @@ export default function Page({ params: { lang } }) {
                                 <div className="mt-4 space-y-2">
 
                                     <Button
-                                        title="reset password"
                                         size="w-full h-14"
                                         type="submit"
                                         loading={loading}
-                                    />
+                                    >
+                                        reset password
+                                    </Button>
 
                                 </div>
 

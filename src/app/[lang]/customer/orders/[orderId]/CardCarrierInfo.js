@@ -23,10 +23,11 @@ export function CarrierInfoCard({ data }) {
                 </div>
 
                 <Button
-                    title="track your order"
                     size="h-10 px-4"
                     border={true}
-                />
+                >
+                    track your order
+                </Button>
 
             </div>
 

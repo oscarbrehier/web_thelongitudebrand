@@ -185,12 +185,13 @@ export function Product({
                     }
 
                     <Button
-                        title={t(content.availability)}
                         size="xs:w-[85%] w-full h-10"
                         text="uppercase"
                         onClick={addItemToCart}
                         disabled={content.availability == "out_of_stock"}
-                    />
+                    >
+                        {t(content.availability)}
+                    </Button>
 
                 </div>
 
@@ -274,21 +275,23 @@ export function Product({
 
                         <div ref={addToCartRefBtn}>
                             <Button
-                                title={t(content.availability)}
                                 size="w-full h-10"
                                 text="uppercase"
                                 onClick={addItemToCart}
                                 disabled={content.availability == "out_of_stock"}
-                            />
+                            >
+                                {t(content.availability)}
+                            </Button>
                         </div>
 
                         <Button
-                            title={wishlist ? "remove from wishlist" : "add to wishlist"}
                             size="w-full h-10"
                             onClick={handleWishlist}
                             text="uppercase"
                             border
-                        />
+                        >
+                            {wishlist ? "remove from wishlist" : "add to wishlist"}
+                        </Button>
 
                     </div>
 

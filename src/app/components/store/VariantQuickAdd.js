@@ -81,13 +81,14 @@ export function VariantQuickAdd({ content, lang, structuredData, ...props }) {
                     />
 
                     <Button
-                        title="add to cart"
                         size="w-full"
                         style="py-1"
                         text="uppercase"
                         onClick={addProductToCart}
                         disabled={size == null}
-                    />
+                    >
+                        add to cart
+                    </Button>
 
                 </div>
 

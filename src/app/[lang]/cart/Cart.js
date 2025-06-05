@@ -150,12 +150,13 @@ export function Cart({ lang }) {
 				<div className="space-y-2">
 
 					<Button
-						title={t('cta_checkout')}
 						onClick={redirectToCheckout}
 						size="w-full lg:h-14 h-10"
 						loading={loading}
 						text="uppercase"
-					/>
+					>
+						{t('cta_checkout')}
+					</Button>
 
 					{error && <p className="text-error-red text-sm">{error}</p>}
 

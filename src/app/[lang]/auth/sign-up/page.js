@@ -55,7 +55,7 @@ export default function Page(props) {
                 terms: formData.get("terms") !== null
             };
 
-            signUpSchema.parse(data);
+            await signUpSchema.parseAsync(data);
             await signUp(data);
 
             trackEvent("sign_up", {
@@ -68,7 +68,7 @@ export default function Page(props) {
         
 
         } catch (error) {
-                
+
             if (error.errors) {
 
                 const errors = error.errors.reduce((acc, curr) => {

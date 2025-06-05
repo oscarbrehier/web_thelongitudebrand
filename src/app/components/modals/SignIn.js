@@ -124,11 +124,12 @@ export default function SignInModal() {
                 <div className="mt-4 space-y-2 w-full">
 
                     <Button
-                        title="login"
                         size="w-full h-10"
                         type="submit"
                         loading={loading}
-                    />
+                    >
+                        login
+                    </Button>
 
                     <>
                         {

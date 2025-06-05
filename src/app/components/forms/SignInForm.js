@@ -42,11 +42,12 @@ export default function SignInForm({
             <div className="mt-4 space-y-2">
 
                 <Button
-                    title="sign in"
                     size="w-full h-14"
                     type="submit"
                     loading={status == "loading"}
-                />
+                >
+                    sign in
+                </Button>
 
                 <div className="w-full flex flex-col text-sm space-y-2">
 

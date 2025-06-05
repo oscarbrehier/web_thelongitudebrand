@@ -17,7 +17,7 @@ export const signUpSchema = z.object({
     password: z
         .string()
         .min(6, { message: requiredError("Password") })
-        .refine(getPasswordStrength, {
+        .refine(async (val) => await getPasswordStrength(val), {
             message: "Password is too weak. Choose a password with at least 6 characters, including a mix of letters, numbers, and symbols"
         }),
     confirmPassword: z

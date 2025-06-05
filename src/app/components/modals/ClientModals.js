@@ -1,6 +1,6 @@
 "use client"
 import { useModalContext } from "@/lib/context/ModalContext";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import AddedToCart from "./AddedToCart";
@@ -14,7 +14,7 @@ const modals = {
 };
 
 export default function ClientModals({ children }) {
-    
+
     const pathname = usePathname();
     const { activeModal } = useModalContext();
 
@@ -33,7 +33,7 @@ export default function ClientModals({ children }) {
 
             <div className="col-start-1 row-start-1">
                 {(activeModal === "added_cart" && pathname.includes("/shop/")) && (
-                    
+
                     <ActiveModalComponent />
 
                 )}
