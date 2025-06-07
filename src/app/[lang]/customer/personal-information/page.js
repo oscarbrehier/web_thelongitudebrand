@@ -2,6 +2,7 @@ import { getCurrentUser } from "@/lib/authentication/sessionHelpers";
 import { PersonalInformationForm } from "./PersonalInformationForm";
 import { adminFirestore } from "@/lib/firebase/admin";
 import { useTranslation } from "@/app/i18n";
+import { getUserById } from "@/lib/firestore/getUserById";
 
 export default async function Page(props) {
 
@@ -9,14 +10,17 @@ export default async function Page(props) {
     const { lang } = params;
     const { t } = await useTranslation(lang, "customer");
     
-    const user = await getCurrentUser();
-    const firestoreUser = await adminFirestore
-        .collection("users")
-        .doc(user.uid)
-        .get();
+    const authUser = await getCurrentUser();
+    let firestoreUserData = null;
 
-    const content = firestoreUser.exists ? firestoreUser.data() : null;
-    content["email"] = user.email;
+    try {
+        firestoreUserData = await getUserById(authUser.uid, { email: authUser.email });
+    } catch (err) {
+        console.error("Failed to fetch Firestore user", err);
+    }
+
+    firestoreUserData["email"] = authUser.email;
+    delete firestoreUserData.updatedAt;
 
     return (
 
@@ -24,7 +28,7 @@ export default async function Page(props) {
             <div className="w-full 2md:grid grid-cols-4 gap-2 mt-16 pt-14">
                 <div className="col-start-2 col-span-2 h-auto">
                     <h1 className="capitalize mx-2 my-1 text-lg">personal information</h1>
-                    {content && <PersonalInformationForm content={content} lang={lang} />}
+                    {firestoreUserData && <PersonalInformationForm content={firestoreUserData} lang={lang} />}
                 </div>
             </div>
         </div>

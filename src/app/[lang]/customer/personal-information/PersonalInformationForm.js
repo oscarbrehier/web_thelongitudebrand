@@ -88,6 +88,7 @@ export function PersonalInformationForm({ content, lang }) {
 
         const formData = new FormData(event.target);
         const data = Object.fromEntries(formData.entries());
+        data.newsletterSubscriber = formData.has("newsletterSubscriber");   
 
         if (!validateForm(data)) {
             setLoading(false);
@@ -103,7 +104,7 @@ export function PersonalInformationForm({ content, lang }) {
 
         try {
 
-            const result = await updateUserProfile(user.uid, modifiedInputs);
+            const result = await updateUserProfile(user.uid, modifiedInputs, { ...data, email: content.email });
 
             if (result?.errors) {
 
@@ -116,14 +117,13 @@ export function PersonalInformationForm({ content, lang }) {
             setIsModified(false);
 
         } catch (err) {
-            console.error(err);
+
+            console.log(err);
+
             setError(prev => ({ ...prev, form: "An unexpected error occurred." }));
-            Sentry.captureException(err);
 
         } finally {
-
             setLoading(false);
-
         };
 
     };

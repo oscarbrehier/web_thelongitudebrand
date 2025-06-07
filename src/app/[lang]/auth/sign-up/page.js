@@ -1,14 +1,10 @@
 "use client"
-import Button from "@/app/components/ui/Button";
-import InputWithLabel from "@/app/components/ui/InputWithLabel";
 import { useAuthContext } from "@/lib/context/AuthContext";
 import handleFirebaseError from "@/lib/firebase/handleFirebaseError";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState, use } from "react";
+import { useState, use } from "react";
 import { signUpSchema } from "@/lib/constants/zodSchema";
 import signUp from "@/lib/authentication/signUp";
-import Checkbox from "@/app/components/ui/Checkbox";
 import SignUpForm from "@/app/components/forms/SignUpForm";
 import { trackEvent } from "@/lib/analytics/analytics";
 
@@ -21,7 +17,6 @@ export default function Page(props) {
 
     const query = useSearchParams();
     const router = useRouter();
-    const { isAuth } = useAuthContext();
 
     const [loading, setLoading] = useState(false);
     const [form, setForm] = useState({

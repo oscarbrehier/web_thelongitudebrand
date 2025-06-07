@@ -1,3 +1,5 @@
+"use client"
+import { useState } from "react";
 import { IoCheckmark } from "react-icons/io5";
 
 export default function Checkbox({
@@ -8,6 +10,15 @@ export default function Checkbox({
     ...props
 }) {
 
+    const [isChecked, setIsChecked] = useState(checked);
+
+    const handleChange = (event) => {
+
+        setIsChecked(event.target.checked);
+        if (onChange) onChange();
+
+    }
+
     return (
 
         <div className="relative flex items-center justify-center">
@@ -15,14 +26,16 @@ export default function Checkbox({
             <input
                 className={`appearance-none border-[1px] bg-cream-50 peer size-${size} ${checked ? "border-black" : "border-neutral-400"}`}
                 type="checkbox"
-                onChange={onChange}
+                onChange={(e) => handleChange(e)}
                 name={name}
-                checked={checked}
+                checked={isChecked}
             />
 
-            <div className="absolute hidden peer-checked:block pointer-events-none">
-                <IoCheckmark className="size-full" />
-            </div>
+            {isChecked && (
+                <div className="absolute hidden peer-checked:block pointer-events-none">
+                    <IoCheckmark className="size-full" />
+                </div>
+            )}
 
         </div>
 

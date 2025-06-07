@@ -1,35 +1,32 @@
 "use server"
-import { getSession } from "./sessionHelpers";
+import { captureException } from "@sentry/nextjs";
+import { adminFirestore } from "../firebase/admin";
+import admin from "firebase-admin";
+import { updateNewsletterSubscriber } from "../firestore/updateNewsletterSubscriber";
 
-const apiPath = process.env.API_PATH;
+export default async function updateUserProfile(userId, newEntries, entries) {
 
-export default async function updateUserProfile(userId, data) {
+    if (!userId || typeof newEntries !== "object") throw new Error("Invalid parameters provided to updateUserProfile");
 
-    if (!userId || typeof data !== "object") throw new Error("Invalid parameters provided to updateUserProfile");
+    const docRef = adminFirestore
+        .collection("users")
+        .doc(userId)
 
-    const sessionToken = await getSession();
+    try {
 
-    const res = await fetch(`${apiPath}/users`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${sessionToken}`
-        },
-        body: JSON.stringify({
-            userId,
-            data
-        }),
-    });
+        await updateNewsletterSubscriber(entries.email, entries);
 
-    
-    if (!res.ok) {
-        
-        const result = await res.json();
+        if (newEntries.email) delete newEntries.email;
 
-        return {
-            errors: result.errors.code,
-        };
+        await docRef
+        .update({
+            ...data,
+            updatedAt: admin.firestore.Timestamp.now()
+        });
 
-    };
+    } catch (err) {
+        captureException(err);
+        throw err;
+    }
 
 };

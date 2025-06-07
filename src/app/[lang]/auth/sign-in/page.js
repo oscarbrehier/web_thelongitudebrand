@@ -103,55 +103,6 @@ export default function Page(props) {
 
                 </div>
 
-                {/* <form onSubmit={handleForm}>
-
-                        <div className="space-y-2">
-
-                            <InputWithLabel
-                                title="email"
-                                type="email"
-                                required={true}
-                                value={query.get("email") || null}
-                                error={inputErrors.email}
-                            />
-
-                            <InputWithLabel
-                                title="password"
-                                type="password"
-                                required={true}
-                                error={inputErrors.password}
-                            />
-
-                            {
-                                form.error && <p className="text-error-red text-sm">{form.error}</p>
-                            }
-
-                        </div>
-
-                        <div className="mt-4 space-y-2">
-
-                            <Button
-                                title="sign in"
-                                size="w-full h-14"
-                                type="submit"
-                                loading={status == "loading"}
-                            />
-
-                            <div>
-
-                                <Link
-                                    className="text-sm"
-                                    href="/auth/reset-password"
-                                >
-                                    Forgot your password?
-                                </Link>
-
-                            </div>
-
-                        </div>
-
-                    </form> */}
-
                 <SignInForm
                     lang={lang}
                     handleForm={handleForm}
