@@ -1,11 +1,17 @@
+import clsx from "clsx";
+
 export default function LoadingSpinner({
-    color = "border-e-neutral-700"
+    color = "border-e-neutral-700",
+    size = "size-6"
 }) {
 
     return (
 
         <div
-            className={`${color} inline-block size-6 animate-spin rounded-full border-2 border-solid border-current align-[-0.125em] text-neon-green motion-reduce:animate-[spin_1.5s_linear_infinite]`}
+            className={clsx("inline-block size-6 animate-spin rounded-full border-2 border-solid border-current align-[-0.125em] text-neon-green motion-reduce:animate-[spin_1.5s_linear_infinite]",
+                size,
+                color
+            )}
             role="status">
             <span
                 className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"

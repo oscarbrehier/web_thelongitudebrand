@@ -1,10 +1,17 @@
 {
-    "shop": "shop",
-    "view_all": "view all",
-    "t_shirts": "t-shirts",
-    "tank_tops": "tank tops",
-    "preorder": "pre order",
-    "in_stock": "add to cart",
-    "out_of_stock": "out of stock",
-    "cta_checkout": "proceed to checkout"
+  "shop": "shop",
+  "view_all": "view all",
+  "t_shirts": "t-shirts",
+  "tank_tops": "tank tops",
+  "add_to_cart": "add to cart",
+  "add_to_wishlist": "add to wishlist",
+  "remove_from_wishlist": "remove from wishlist",
+  "label_preorder": "pre order",
+  "label_in_stock": "in stock",
+  "label_out_of_stock": "out of stock",
+  "item_out_of_stock": "item is out of stock",
+  "cta_checkout": "proceed to checkout",
+  "size": "size",
+  "select_size": "please select a size first",
+  "color": "color"
 }

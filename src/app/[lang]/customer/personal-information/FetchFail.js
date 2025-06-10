@@ -1,5 +1,5 @@
 "use client"
-import { BrandName } from "@/app/components/BrandName";
+import { EmptyState } from "@/app/components/EmptyState";
 import Button from "@/app/components/ui/Button"
 import { useTranslation } from "@/app/i18n/client";
 import { useRouter } from "next/navigation";
@@ -11,23 +11,21 @@ export function FetchFail({ lang }) {
 
 	return (
 
-		<div className="flex-1 w-full flex flex-col items-center justify-center space-y-8">
-
-			<BrandName />
-
-			<div className="text-center">
-				<p>{t("failed_fetch_user_info")}</p>
-				<p>{t("try_refresh_or_later")}</p>
-			</div>
-
+		<EmptyState
+			title="error"
+			description={[
+				"failed_fetch_user_info",
+				"try_refresh_or_later"
+			]}
+			trans={t}
+		>
 			<Button
 				size="h-10 px-4"
 				onClick={() => router.refresh()}
 			>
 				{t("retry")}
 			</Button>
-
-		</div>
+		</EmptyState>
 
 	);
 

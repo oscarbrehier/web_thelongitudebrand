@@ -1,7 +1,10 @@
 {
+	"error": "error",
 	"failed_fetch_user_info": "We couldn’t load your information right now.",
 	"try_refresh_or_later": "Please try refreshing the page or come back later.",
 	"retry": "retry",
 	"too_many_requests": "Too many requests. Try again later.",
-	"unexpected_error": "An unexpected error occurred."
+	"unexpected_error": "An unexpected error occurred.",
+	"loading_error": "loading error",
+	"products_fetch_failure_desc": "Uh-oh! There was an issue loading our products. We're addressing it—please refresh or try again later."
 }

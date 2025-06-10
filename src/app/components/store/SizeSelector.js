@@ -1,10 +1,22 @@
-export default function SizeSelector({ available, current, label, setSize, style }) {
+export default function SizeSelector({
+    trans,
+    available,
+    current,
+    label,
+    setSize,
+    style
+}) {
 
     return (
 
         <div className={"space-y-2" + " " + style}>
 
-            <p className={`text-xs capitalize ${label?.error && 'text-red-600'}`}>{label.error ? label.errorMessage : label.text}</p>
+            <p className={`text-xs ${label?.error ? 'text-red-600' : "capitalize"}`}>
+                {label.error ?
+                    trans(label.errorMessage) : 
+                    trans(label.text)
+                }
+            </p>
 
             <div className="grid grid-cols-4 gap-2">
 

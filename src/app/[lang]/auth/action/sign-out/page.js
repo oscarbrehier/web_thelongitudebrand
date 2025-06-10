@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { storageKeys } from "@/lib/constants/settings.config";
 import { useAuthContext } from "@/lib/context/AuthContext";
 import { BrandName } from "@/app/components/BrandName";
+import posthog from "posthog-js";
 
 export default function Page() {
 
@@ -26,6 +27,7 @@ export default function Page() {
 
             await auth.signOut();
             await deleteAuthCookie();
+            posthog.reset();
 
             router.push("/shop");
 

@@ -1,5 +1,6 @@
 import { database } from "@/lib/firebase/client";
 import { arrayRemove, doc, Timestamp, updateDoc } from "@firebase/firestore";
+import { captureException } from "@sentry/nextjs";
 
 export default async function removeFromWishlist(productId, userId) {
 
@@ -14,7 +15,7 @@ export default async function removeFromWishlist(productId, userId) {
 
     } catch (err) {
 
-        console.error(err);
+        captureException(err);
 
     };
 

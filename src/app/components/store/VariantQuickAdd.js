@@ -6,9 +6,11 @@ import { useCartStore } from "@/lib/stores/useCartStore";
 import { useAuthContext } from "@/lib/context/AuthContext";
 import SizeSelector from "./SizeSelector";
 import { trackEvent } from "@/lib/analytics/analytics";
+import { useTranslation } from "@/app/i18n/client";
 
 export function VariantQuickAdd({ content, lang, structuredData, ...props }) {
 
+    const { t } = useTranslation(lang, ["shop"]);
     const [size, setSize] = useState(null);
     const { addToCart } = useCartStore();
     const { user } = useAuthContext();
@@ -16,13 +18,6 @@ export function VariantQuickAdd({ content, lang, structuredData, ...props }) {
     const addProductToCart = async () => {
 
         if (size == null) return;
-
-        trackEvent('add_to_cart', {
-            method: "quick_add",
-            productId: `${content._id}`,
-            name: content.title,
-            size: size,
-        });
 
         await addToCart({
             productId: `${content._id}&size=${size}`,
@@ -38,7 +33,14 @@ export function VariantQuickAdd({ content, lang, structuredData, ...props }) {
                 top: 0,
                 behavior: 'smooth',
             });
-        }
+        };
+
+        trackEvent('add_to_cart', {
+            method: "quick_add",
+            productId: `${content._id}`,
+            name: content.title,
+            size: size,
+        });
 
     };
 
@@ -73,9 +75,9 @@ export function VariantQuickAdd({ content, lang, structuredData, ...props }) {
                         setSize={setSize}
                         available={content.available_sizes}
                         label={{
-                            text: 'sizes',
+                            text: t("size"),
                             error: false,
-                            errorMessage: 'please select your size first'
+                            errorMessage: t("select_size")
                         }}
                         style="w-full"
                     />
@@ -87,7 +89,7 @@ export function VariantQuickAdd({ content, lang, structuredData, ...props }) {
                         onClick={addProductToCart}
                         disabled={size == null}
                     >
-                        add to cart
+                        {t("add_to_cart")}
                     </Button>
 
                 </div>

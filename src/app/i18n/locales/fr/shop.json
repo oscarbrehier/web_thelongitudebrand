@@ -3,8 +3,15 @@
     "view_all": "afficher tout",
     "t_shirt": "t-shirts",
     "tank_top": "débardeurs",
-    "preorder": "précommander",
-    "in_stock": "ajouter au panier",
-    "out_of_stock": "en rupture de stock",
-    "cta_checkout": "finaliser la commande"
+    "add_to_cart": "ajouter au panier",
+    "add_to_wishlist": "ajouter aux favoris",
+    "remove_from_wishlist": "retirer des favoris",
+    "label_preorder": "précommander",
+    "label_in_stock": "en stock",
+    "label_out_of_stock": "en rupture de stock",
+    "item_out_of_stock": "article en rupture de stock",
+    "cta_checkout": "finaliser la commande",
+    "size": "taille",
+    "select_size": "veuillez d'abord choisir la taille",
+    "color": "couleur"
 }

@@ -2,33 +2,29 @@ import { client } from "@/lib/sanity/client";
 import { ProductsFilter } from "./products-filter";
 import { useTranslation } from "@/app/i18n";
 import { captureException } from "@sentry/nextjs";
+import { EmptyState } from "@/app/components/EmptyState";
+import Button from "@/app/components/ui/Button";
 
 export default async function Page(props) {
-    const params = await props.params;
+	
+	const params = await props.params;
+	const { lang } = params;
+	const { t } = await useTranslation(lang, ["shop", "error"]);
 
-    const {
-        lang
-    } = params;
+	const CONTENT_QUERY = '*[_type == "product"] { title, images, _type, _id, category ->  { _ref, _type, title }, price, slug }';
+	const CATEGORY_QUERY = '*[_type == "category" && count(*[_type == "product" && references(^._id)]) > 0] { title }';
 
-    const CONTENT_QUERY = '*[_type == "product"] { title, images, _type, _id, category ->  { _ref, _type, title }, price, slug }';
-    const CATEGORY_QUERY = '*[_type == "category" && count(*[_type == "product" && references(^._id)]) > 0] { title }';
+	let products, categories, categoryTitles = null;
 
-    let products, categories, categoryTitles = null;
-
-    try {
-
+	try {
 		products = await client.fetch(CONTENT_QUERY);
 		categories = await client.fetch(CATEGORY_QUERY);
 		categoryTitles = ['view-all', ...categories.map((category) => category.title).reverse()];
-
-
 	} catch (err) {
 		captureException(err);
 	}
 
-    const { t } = await useTranslation(lang, "shop");
-
-    return (
+	return (
 
 		<div className="pt-12 space-y-2 flex flex-col min-h-screen">
 
@@ -53,11 +49,20 @@ export default async function Page(props) {
 
 				) : (
 
-					<div className="flex-1 w-full flex justify-center">
-						
-						<p className="">Uh-oh! Something went wrong while loading our products. We’re on it—please refresh or try again later</p>
-						
-					</div>
+					<EmptyState
+						trans={t}
+						ns="error"
+						title="loading_error"
+						description="products_fetch_failure_desc"
+					>
+						<Button
+							size="h-10 px-4"
+							onClick="page-refresh"
+						>
+							Retry
+						</Button>
+					</EmptyState>
+
 
 				)
 			}

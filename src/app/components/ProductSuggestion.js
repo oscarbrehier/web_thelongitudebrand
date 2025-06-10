@@ -4,9 +4,11 @@ import { StoreItem } from "./store/StoreItem";
 import { captureException } from "@sentry/nextjs";
 import { useEffect, useState } from "react";
 import { getProducts } from "@/lib/sanity/product";
+import { useTranslation } from "../i18n/client";
 
 export default function ProductSuggestion({ lang }) {
 
+	const { t } = useTranslation(lang, ["common"]);
 	const [products, setProducts] = useState(null);
 
 	useEffect(() => {
@@ -32,7 +34,7 @@ export default function ProductSuggestion({ lang }) {
 	return (
 
 		<>
-			<h1 className="capitalize mx-2 my-1 text-lg">suggestions</h1>
+			<h1 className="capitalize mx-2 my-1 text-lg">{t("suggestions")}</h1>
 			<ProductGrid>
 				{products && products.map((product) => (
 					<StoreItem 

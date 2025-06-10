@@ -26,9 +26,9 @@ export function Product({
     const [showFixedButton, setShowFixedButton] = useState(true);
     const [labels, setLabels] = useState({
         size: {
-            text: 'sizes',
+            text: "size",
             error: false,
-            errorMessage: 'please select your size first'
+            errorMessage: "select_size"
         },
         availability: {
             error: false,
@@ -56,7 +56,7 @@ export function Product({
 
         if (size == null) return toggleLabelError('size');
         if (content.availability == "out_of_stock") {
-            toggleLabelError('availability', 'item is out of stock')
+            toggleLabelError('availability', t("item_out_of_stock"))
             return;
         }
 
@@ -92,8 +92,7 @@ export function Product({
         const action = wishlist ? removeFromWishlist : addToWishlist;
         await action(content._id, user.uid);
 
-        if (!wishlist)
-        {
+        if (!wishlist) {
             trackEvent("add_to_wishlist", {
                 productId: content._id,
                 name: content.title
@@ -169,6 +168,7 @@ export function Product({
                 <div className="lg:hidden fixed left-0 bottom-0 h-auto w-full p-4 bg-cream-100 space-y-2 flex flex-col items-center">
 
                     <SizeSelector
+                        trans={t}
                         available={content.available_sizes}
                         current={size}
                         label={labels.size}
@@ -190,7 +190,7 @@ export function Product({
                         onClick={addItemToCart}
                         disabled={content.availability == "out_of_stock"}
                     >
-                        {t(content.availability)}
+                        {t(`label_${content.availability}`)}
                     </Button>
 
                 </div>
@@ -239,7 +239,7 @@ export function Product({
                     <div className="space-y-2">
 
                         <p className="text-xs capitalize">
-                            color
+                            {t("color")}
                             <span className="uppercase mx-10">black</span>
                         </p>
 
@@ -259,6 +259,7 @@ export function Product({
                     </div>
 
                     <SizeSelector
+                        trans={t}
                         available={content.available_sizes}
                         current={size}
                         label={labels.size}
@@ -280,7 +281,7 @@ export function Product({
                                 onClick={addItemToCart}
                                 disabled={content.availability == "out_of_stock"}
                             >
-                                {t(content.availability)}
+                                {t(`label_${content.availability}`)}
                             </Button>
                         </div>
 
@@ -290,7 +291,7 @@ export function Product({
                             text="uppercase"
                             border
                         >
-                            {wishlist ? "remove from wishlist" : "add to wishlist"}
+                            {t(wishlist ? "remove_from_wishlist" : "add_to_wishlist")}
                         </Button>
 
                     </div>

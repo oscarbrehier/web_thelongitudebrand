@@ -4,5 +4,7 @@
 	"show": "afficher",
 	"field_required": "champ obligatoire",
 	"save": "enregistrer",
-	"shop_now": "accéder a la boutique"
+	"shop_now": "accéder a la boutique",
+	"continue_shopping": "poursuivre vos achats",
+	"suggestions": "suggestions"
 }

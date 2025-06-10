@@ -5,6 +5,8 @@ import { adminFirestore } from "../firebase/admin"
 
 export async function getUserById(userId, params) {
 
+	return null;
+
 	const userDocRef = adminFirestore
 		.collection("users")
 		.doc(userId);

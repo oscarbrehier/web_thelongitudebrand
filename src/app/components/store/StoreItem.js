@@ -1,5 +1,6 @@
 import SanityImage from "../ui/SanityImage";
 import { VariantQuickAdd } from "./VariantQuickAdd";
+import { VariantWishlist } from "./VariantWishlist";
 
 export function StoreItem({
     data: content,
@@ -25,18 +26,20 @@ export function StoreItem({
             priceCurrency: "EUR",
             availability: "https://schema.org/InStock",
         },
-    })
+    });
 
     switch (variant) {
         case "quick-add":
             return (<VariantQuickAdd content={content} lang={lang} structuredData={structuredData} {...props} />);
+        case "wishlist":
+            return (<VariantWishlist content={content} structuredData={structuredData} />)
         default:
-            return (<VariantBasic content={content} lang={lang} structuredData={structuredData} />);
+            return (<VariantBasic content={content} structuredData={structuredData} />);
     };
 
 };
 
-function VariantBasic({ content, lang, structuredData }) {
+function VariantBasic({ content, structuredData }) {
 
     return (
         <>

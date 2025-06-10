@@ -22,13 +22,7 @@ export default async function Page(props) {
     }
 
     if (!firestoreUserData) {
-
-        return (
-
-           <FetchFail lang={lang} />
-
-        )
-
+        return (<FetchFail lang={lang} />);
     }
 
     firestoreUserData["email"] = authUser.email;

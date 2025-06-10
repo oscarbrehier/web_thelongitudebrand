@@ -1,8 +1,8 @@
 "use client"
-import { useEffect, useState } from "react"
-import { tv } from "tailwind-variants"
-import LoadingSpinner from "./loadingSpinner"
-import clsx from "clsx"
+import { useEffect, useState } from "react";
+import { tv } from "tailwind-variants";
+import LoadingSpinner from "./loadingSpinner";
+import { useRouter } from "next/navigation";
 
 const buttonVariants = tv({
     base: "select-none flex items-center justify-center text-sm transition-all duration-300 ease-in-out box-border",
@@ -91,7 +91,9 @@ export default function Button({
     disabled = false,
     ...props
 }) {
-    const [status, setStatus] = useState(loading)
+
+    const router = useRouter();
+    const [status, setStatus] = useState(loading);
 
     useEffect(() => {
         setStatus(loading)
@@ -109,12 +111,18 @@ export default function Button({
     const textClasses = textVariants({
         variant,
         disabled
-    })
+    });
+
+    const handleOnClickAction = (action) => {
+
+        if (action == "page-refresh") router.refresh();
+
+    };
 
     return (
         <button
             className={buttonClasses}
-            onClick={!disabled ? onClick : undefined}
+            onClick={!disabled ? (typeof onClick == "function" ? onClick : () => handleOnClickAction(onClick)) : undefined}
             disabled={disabled}
             {...props}
         >

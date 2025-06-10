@@ -83,8 +83,9 @@ export default async function Page(props) {
     } = params;
 
     const content = await getProductBySlug(item);
-
     if (!content) notFound();
+
+    console.log(content);
 
     const structuredData = JSON.stringify([
         {
