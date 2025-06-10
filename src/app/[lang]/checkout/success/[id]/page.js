@@ -2,9 +2,7 @@ import { getCurrentUser } from "@/lib/authentication/sessionHelpers";
 import getOrderByCheckoutId from "@/lib/firestore/getOrderByCheckoutId";
 import { notFound, redirect } from "next/navigation";
 import NoContentLayout from "@/app/components/NoContentLayout";
-import { useEffect } from "react";
-import { trackEvent } from "@/lib/analytics/analytics";
-
+import { TrackEvent } from "./TrackEvent";
 
 export default async function Page(props) {
 
@@ -44,19 +42,3 @@ export default async function Page(props) {
 
     );
 };
-
-function TrackEvent({ order }) {
-    "use client"
-
-    useEffect(() => {
-        trackEvent("order_completed", {
-            orderId: order.orderId,
-            orderTotal: order.total,
-            currency: "EUR",
-            itemCount: order.items.length,
-            cartItems: order.items,
-        });
-    }, []);
-
-    return (null);
-}
