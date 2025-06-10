@@ -29,11 +29,12 @@ export default async function Layout(props) {
                         baseRoute="/customer"
                         items={customerPages}
                         lang={lang}
+                        namespace={"navigation"}
                     >
 
                         <SignOutButton
-                            title="sign out"
                             className="text-sm hover:bg-neon-green"
+                            lang={lang}
                         />
 
                     </SubMenu>

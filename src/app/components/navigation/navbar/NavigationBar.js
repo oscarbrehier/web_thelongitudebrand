@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import MobileMenu from "./MobileMenu";
 import { IoBagOutline, IoMenuOutline, IoCloseOutline } from "react-icons/io5";
+import { BrandName } from "../../BrandName";
 
 export default function NavigationBar({ lang }) {
 
@@ -78,7 +79,9 @@ export default function NavigationBar({ lang }) {
                     "
                 >
 
-                    <Link href="/">the<span className="font-semibold">longitude</span>brand</Link>
+                    <Link href="/">
+                        <BrandName fontSize="font-normal" />
+                    </Link>
 
                     <div className={`sm:hidden flex items-center space-x-2`}>
 

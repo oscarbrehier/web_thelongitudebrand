@@ -1,0 +1,7 @@
+{
+	"failed_fetch_user_info": "We couldn’t load your information right now.",
+	"try_refresh_or_later": "Please try refreshing the page or come back later.",
+	"retry": "retry",
+	"too_many_requests": "Too many requests. Try again later.",
+	"unexpected_error": "An unexpected error occurred."
+}

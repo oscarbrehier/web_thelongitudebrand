@@ -1,0 +1,7 @@
+{
+  "failed_fetch_user_info": "Nous n’avons pas pu charger vos informations pour le moment.",
+  "try_refresh_or_later": "Veuillez essayer d’actualiser la page ou de revenir plus tard.",
+  "retry": "réessayer",
+  "too_many_requests": "Trop de tentatives. Veuillez réessayer plus tard.",
+  "unexpected_error": "Une erreur inattendue est survenue."
+}

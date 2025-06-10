@@ -1,0 +1,9 @@
+{
+	"orders_title": "your orders",
+	"no_orders": "no orders",
+	"no_orders_description": "When you do, they’ll appear here.\nowse the shop to discover our latest collections.",
+	"order_id": "order no.",
+	"order_date": "placed on",
+	"total_amount": "total",
+	"status": "status"
+}

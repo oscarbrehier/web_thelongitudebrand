@@ -7,12 +7,14 @@ import { useAuthContext } from "@/lib/context/AuthContext";
 import { captureException } from "@sentry/nextjs";
 import debugLog from "@/lib/utils/debugLog";
 import posthog from "posthog-js";
+import { useTranslation } from "@/app/i18n/client";
 
 export default function SignOutButton({
-    title,
-    className
+    className,
+    lang,
 }) {
 
+    const { t } = useTranslation(lang, "navigation"); 
     const router = useRouter();
 
     const { user } = useAuthContext();
@@ -48,7 +50,7 @@ export default function SignOutButton({
     return (
 
         <button onClick={handleSignOut} className={className}>
-            {title}
+            {t("sign_out")}
         </button>
 
     )

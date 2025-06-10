@@ -78,8 +78,8 @@ export async function middleware(request) {
 
             console.log(err);
 
-            if (session && !pathname.includes("/auth/sign-out")) {
-                return NextResponse.redirect(new URL("/auth/sign-out", request.url));
+            if (session && !pathname.includes("/auth/action/sign-out")) {
+                return NextResponse.redirect(new URL("/auth/action/sign-out", request.url));
             };
 
         };
@@ -97,5 +97,5 @@ export async function middleware(request) {
 }
 
 export const config = {
-    matcher: '/((?!api|_next/static|_next/image|.*\\.png$|password).*)',
+    matcher: '/((?!api|_next/static|_next/image|.*\\.png$|favicon.ico|images|password).*)',
 };

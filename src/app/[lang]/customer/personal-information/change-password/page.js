@@ -6,33 +6,34 @@ import Button from "@/app/components/ui/Button";
 import { useRouter } from "next/navigation";
 import { useState, use } from "react";
 import { z, ZodError } from "zod";
+import { useTranslation } from "@/app/i18n/client";
 
 const passwordCriteria = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
 const required_error = (fieldName) => `${fieldName} is required`;
 
 const formSchema = z.object({
-    currentPassword: z.string().min(1, { message: required_error("Current password") }),
+    currentPassword: z.string().min(1, { message: "field_required" }),
     newPassword: z.string()
-        .min(6, { message: "Password must be at least 6 characters long" })
+        .min(6, { message: "password_too_short" })
         .refine(async (val) => await getPasswordStrength(val), {
-            message: "Password is too weak. Include letters, numbers, and symbols"
+            message: "password_too_weak"
         }),
     confirmNewPassword: z.string()
-        .min(1, { message: "Please confirm your new password " })
+        .min(1, { message: "password_confirm" })
 }).refine((data) => data.newPassword === data.confirmNewPassword, {
-    message: "Passwords don't match",
+    message: "passwords_do_not_match",
     path: ["confirmNewPassword"]
 });
 
 export default function Page(props) {
 
     const params = use(props.params);
-
     const {
         lang
     } = params;
 
     const router = useRouter();
+    const { t } = useTranslation(lang, ["auth", "common", "error"])
 
     const [values, setValues] = useState({
         currentPassword: "",
@@ -67,7 +68,7 @@ export default function Page(props) {
 
         try {
 
-            formSchema.parse(values);
+            await formSchema.parseAsync(values);
             await updatePassword(data.currentPassword, data.newPassword);
             router.push("/customer/personal-information");
 
@@ -90,17 +91,17 @@ export default function Page(props) {
                     {
                         setErrors((prev) => ({
                             ...prev,
-                            currentPassword: "Current password is invalid",
+                            currentPassword: "password_invalid",
                         }));
                         break;
                     }
                 case "auth/too-many-requests":
                     {
-                        setFormError("Too many requests. Try again later.");
+                        setFormError("too_many_requests");
                         break ;
                     }
                 default:
-                    setFormError("An unexpected error occurred.");
+                    setFormError("unexpected_error");
                     break;
             }
 
@@ -120,39 +121,42 @@ export default function Page(props) {
 
                 <form action={handleSubmitForm}>
 
-                    <h1 className="capitalize mx-2 my-1 text-lg">change password</h1>
+                    <h1 className="capitalize mx-2 my-1 text-lg">{t("change_password")}</h1>
 
                     <div className="space-y-2">
 
                         <InputWithLabel
-                            title='current password'
+                            title={t("current_password")}
                             value={values.currentPassword}
                             type='password'
                             onChange={handleInputChange}
-                            error={errors.currentPassword}
+                            error={t(errors.currentPassword)}
                             required={true}
+                            lang={lang}
                         />
 
                         <InputWithLabel
-                            title='new password'
+                            title={t("new_password")}
                             value={values.newPassword}
                             type='password'
                             onChange={handleInputChange}
-                            error={errors.newPassword}
+                            error={t(errors.newPassword)}
                             required={true}
+                            lang={lang}
                         />
 
                         <InputWithLabel
-                            title='confirm new password'
+                            title={t("confirm_new_password")}
                             value={values.confirmNewPassword}
                             type='password'
                             onChange={handleInputChange}
-                            error={errors.confirmNewPassword}
+                            error={t(errors.confirmNewPassword)}
                             required={true}
+                            lang={lang}
                         />
 
                         {formError !== "" && (
-                            <p className="text-sm text-error-red">{formError}</p>
+                            <p className="text-sm text-error-red">{t(formError, { ns: "error" })}</p>
                         )}
 
                     </div>
@@ -166,7 +170,7 @@ export default function Page(props) {
                             loading={loading}
                             disabled={isFormIncomplete}
                         >
-                            save
+                            {t("save", { ns: "common" })}
                         </Button>
 
                     </div>

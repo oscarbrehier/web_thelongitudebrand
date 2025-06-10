@@ -8,24 +8,26 @@ import Hyperlink from '@/app/components/ui/Hyperlink';
 import Checkbox from "@/app/components/ui/Checkbox";
 import * as Sentry from "@sentry/nextjs";
 import { z } from "zod";
+import { useTranslation } from "@/app/i18n/client";
 
 export const formSchema = z.object({
     firstName: z
         .string()
-        .min(1, { message: "First name is required" }),
+        .min(1, { message: "field_required" }),
     lastName: z
         .string()
-        .min(1, { message: "Last name is required" }),
+        .min(1, { message: "field_required" }),
 });
 
 export function PersonalInformationForm({ content, lang }) {
 
+    const { t } = useTranslation(lang, ["customer", "auth", "common"]);
+    
     const [error, setError] = useState({
         form: null,
         inputFirstName: null,
         inputLastName: null,
     });
-
     const [loading, setLoading] = useState(false);
     const [isModified, setIsModified] = useState(false);
 
@@ -137,19 +139,22 @@ export function PersonalInformationForm({ content, lang }) {
                 <div className="space-y-2">
 
                     <InputWithLabel
-                        title='first name'
+                        title={t("first_name")}
                         value={content.firstName}
                         type='text'
                         onChange={(e) => handleInputChange(e)}
-                        error={error?.inputFirstName}
+                        error={t(error?.inputFirstName)}
+                        lang={lang}
                     />
 
+
                     <InputWithLabel
-                        title='last name'
+                        title={t("last_name")}
                         value={content.lastName}
                         type='text'
                         onChange={(e) => handleInputChange(e)}
-                        error={error?.inputLastName}
+                        error={t(error?.inputLastName)}
+                        lang={lang}
                     />
 
                     <InputWithLabel
@@ -157,14 +162,16 @@ export function PersonalInformationForm({ content, lang }) {
                         value={content.email}
                         type='email'
                         disabled
+                        lang={lang}
                     />
 
                     <InputWithLabel
-                        title='date of birth'
+                        title={t("date_of_birth")}
                         type='date'
                         optional={true}
                         value={content.dateOfBirth}
                         onChange={(e) => handleInputChange(e)}
+                        lang={lang}
                     />
 
                 </div>
@@ -175,7 +182,7 @@ export function PersonalInformationForm({ content, lang }) {
 
                     <div className="space-y-1">
 
-                        <h2 className="">Communication Preferences</h2>
+                        <h2 className="capitalize">{t("communication_preferences")}</h2>
 
                         <div className="flex space-x-2 h-auto items-center">
 
@@ -189,7 +196,7 @@ export function PersonalInformationForm({ content, lang }) {
                             <div className="text-xs">
 
                                 <p className="text-neutral-600">
-                                    Be the first to receive Longitude news, including new collections, launches and sales. Sent twice a week.
+                                    {t("newsletter_opt_in_description")}
                                 </p>
 
                             </div>
@@ -212,7 +219,7 @@ export function PersonalInformationForm({ content, lang }) {
                         loading={loading}
                         disabled={!isModified}
                     >
-                        save
+                        {t("save", { ns: "common" })}
                     </Button>
 
                     <Hyperlink
@@ -220,7 +227,7 @@ export function PersonalInformationForm({ content, lang }) {
                         size='w-full h-14'
                         border={true}
                     >
-                        change password
+                        {t("change_password", { ns: "auth" })}
                     </Hyperlink>
 
                 </div>

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { storageKeys } from "@/lib/constants/settings.config";
 import { useAuthContext } from "@/lib/context/AuthContext";
+import { BrandName } from "@/app/components/BrandName";
 
 export default function Page() {
 
@@ -35,7 +36,9 @@ export default function Page() {
     }, [router]);
 
     return (
-        <></>
+        <div className="flex-1 flex flex-col items-center justify-center space-y-4">
+            <BrandName />
+        </div>
     );
 
 };

@@ -1,13 +1,16 @@
 {
-    "shop": "boutique",
-    "account": "compte",
-    "sign_in": "se connecter",
-    "cart": "panier",
-    "wishlist": "wishlist",
-    "shipping": "expéditon",
-    "billing": "facturation",
-    "customer_service": "service client",
-    "contact_us": "nous contacter",
-    "help_and_assistance": "aide et assistance",
-    "follow_us": "nous suivre"
+  "shop": "boutique",
+  "account": "compte",
+  "sign_in": "se connecter",
+  "sign_out": "déconnexion",
+  "cart": "panier",
+  "wishlist": "favoris",
+  "shipping": "expéditon",
+  "billing": "facturation",
+  "customer_service": "service client",
+  "contact_us": "nous contacter",
+  "help_and_assistance": "aide et assistance",
+  "follow_us": "nous suivre",
+  "personal_information": "information personnelles",
+  "orders": "commandes"
 }

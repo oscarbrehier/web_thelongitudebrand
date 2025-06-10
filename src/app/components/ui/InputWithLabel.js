@@ -1,4 +1,5 @@
 "use client"
+import { useTranslation } from "@/app/i18n/client";
 import camelize from "@/lib/utils/camelize";
 import getPasswordStrength from "@/lib/utils/getPasswordStrength";
 import { useState, useEffect } from "react";
@@ -14,8 +15,11 @@ export default function InputWithLabel({
     optional = false,
     error = null,
     handleError,
+    lang,
     ...props
 }) {
+
+    const { t } = useTranslation(lang, ["auth", "common"]);
 
     const [inputValue, setInputValue] = useState(value || "");
     const titleValue = title.toLowerCase().replace(/\s+/g, "_");
@@ -48,7 +52,7 @@ export default function InputWithLabel({
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
             if (!emailRegex.test(inputValue)) {
-                err = 'Please enter a valid email address';
+                err = "invalid_email";
             };
 
         };
@@ -56,14 +60,14 @@ export default function InputWithLabel({
         if (type == "password" && props.checkPasswordStrength) {
             
             const {score} = getPasswordStrength(inputValue);
-            if (score <= 3) err = "Choose a password with at least 6 characters, including a mix of letters, numbers, and symbols"
+            if (score <= 3) err = "password_too_weak"
             
         };
 
         if (required && inputValue == "") err = `${title.charAt(0).toUpperCase() + title.slice(1)} is required`;
 
         if (props.password && props.password !== inputValue) {
-            err = "Your passwords don't match";
+            err = "passwords_do_not_match";
         };
 
         setErrorMessage(err);
@@ -101,7 +105,7 @@ export default function InputWithLabel({
                     {title}
                     {optional && (
                         <span className="text-[10px] text-neutral-600 uppercase mx-1">
-                            optional
+                            {t("optional", { ns: "common" })}
                         </span>
                     )}
                 </label>
@@ -121,7 +125,7 @@ export default function InputWithLabel({
                         onClick={() => setVisible(!visible)}
                         className="size-14 flex items-center justify-end children:cursor-pointer text-xs underline hover:no-underline p-4 select-none"
                     >
-                        <p>{visible ? "hide" : "show"}</p>
+                        <p>{t(visible ? "hide" : "show", { ns: "common" })}</p>
                     </div>
                 )}
 
@@ -130,7 +134,7 @@ export default function InputWithLabel({
             {
                 errorMessage && (
                     <p className="mt-1 text-sm text-error-red">
-                        {errorMessage}
+                        {t(errorMessage)}
                     </p>
                 )
             }

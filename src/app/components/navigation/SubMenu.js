@@ -1,4 +1,5 @@
 "use client"
+import { useTranslation } from "@/app/i18n/client";
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -6,8 +7,11 @@ export default function SubMenu({
     baseRoute,
     items,
     children,
-    lang
+    lang,
+    namespace
 }) {
+
+    const { t } = useTranslation(lang, namespace);
 
     const pathname = usePathname();
     const escapedBaseRoute = baseRoute.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -35,7 +39,7 @@ export default function SubMenu({
                                 key={index}
                                 className={`${pathname.toString().includes(`${baseRoute}/${route}`) ? 'bg-neon-green' : 'hover:bg-cream-400'}`}
                             >
-                                {title.replace(/-/g, ' ')}
+                                {t(title.replace("-", "_"))}
                             </Link>
                         )
 

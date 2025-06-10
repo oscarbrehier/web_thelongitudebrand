@@ -1,6 +1,7 @@
 import { client } from "@/lib/sanity/client";
 import { ProductsFilter } from "./products-filter";
 import { useTranslation } from "@/app/i18n";
+import { captureException } from "@sentry/nextjs";
 
 export default async function Page(props) {
     const params = await props.params;
@@ -22,9 +23,7 @@ export default async function Page(props) {
 
 
 	} catch (err) {
-
-		console.log(err);
-
+		captureException(err);
 	}
 
     const { t } = await useTranslation(lang, "shop");

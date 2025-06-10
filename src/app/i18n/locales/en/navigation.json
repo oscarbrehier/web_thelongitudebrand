@@ -1,6 +1,7 @@
 {
     "shop": "shop",
     "sign_in": "sign in",
+    "sign_out": "sign out",
     "account": "account",
     "cart": "cart",
     "wishlist": "wishlist",
@@ -9,5 +10,7 @@
     "customer_service": "customer service",
     "contact_us": "contact us",
     "help_and_assistance": "help & assistance",
-    "follow_us": "follow us"
+    "follow_us": "follow us",
+    "personal_information": "personal information",
+    "orders": "orders"
 }
