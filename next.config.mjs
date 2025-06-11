@@ -1,9 +1,26 @@
-import {withSentryConfig} from "@sentry/nextjs";
+import { withSentryConfig } from "@sentry/nextjs";
 import createBundleAnalyzer from '@next/bundle-analyzer';
 
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
+    async rewrites() {
+        return [
+            {
+                source: "/ingest/static/:path*",
+                destination: "https://eu-assets.i.posthog.com/static/:path*",
+            },
+            {
+                source: "/ingest/:path*",
+                destination: "https://eu.i.posthog.com/:path*",
+            },
+            {
+                source: "/ingest/decide",
+                destination: "https://eu.i.posthog.com/decide",
+            },
+        ];
+    },
+    skipTrailingSlashRedirect: true, 
     images: {
         remotePatterns: [
             {
@@ -40,7 +57,7 @@ const sentryConfig = withSentryConfig(nextConfig, {
 
     // Automatically annotate React components to show their full name in breadcrumbs and session replay
     reactComponentAnnotation: {
-    enabled: true,
+        enabled: true,
     },
 
     // Route browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers.

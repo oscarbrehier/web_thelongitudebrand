@@ -33,7 +33,8 @@ export function PostHogProvider({ children, posthogKey, posthogHost }) {
 			const posthog = mod.default;
 
 			posthog.init(posthogKey, {
-				api_host: posthogHost || 'https://eu.i.posthog.com',
+				api_host: "/ingest",
+				ui_host: posthogHost || 'https://eu.i.posthog.com',
 				person_profiles: 'identified_only', // or 'always' to create profiles for anonymous users as well
 				capture_pageview: false, // Disable automatic pageview capture, as we capture manually,
 				persistence: "localStorage+cookie",
