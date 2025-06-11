@@ -22,7 +22,7 @@ export default async function Layout(props) {
     } = props;
 
     const pathname = (await headers()).get("x-pathname");
-    if (pathname == "/") return children;
+    if (pathname == "home") return children;
 
     return (
 
