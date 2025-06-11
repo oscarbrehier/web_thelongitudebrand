@@ -92,7 +92,6 @@ export default function Button({
     ...props
 }) {
 
-    const router = useRouter();
     const [status, setStatus] = useState(loading);
 
     useEffect(() => {
@@ -113,16 +112,10 @@ export default function Button({
         disabled
     });
 
-    const handleOnClickAction = (action) => {
-
-        if (action == "page-refresh") router.refresh();
-
-    };
-
     return (
         <button
             className={buttonClasses}
-            onClick={!disabled ? (typeof onClick == "function" ? onClick : () => handleOnClickAction(onClick)) : undefined}
+            onClick={!disabled ? onClick : undefined}
             disabled={disabled}
             {...props}
         >

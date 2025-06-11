@@ -85,8 +85,6 @@ export default async function Page(props) {
     const content = await getProductBySlug(item);
     if (!content) notFound();
 
-    console.log(content);
-
     const structuredData = JSON.stringify([
         {
             "@context": "https://schema.org",

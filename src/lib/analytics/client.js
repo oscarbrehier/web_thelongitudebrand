@@ -27,7 +27,6 @@ export function PostHogProvider({ children, posthogKey, posthogHost }) {
 
 		
 		if (!parsedConsent?.analytics) return ;
-		console.log(parsedConsent)
 
 		import("posthog-js").then((mod) => {
 

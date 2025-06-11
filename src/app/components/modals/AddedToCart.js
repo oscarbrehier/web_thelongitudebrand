@@ -21,6 +21,7 @@ export default function AddedToCart() {
         cartTotal: state.total
     }));
     const cartLastItem = cartLength > 0 ? cart[cartLength - 1] : null;
+    console.log(cartLastItem)
 
     const redirectToCheckout = async () => {
         try {

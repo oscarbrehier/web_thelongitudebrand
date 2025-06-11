@@ -1,28 +1,30 @@
-import { client } from "@/lib/sanity/client";
 import { ProductsFilter } from "./products-filter";
 import { useTranslation } from "@/app/i18n";
-import { captureException } from "@sentry/nextjs";
 import { EmptyState } from "@/app/components/EmptyState";
-import Button from "@/app/components/ui/Button";
+import { getShopContent } from "@/lib/sanity/getShopContent";
+import { RetryFetchButton } from "./RetryFetchButton";
 
 export default async function Page(props) {
-	
+
 	const params = await props.params;
 	const { lang } = params;
 	const { t } = await useTranslation(lang, ["shop", "error"]);
 
-	const CONTENT_QUERY = '*[_type == "product"] { title, images, _type, _id, category ->  { _ref, _type, title }, price, slug }';
-	const CATEGORY_QUERY = '*[_type == "category" && count(*[_type == "product" && references(^._id)]) > 0] { title }';
-
-	let products, categories, categoryTitles = null;
+	let products, categories = null;
+	let hasError = false;
 
 	try {
-		products = await client.fetch(CONTENT_QUERY);
-		categories = await client.fetch(CATEGORY_QUERY);
-		categoryTitles = ['view-all', ...categories.map((category) => category.title).reverse()];
+
+		const res = await getShopContent();
+		products = res.products;
+		categories = res.categories;
+
 	} catch (err) {
-		captureException(err);
+		hasError = true;
 	}
+
+	const isEmpty =
+		hasError || !products?.length || !categories?.length;
 
 	return (
 
@@ -39,15 +41,7 @@ export default async function Page(props) {
 			</div>
 
 			{
-				products && categoryTitles ? (
-
-					<ProductsFilter
-						lang={lang}
-						products={products}
-						categories={categoryTitles}
-					/>
-
-				) : (
+				isEmpty ? (
 
 					<EmptyState
 						trans={t}
@@ -55,14 +49,16 @@ export default async function Page(props) {
 						title="loading_error"
 						description="products_fetch_failure_desc"
 					>
-						<Button
-							size="h-10 px-4"
-							onClick="page-refresh"
-						>
-							Retry
-						</Button>
+						<RetryFetchButton />
 					</EmptyState>
 
+				) : (
+
+					<ProductsFilter
+						lang={lang}
+						products={products}
+						categories={categories}
+					/>
 
 				)
 			}

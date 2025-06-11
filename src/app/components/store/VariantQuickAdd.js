@@ -25,7 +25,7 @@ export function VariantQuickAdd({ content, lang, structuredData, ...props }) {
             size: size,
             price: content.price,
             cover: content.cover,
-            image_ref: content.cover,
+            image_ref: content.image_ref,
         }, user?.uid);
 
         if (typeof window !== 'undefined') {
