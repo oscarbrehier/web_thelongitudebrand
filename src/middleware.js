@@ -9,6 +9,26 @@ import { storageKeys } from './lib/constants/settings.config';
 acceptLanguage.languages(languages);
 
 export async function middleware(request) {
+    
+    if (request.nextUrl.pathname.startsWith('/ingest/')) {
+        
+        const url = request.nextUrl.clone()
+        const hostname = url.pathname.startsWith('/ingest/static/')
+        ? 'eu-assets.i.posthog.com'
+        : 'eu.i.posthog.com'
+        
+        const requestHeaders = new Headers(request.headers)
+        requestHeaders.set('host', hostname)
+        
+        url.protocol = 'https'
+        url.hostname = hostname
+        url.port = 443
+        url.pathname = url.pathname.replace(/^\/ingest/, '')
+        
+        return NextResponse.rewrite(url, {
+            headers: requestHeaders,
+        })
+    }
 
     let lng;
     let isAuth = false;
@@ -30,7 +50,7 @@ export async function middleware(request) {
     };
 
     if (pathname.startsWith("/locked")) return NextResponse.redirect(new URL('/shop', request.url));
- 
+
     if (cookieStore.has(cookieName)) {
         lng = acceptLanguage.get(cookieStore.get(cookieName).value);
     } else {
@@ -70,10 +90,10 @@ export async function middleware(request) {
     if (session) {
 
         try {
-            
+
             await verifyFirebaseSessionJwt(session);
             isAuth = true;
-            
+
         } catch (err) {
 
             console.log(err);
@@ -98,4 +118,9 @@ export async function middleware(request) {
 
 export const config = {
     matcher: '/((?!api|_next/static|_next/image|.*\\.png$|favicon.ico|images|password).*)',
+    // matcher: '/((?!api|_next/static|_next/image|.*\\.png$|favicon.ico|images|password).*)|^/ingest/.*',
+    // matcher: [
+    //     '/ingest/:path*',
+    //     '/((?!api|_next/static|_next/image|.*\\.png$|favicon.ico|images|password).*)',
+    // ],
 };

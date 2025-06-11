@@ -21,8 +21,6 @@ export default function CartItemSmall({
     }
 }) {
 
-    console.log(content)
-
     if (!content) return null;
 
     const { productId, name, size, quantity, price, image_ref } = content;
