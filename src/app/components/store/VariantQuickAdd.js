@@ -71,6 +71,7 @@ export function VariantQuickAdd({ content, lang, structuredData, ...props }) {
                     </div>
 
                     <SizeSelector
+                        trans={t}
                         current={size}
                         setSize={setSize}
                         available={content.available_sizes}
