@@ -43,7 +43,7 @@ export default async function Page(props) {
     return (
 
         <>
-            {/* <h1 className="capitalize font-playfair text-5xl italic">wishlist</h1> */}
+            {/* <h1 className="capitalize font-times-roman text-5xl italic">wishlist</h1> */}
             {
                 data.length > 0 ? (
 

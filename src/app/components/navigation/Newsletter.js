@@ -14,7 +14,7 @@ export default function Newsletter({ lang }) {
 
         <div className="flex flex-col space-y-2 sm:col-span-2">
 
-            <h2 className="capitalize font-playfair text-4xl italic">{t("newsletter")}</h2>
+            <h2 className="capitalize font-times-roman text-4xl italic">{t("newsletter")}</h2>
 
             <div className="w-full text-xs">{t("subscribe_prompt")}</div>
 

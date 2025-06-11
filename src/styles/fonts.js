@@ -1,11 +1,4 @@
-import { Space_Grotesk } from "next/font/google";
 import { Poppins } from "next/font/google";
-
-export const spaceGrotesk = Space_Grotesk({
-	display: "swap",
-	subsets: ["latin"],
-	weight: ['variable'],
-});
 
 export const poppins = Poppins({
 	display: "swap",

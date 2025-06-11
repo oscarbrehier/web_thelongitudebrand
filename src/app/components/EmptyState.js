@@ -14,7 +14,7 @@ export function EmptyState({
 
 		<div className="flex-1 w-full flex flex-col items-center justify-center space-y-8">
 
-			<p className="font-playfair text-5xl italic">{trans(title, namespace)}.</p>
+			<p className="font-times-roman text-5xl italic">{trans(title, namespace)}.</p>
 
 			<div className="text-center">
 				{

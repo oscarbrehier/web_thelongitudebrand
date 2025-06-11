@@ -45,7 +45,7 @@ export default function CartItemBig({ index, item }) {
 
             <div className="h-full col-span-3 flex">
 
-                <p className="font-playfair italic xl:pr-32 xl:block hidden">{index + 1}</p>
+                <p className="font-times-roman italic xl:pr-32 xl:block hidden">{index + 1}</p>
 
                 <Link href={`/shop/${name}`} className="2md:w-52 max-w-40">
 

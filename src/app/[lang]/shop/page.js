@@ -34,7 +34,7 @@ export default async function Page(props) {
 
 				<div className="h-full flex justify-start items-center col-start-2">
 					<div className="bg-neon-green">
-						<h1 className={`capitalize italic font-medium text-6xl font-playfair`}>{t("shop")}</h1>
+						<h1 className={`capitalize italic font-medium text-6xl font-times-roman`}>{t("shop")}</h1>
 					</div>
 				</div>
 

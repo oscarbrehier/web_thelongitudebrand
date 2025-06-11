@@ -8,6 +8,7 @@ import Head from "next/head";
 import { PostHogProvider } from "@/lib/analytics/client";
 import LocaleTracker from "./i18n/LocaleTracker";
 import CookieConsentTrigger from "./components/CookieConsentTrigger";
+import clsx from "clsx";
 
 const baseUrl = "https://www.longitudebrand.com";
 
@@ -74,12 +75,12 @@ export default async function RootLayout({
 				<AuthContextProvider>
 					<ModalProvider>
 
-							<body className={poppins.className}>
-								<CookieConsentTrigger />
-								<LocaleTracker />
-								{children}
-								{/* <SpeedInsights /> */}
-							</body>
+						<body className={clsx(poppins.className)}>
+							<CookieConsentTrigger />
+							<LocaleTracker />
+							{children}
+							{/* <SpeedInsights /> */}
+						</body>
 
 					</ModalProvider>
 				</AuthContextProvider>

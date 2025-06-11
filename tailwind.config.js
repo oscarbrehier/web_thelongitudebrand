@@ -37,8 +37,7 @@ module.exports = {
 			},
 		},
 		fontFamily: {
-			"space": "Space Grotesk",
-			"playfair": ["Playfair Display", "serif"]
+			"times-roman": ['Times New Roman', "serif"]
 		},
 		screens: {
 			'xxs': '380px',

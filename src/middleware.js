@@ -117,10 +117,5 @@ export async function middleware(request) {
 }
 
 export const config = {
-    matcher: '/((?!api|_next/static|_next/image|.*\\.png$|favicon.ico|images|password).*)',
-    // matcher: '/((?!api|_next/static|_next/image|.*\\.png$|favicon.ico|images|password).*)|^/ingest/.*',
-    // matcher: [
-    //     '/ingest/:path*',
-    //     '/((?!api|_next/static|_next/image|.*\\.png$|favicon.ico|images|password).*)',
-    // ],
+    matcher: '/((?!api|_next/static|_next/image|.*\\.png$|favicon.ico|images|password|fonts).*)',
 };

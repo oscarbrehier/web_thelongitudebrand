@@ -1,19 +1,8 @@
-import { spaceGrotesk } from "@/styles/fonts";
-
-export default async function Page(props) {
-    
-    const params = await props.params;
-
-    const {
-        lang
-    } = params;
-
+export default async function Page() {
     return (
 
 		<div className="h-screen w-full flex items-center justify-center">
-
-			<p className={`uppercase text-2xl font-medium text-neutral-800 ` + spaceGrotesk.className}>soon coming.</p>
-
+			<p className="italic lg:text-6xl text-4xl font-medium bg-neon-green font-times-roman">soon coming.</p>
 		</div>
 
 	);

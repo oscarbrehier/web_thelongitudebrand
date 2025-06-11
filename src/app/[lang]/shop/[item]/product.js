@@ -229,8 +229,8 @@ export function Product({
 
                 <div className="w-full flex 3xl:flex-row lg:flex-col flex-row items-start justify-between mt-20 lg:px-0 xs:px-8 3xl:space-y-0 lg:space-y-2 space-y-0">
 
-                    <h1 className="capitalize italic font-playfair xs:text-4xl text-2xl bg-neon-green">{content.title}</h1>
-                    <p className="capitalize italic font-playfair xs:text-4xl text-2xl bg-neon-green">{content.price}€</p>
+                    <h1 className="capitalize italic font-times-roman xs:text-4xl text-2xl bg-neon-green">{content.title}</h1>
+                    <p className="capitalize italic font-times-roman xs:text-4xl text-2xl bg-neon-green">{content.price}€</p>
 
                 </div>
 
