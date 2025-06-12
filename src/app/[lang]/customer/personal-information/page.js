@@ -13,13 +13,7 @@ export default async function Page(props) {
     const { t } = await useTranslation(lang, ["navigation"]);
 
     const authUser = await getCurrentUser();
-    let firestoreUserData = null;
-
-    try {
-        firestoreUserData = await getUserById(authUser.uid, { email: authUser.email });
-    } catch (err) {
-        console.error("Failed to fetch Firestore user", err);
-    }
+    const firestoreUserData = await getUserById(authUser.uid, { email: authUser.email });
 
     if (!firestoreUserData) {
         return (<FetchFail lang={lang} />);

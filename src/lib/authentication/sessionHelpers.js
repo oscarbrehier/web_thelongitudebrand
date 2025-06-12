@@ -16,7 +16,6 @@ export async function isUserAuthenticated(session) {
 
     } catch (error) {
 
-        console.log(error);
         return false;
 
     };

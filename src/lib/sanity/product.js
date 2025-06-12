@@ -1,20 +1,42 @@
-import { client, urlFor } from "./client";
+import { urlFor } from "./client";
 import { sanityFetch } from "./fetch";
-import { parseSanityImage } from "./parseSanityImage";
 
-async function getProduct(query) {
+function normalizeColors(colors) {
 
-    const product = await sanityFetch({
-        query
+    const normalizedColors = colors.map(c => {
+
+        const langEntries = c.translations.map(({ lang, value }) => [lang, value]);
+        return {
+            key: c.key,
+            ...Object.fromEntries(langEntries),
+        };
+
+    });
+
+    return (normalizedColors);
+
+};
+
+async function getProduct(query, tags = []) {
+
+    const [product] = await sanityFetch({
+        query,
+        tags
     });
 
     if (product.length == 0 || !product) return (null);
 
-    const imageUrl = urlFor(product[0].images[0].asset._ref).url();
-    product[0].cover = imageUrl;
-    product[0].image_ref = product[0].images[0].asset;
+    const imageUrl = urlFor(product.images[0].asset._ref).url();
+    product.cover = imageUrl;
+    product.image_ref = product.images[0].asset;
 
-    return (product[0]);
+    if (product.color) product.color = normalizeColors(product.color);
+    if (product.variant) product.variant.map((v) => ({
+        ...v,
+        color: normalizeColors(v.color)
+    }));
+
+    return (product);
 
 };
 
@@ -51,9 +73,29 @@ async function getProducts(queryParams) {
 
 async function getProductBySlug(slug) {
 
-    const PRODUCT_QUERY = `*[_type == "product" && slug.current == "${slug}"] { ..., available_sizes[] -> { size } }`;
+    const PRODUCT_QUERY = `*[_type == "product" && slug.current == "${slug}"]{
+        ...,
+        available_sizes[]->{
+            size
+        },
+        variant[]->{
+            _id,
+            title,
+            slug,
+            price,
+            images,
+            color[]->{
+                key,
+                translations
+            }
+        },
+        color[]->{
+            key,
+            translations
+        }
+    }`;
 
-    const res = await getProduct(PRODUCT_QUERY);
+    const res = await getProduct(PRODUCT_QUERY, [`product:${slug}`]);
     return res;
 
 };

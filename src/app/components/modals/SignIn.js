@@ -79,9 +79,7 @@ export default function SignInModal() {
                 setForm(prev => ({ ...prev, error: formatError }));
 
             } else {
-
                 setForm(prev => ({ ...prev, error: "An error occured. Please try again or come back later." }));
-
             };
 
         } finally {

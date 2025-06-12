@@ -18,7 +18,7 @@ async function deleteUserCart(userId) {
 
     } catch (err) {
 
-        console.log("Failed to delete cart for user with ID:", userId);
+        Sentry.captureException(err);
         throw (err);
 
     };
@@ -73,10 +73,7 @@ export default async function handleCheckoutSuccess(event) {
         await createOrderProcess(orderId);
 
     } catch (err) {
-
-        console.error(err); // remove_prod
         Sentry.captureException(err);
-
     };
 
 };

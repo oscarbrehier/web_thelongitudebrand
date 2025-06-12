@@ -1,4 +1,5 @@
 "use server"
+import { captureException } from "@sentry/nextjs";
 import { adminFirestore } from "../firebase/admin";
 
 export default async function deleteOrder(orderId) {
@@ -15,9 +16,7 @@ export default async function deleteOrder(orderId) {
 
     } catch (err) {
 
-        console.error("Failed to delete order with ID:", orderId);
-        console.error(err);
-        
+        captureException(err);
         return {
             errors: "order-delete/failed",
         };

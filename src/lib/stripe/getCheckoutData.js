@@ -1,3 +1,5 @@
+import { captureException } from "@sentry/nextjs";
+
 export default async function getCheckoutData(checkoutId) {
 
 	const isDev = process.env.NODE_ENV === "development";
@@ -16,7 +18,7 @@ export default async function getCheckoutData(checkoutId) {
 
 	} catch (err) {
 
-		console.error(err);
+		captureException(err);
 		return {
 			error: "checkout-fetch/failed",
 		};

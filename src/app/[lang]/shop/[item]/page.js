@@ -12,53 +12,46 @@ export async function generateMetadata(props) {
         item
     } = params;
 
-    try {
+    const response = await getProductBySlug(item);
 
-        const response = await getProductBySlug(item);
-
-        if (!response || response.length === 0) {
-
-            return {
-                title: "Not found",
-                description: "The product you are looking for does not exist",
-            };
-
-        };
-
-        const url = `https://www.longitudebrand.com/${lang}/shop/${item}`;
+    if (!response || response.length === 0) {
 
         return {
-            title: response.title,
-            description: response.description || "description",
-            keywords: response.keywords ? response?.keywords.join(", ") : "",
-            author: "Longitude",
-            alternates: {
-                canonical: url,
-                languages: {
-                    "en-EN": "/en",
-                    "fr-FR": "/fr"
-                }
-            },
-            openGraph: {
-                title: response.title,
-                type: "website",
-                description: response.description || "default",
-                url,
-                images: response.cover ? [{ url: response.cover }] : [],
-            },
-            twitter: {
-                card: "summary_large_image",
-                title: response.title,
-                description: response.description || "description",
-                images: response.cover || [],
-            },
+            title: "Not found",
+            description: "The product you are looking for does not exist",
         };
 
-    } catch (err) {
+    };
 
-        console.log(err)
+    const url = `https://www.longitudebrand.com/${lang}/shop/${item}`;
 
-    }
+    return {
+        title: response.title,
+        description: response.description || "description",
+        keywords: response.keywords ? response?.keywords.join(", ") : "",
+        author: "Longitude",
+        alternates: {
+            canonical: url,
+            languages: {
+                "en-EN": "/en",
+                "fr-FR": "/fr"
+            }
+        },
+        openGraph: {
+            title: response.title,
+            type: "website",
+            description: response.description || "default",
+            url,
+            images: response.cover ? [{ url: response.cover }] : [],
+        },
+        twitter: {
+            card: "summary_large_image",
+            title: response.title,
+            description: response.description || "description",
+            images: response.cover || [],
+        },
+    };
+
 };
 
 export async function generateStaticParams() {
@@ -92,7 +85,7 @@ export default async function Page(props) {
             name: "Longitude",
             url: "https://www.longitudebrand.com",
             logo: "https://www.longitudebrand.com/logo.png",
-        },  
+        },
         {
             "@context": "https://schema.org",
             "@type": "Product",

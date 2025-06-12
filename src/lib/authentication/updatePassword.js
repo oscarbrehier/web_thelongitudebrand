@@ -2,6 +2,7 @@ import { getAuth, updatePassword as updateUserPassword } from 'firebase/auth';
 import firebase_app, { database } from '../firebase/client';
 import reauthenticateUser from './reauthenticateUser';
 import { doc, getDoc, Timestamp, updateDoc } from '@firebase/firestore';
+import { captureException } from '@sentry/nextjs';
 const auth = getAuth(firebase_app);
 
 export default async function updatePassword(currentPassword, password) {
@@ -38,7 +39,7 @@ export default async function updatePassword(currentPassword, password) {
 
     } catch (err) {
 
-        console.log(err.code);
+        captureException(err);
         throw err;
 
     };

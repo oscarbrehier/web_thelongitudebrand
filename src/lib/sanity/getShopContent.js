@@ -3,16 +3,18 @@ import { sanityFetch } from "./fetch";
 
 export async function getShopContent() {
 
+	console.log("🚀 getShopContent fetch running");
+
 	try {
 
 		const products = await sanityFetch({
 			query: `*[_type == "product"] { title, images, _type, _id, category ->  { _ref, _type, title }, price, slug }`,
-			tags: ["products"]
+			tags: ["product"]
 		});
 
 		const categories = await sanityFetch({
 			query: `*[_type == "category" && count(*[_type == "product" && references(^._id)]) > 0] { title }`,
-			tags: ["categories"]
+			tags: ["category"]
 		});
 
 		const categoryTitles = ['view-all', ...categories.map((category) => category.title).reverse()]; 

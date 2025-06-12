@@ -1,4 +1,5 @@
 "use server"
+import { captureException } from "@sentry/nextjs";
 import { adminFirestore } from "../firebase/admin";
 import admin from "firebase-admin";
 
@@ -25,7 +26,7 @@ export default async function createOrder(orderId, userId, items, total, stripeC
 
     } catch (err) {
 
-        console.error(err);
+        captureException(err);
         return {
             errors: "create-order/failed",
         };

@@ -1,4 +1,5 @@
 "use server"
+import { captureException } from "@sentry/nextjs";
 import getCheckoutData from "../stripe/getCheckoutData";
 import getOrder from "./getOrder";
 import getOrderProcess from "./getOrderProcess";
@@ -42,7 +43,7 @@ export default async function getOrderDetails(orderId) {
 
     } catch (err) {
 
-        console.error(err);
+        captureException(err);
         return handleError();
 
     };

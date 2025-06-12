@@ -4,6 +4,13 @@ import createBundleAnalyzer from '@next/bundle-analyzer';
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
+    ...(process.env.NODE_ENV !== "product" && {
+        logging: {
+            fetches: {
+                fullUrl: true,
+            },
+        },
+    }),
     skipTrailingSlashRedirect: true,
     images: {
         remotePatterns: [

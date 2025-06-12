@@ -5,6 +5,7 @@ import { fallbackLng, languages, cookieName } from './app/i18n/settings';
 import verifyFirebaseSessionJwt from './lib/authentication/verifyFirebaseJwt';
 import { authRoutes, guestRoutes } from './lib/constants/settings.config';
 import { storageKeys } from './lib/constants/settings.config';
+import { captureException } from '@sentry/nextjs';
 
 acceptLanguage.languages(languages);
 
@@ -96,7 +97,7 @@ export async function middleware(request) {
 
         } catch (err) {
 
-            console.log(err);
+            captureException(err);
 
             if (session && !pathname.includes("/auth/action/sign-out")) {
                 return NextResponse.redirect(new URL("/auth/action/sign-out", request.url));

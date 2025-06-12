@@ -27,7 +27,6 @@ export default async function signIn(email, password, setCartSync) {
     } catch (err) {
 
         captureException(err);
-        console.error(err);
         throw err;
 
     };

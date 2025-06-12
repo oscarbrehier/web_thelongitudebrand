@@ -1,6 +1,7 @@
 "use server"
 
 import { adminFirestore } from "@/lib/firebase/admin";
+import { captureException } from "@sentry/nextjs";
 import admin from "firebase-admin";
 
 export default async function updateCartInFirestore(items, userId) {
@@ -15,7 +16,7 @@ export default async function updateCartInFirestore(items, userId) {
 
     } catch (err) {
 
-        console.log(err);
+        captureException(err);
         return {
             errors: "cart-update/failed"
         };

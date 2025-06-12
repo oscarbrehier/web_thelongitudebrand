@@ -12,7 +12,6 @@ export default async function fetchUserWishlist(userId) {
 
     } catch (err) {
 
-        console.log(err);
         return null;
 
     };

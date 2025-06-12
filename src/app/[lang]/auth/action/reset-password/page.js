@@ -12,7 +12,7 @@ import { auth } from "@/lib/firebase/client";
 const formSchema = z.object({
     password: z.string()
         .min(6, { message: "New password" })
-        .refine(getPasswordStrength, {
+        .refine(async (val) => await getPasswordStrength(val), {
             message: "Password is too weak. Choose a password with at least 6 characters, including a mix of letters, numbers, and symbols"
         }),
     confirmPassword: z.string()
@@ -49,14 +49,12 @@ export default function Page({ params: { lang } }) {
                 confirmPassword: formData.get("confirmPassword")
             };
 
-            formSchema.parse(data);
+            await formSchema.parseAsync(data);
 
             await confirmPasswordReset(auth, code, data.password);
             router.push("/auth/sign-in");
 
         } catch (error) {
-
-            console.log("error from catch", error);
 
             if (error.errors) {
 

@@ -43,7 +43,7 @@ export default function InputWithLabel({
 
     }, [submit]);
 
-    const validateField = () => {
+    const validateField = async () => {
 
         let err = null;
 
@@ -59,7 +59,7 @@ export default function InputWithLabel({
         
         if (type == "password" && props.checkPasswordStrength) {
             
-            const {score} = getPasswordStrength(inputValue);
+            const {score} = await getPasswordStrength(inputValue);
             if (score <= 3) err = "password_too_weak"
             
         };

@@ -120,8 +120,7 @@ export function PersonalInformationForm({ content, lang }) {
 
         } catch (err) {
 
-            console.log(err);
-
+            Sentry.captureException(err);
             setError(prev => ({ ...prev, form: "An unexpected error occurred." }));
 
         } finally {

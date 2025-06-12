@@ -21,18 +21,20 @@ export default function AddedToCart() {
         cartTotal: state.total
     }));
     const cartLastItem = cartLength > 0 ? cart[cartLength - 1] : null;
-    console.log(cartLastItem)
 
     const redirectToCheckout = async () => {
+        
         try {
+
             const url = await checkout(user, cart, cartTotal, pathname);
             if (!url) throw new Error("checkout creation failure");
             router.push(url);
             closeModal();
+
         } catch (err) {
-			console.log(err);
             captureException(err);
-        }
+        };
+
     };
 
     return (

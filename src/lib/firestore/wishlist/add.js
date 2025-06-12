@@ -1,5 +1,6 @@
 import { database } from "@/lib/firebase/client";
 import { arrayUnion, doc, getDoc, setDoc, Timestamp, updateDoc } from "@firebase/firestore";
+import { captureException } from "@sentry/nextjs";
 
 export default async function addToWishlist(productId, userId) {
 
@@ -29,9 +30,7 @@ export default async function addToWishlist(productId, userId) {
         };
 
     } catch (err) {
-
-        console.error(err);
-
+        captureException(err);
     };
 
 };

@@ -8,9 +8,6 @@ import { useState, use } from "react";
 import { z, ZodError } from "zod";
 import { useTranslation } from "@/app/i18n/client";
 
-const passwordCriteria = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
-const required_error = (fieldName) => `${fieldName} is required`;
-
 const formSchema = z.object({
     currentPassword: z.string().min(1, { message: "field_required" }),
     newPassword: z.string()

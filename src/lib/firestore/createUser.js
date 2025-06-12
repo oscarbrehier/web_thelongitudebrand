@@ -24,8 +24,6 @@ export default async function createUser(userId, data) {
 
     } catch (err) {
 
-        console.log("Failed to create user in Firestore");
-        console.error(err);
         Sentry.captureException(err);
 
     };

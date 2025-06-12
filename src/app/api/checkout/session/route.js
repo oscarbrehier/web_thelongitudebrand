@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY_TEST);
 import { headers } from "next/headers";
+import { captureException } from "@sentry/nextjs";
 
 export async function POST(request, response) {
 
@@ -25,8 +26,8 @@ export async function POST(request, response) {
 
 	} catch (err) {
 
-		console.error(err);
-		return NextResponse.json({ error: 'Please check console' }, { status: 500 });
+		captureException(err);
+		return NextResponse.json({ status: 500 });
 
 	};
 
@@ -44,7 +45,7 @@ export async function GET(request, response) {
 
 	} catch (err) {
 
-		console.error(err);
+		captureException(err);
 		return NextResponse.json({ result: null }, { status: '500' });
 
 	}

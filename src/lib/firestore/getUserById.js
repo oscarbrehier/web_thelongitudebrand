@@ -35,7 +35,7 @@ export async function getUserById(userId, params) {
 	} catch (err) {
 
 		captureException(err);
-		throw err;
+		return (null);
 
 	};
 

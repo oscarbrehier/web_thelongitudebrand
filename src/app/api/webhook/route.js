@@ -2,6 +2,7 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import handleCheckoutSuccess from "./handleCheckoutSuccess";
+import { captureException } from "@sentry/nextjs";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY_TEST);
 
@@ -20,7 +21,7 @@ export async function POST(req) {
 
     } catch (err) {
 
-        console.error(err);
+        captureException(err);
         return NextResponse.json({ error: err.message }, { status: 400 });
 
     };

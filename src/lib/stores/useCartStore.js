@@ -2,7 +2,6 @@ import { persist } from "zustand/middleware";
 import { create } from "zustand";
 import getCartFromDb from "../firestore/getCartFromDb";
 import updateCartInFirestore from "@/actions/updateCartInFirestore";
-import { trackEvent } from "../analytics/analytics";
 import { DIRECTION } from "../constants/cart.config";
 
 const throwUpdateError = () => console.error('Failed to update cart in Firebase.');

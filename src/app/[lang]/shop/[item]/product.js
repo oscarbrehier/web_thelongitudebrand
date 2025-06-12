@@ -12,6 +12,8 @@ import { useTranslation } from "@/app/i18n/client";
 import posthog from "posthog-js";
 import SizeSelector from "@/app/components/store/SizeSelector";
 import { trackEvent } from "@/lib/analytics/analytics";
+import { urlFor } from "@/lib/sanity/client";
+import Link from "next/link";
 
 export function Product({
     lang,
@@ -240,7 +242,14 @@ export function Product({
 
                         <p className="text-xs capitalize">
                             {t("color")}
-                            <span className="uppercase mx-10">black</span>
+                            {
+                                content.color?.map((color, i) => (
+                                    <span key={color.key} className="uppercase mx-10">
+                                        {color[lang]}
+                                        {i < content.color.length - 1 && <span>/</span>}
+                                    </span>
+                                ))
+                            }
                         </p>
 
                         <div className="grid grid-cols-5 gap-2">
@@ -252,6 +261,23 @@ export function Product({
                                     quality={0}
                                 />
                             </div>
+
+                            {
+                                content.variant?.map((v, key) => (
+                                    <Link 
+                                        key={key} 
+                                        href={`/shop/${v.slug.current}`}
+                                    >
+                                        <div className="flex items-center justify-center uppercase text-sm border-[1px] border-neutral-900 px-2 py-4">
+                                            <SanityImage
+                                                source={v.images[0].asset._ref}
+                                                alt={v.title}
+                                                quality={0}
+                                            />
+                                        </div>
+                                    </Link>
+                                ))
+                            }
 
 
                         </div>

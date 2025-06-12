@@ -1,5 +1,6 @@
 "use server"
 
+import { captureException } from "@sentry/nextjs";
 import { adminFirestore } from "../firebase/admin";
 
 export default async function getOrderProcess(orderId) {
@@ -28,7 +29,7 @@ export default async function getOrderProcess(orderId) {
 
     } catch (err) {
 
-        console.error(err);
+        captureException(err);
         return {
             error: "order-details-fetch/failed"
         };

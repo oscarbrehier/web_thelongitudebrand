@@ -1,4 +1,5 @@
 "use server"
+import { captureException } from "@sentry/nextjs";
 import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY_TEST);
 
@@ -14,7 +15,7 @@ export default async function createCustomer(name, email) {
 
     } catch (err) {
 
-        console.error(err);
+        captureException(err);
         return {
             errors: "stripe-create-customer/failed"
         };

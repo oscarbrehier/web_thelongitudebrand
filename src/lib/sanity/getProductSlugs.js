@@ -1,3 +1,4 @@
+import { captureException } from "@sentry/nextjs";
 import { client } from "./client";
 
 export default async function getProductSlugs() {
@@ -11,7 +12,7 @@ export default async function getProductSlugs() {
 
     } catch (err) {
 
-        console.error("Failed to fetch product slugs:", err);
+        captureException(err);
         return [];
 
     };

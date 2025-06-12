@@ -57,8 +57,6 @@ export default function Page(props) {
 
         } catch (error) {
 
-            console.log(error)
-
             if (error.errors) {
 
                 const errors = error.errors.reduce((acc, curr) => {
@@ -80,9 +78,7 @@ export default function Page(props) {
                 setForm(prev => ({ ...prev, error: formatError }));
 
             } else {
-
                 setForm(prev => ({ ...prev, error: "An error occured. Please try again or come back later." }));
-
             };
 
             setStatus("error");

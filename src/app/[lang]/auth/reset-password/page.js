@@ -46,12 +46,8 @@ export default function Page({ params: { lang } }) {
 
         } catch (error) {
 
-            console.error(error);
-
             if (error.errors) {
-
                 setError(prev => ({ ...prev, field: error.errors[0].message }));
-
             };
 
             setStatus("error");

@@ -9,7 +9,8 @@ import { PostHogProvider } from "@/lib/analytics/client";
 import LocaleTracker from "./i18n/LocaleTracker";
 import CookieConsentTrigger from "./components/CookieConsentTrigger";
 import clsx from "clsx";
-
+import { SpeedInsights } from '@vercel/speed-insights/next';
+ 
 const baseUrl = "https://www.longitudebrand.com";
 
 export const metadata = {
@@ -79,7 +80,7 @@ export default async function RootLayout({
 							<CookieConsentTrigger />
 							<LocaleTracker />
 							{children}
-							{/* <SpeedInsights /> */}
+							<SpeedInsights />
 						</body>
 
 					</ModalProvider>
