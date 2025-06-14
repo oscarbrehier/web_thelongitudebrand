@@ -13,7 +13,7 @@ export async function POST(request) {
 		});
 	};
 
-	const strength = zxcvbn(password);
+	const strength = zxcvbn(password).score;
 	return NextResponse.json({
 		score: strength
 	}, {

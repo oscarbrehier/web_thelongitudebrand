@@ -8,7 +8,7 @@ export default async function getPasswordStrength(password) {
         body: JSON.stringify({ password }),
     });
 
-    const data = response.json();
+    const data = await response.json();
     return data.score >= 4;
 
 };

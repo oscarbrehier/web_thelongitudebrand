@@ -50,6 +50,7 @@ export default function Page(props) {
                 terms: formData.get("terms") !== null
             };
 
+            console.log("parsing")
             await signUpSchema.parseAsync(data);
             await signUp(data);
 
