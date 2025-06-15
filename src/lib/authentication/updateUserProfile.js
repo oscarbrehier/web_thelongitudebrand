@@ -2,7 +2,7 @@
 import { captureException } from "@sentry/nextjs";
 import { adminFirestore } from "../firebase/admin";
 import admin from "firebase-admin";
-import { updateNewsletterSubscriber } from "../firestore/updateNewsletterSubscriber";
+import { handleNewsletterSubscription } from "../firestore/newsletter";
 
 export default async function updateUserProfile(userId, newEntries, entries) {
 
@@ -14,7 +14,7 @@ export default async function updateUserProfile(userId, newEntries, entries) {
 
     try {
 
-        await updateNewsletterSubscriber(entries.email, entries);
+        handleNewsletterSubscription(entries.email, entries.newsletterSubscriber);
 
         if (newEntries.email) delete newEntries.email;
 

@@ -10,7 +10,7 @@ export default function Checkbox({
     ...props
 }) {
 
-    const [isChecked, setIsChecked] = useState(checked);
+    const [isChecked, setIsChecked] = useState(checked || false);
 
     const handleChange = (event) => {
 

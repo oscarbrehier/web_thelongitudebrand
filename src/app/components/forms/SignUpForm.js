@@ -25,12 +25,14 @@ export default function SignUpForm({
                         title="first name"
                         required={true}
                         error={errors?.firstName}
+                        lang={lang}
                     />
 
                     <InputWithLabel
                         title="last name"
                         required={true}
                         error={errors?.lastName}
+                        lang={lang}
                     />
 
                 </div>
@@ -41,6 +43,7 @@ export default function SignUpForm({
                     required={true}
                     value={email}
                     error={errors?.email}
+                    lang={lang}
                 />
 
                 <InputWithLabel
@@ -48,6 +51,7 @@ export default function SignUpForm({
                     type="password"
                     required={true}
                     error={errors?.password}
+                    lang={lang}
                 />
 
                 <InputWithLabel
@@ -55,6 +59,7 @@ export default function SignUpForm({
                     type="password"
                     required={true}
                     error={errors?.confirmPassword}
+                    lang={lang}
                 />
 
                 {

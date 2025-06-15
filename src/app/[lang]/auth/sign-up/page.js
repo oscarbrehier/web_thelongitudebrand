@@ -1,21 +1,23 @@
 "use client"
-import { useAuthContext } from "@/lib/context/AuthContext";
 import handleFirebaseError from "@/lib/firebase/handleFirebaseError";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, use } from "react";
+import { useState, use, useEffect } from "react";
 import { signUpSchema } from "@/lib/constants/zodSchema";
 import signUp from "@/lib/authentication/signUp";
 import SignUpForm from "@/app/components/forms/SignUpForm";
 import { trackEvent } from "@/lib/analytics/analytics";
 
 export default function Page(props) {
-    const params = use(props.params);
 
-    const {
-        lang
-    } = params;
+    const params = use(props.params);
+    const { lang } = params;
 
     const query = useSearchParams();
+    const [initialEmail, setInitialEmail] = useState("");
+    useEffect(() => {
+        setInitialEmail(query.get('email') || "");
+    }, [query]);;
+
     const router = useRouter();
 
     const [loading, setLoading] = useState(false);
@@ -36,9 +38,9 @@ export default function Page(props) {
 
         event.preventDefault();
         setLoading(true);
-        
+
         try {
-            
+
             const formData = new FormData(event.target);
             const data = {
                 firstName: formData.get("firstName"),
@@ -46,11 +48,10 @@ export default function Page(props) {
                 email: formData.get("email"),
                 password: formData.get("password"),
                 confirmPassword: formData.get("confirmPassword"),
-                newsletter: formData.get("newsletter"),
+                newsletter: !!formData.get("newsletter"),
                 terms: formData.get("terms") !== null
             };
 
-            console.log("parsing")
             await signUpSchema.parseAsync(data);
             await signUp(data);
 
@@ -60,8 +61,8 @@ export default function Page(props) {
                 source: "auth_page",
             });
 
+            router.refresh();
             router.push("/customer/personal-information");
-        
 
         } catch (error) {
 
@@ -96,45 +97,44 @@ export default function Page(props) {
             };
 
         } finally {
-
             setLoading(false);
-
         };
 
     };
 
     return (
 
-            <div className="h-screen w-full mt-16 pt-16 2md:grid grid-cols-4 gap-2">
+        <div className="h-screen w-full mt-16 pt-16 2md:grid grid-cols-4 gap-2">
 
-                <div className="col-start-2 col-span-2 h-auto">
+            <div className="col-start-2 col-span-2 h-auto">
 
-                    <div className="mx-2 mb-4">
+                <div className="mx-2 mb-4">
 
-                        <p className="capitalize text-lg">sign in</p>
-
-                    </div>
-
-                    <SignUpForm
-                        lang={lang}
-                        handleForm={handleForm}
-                        errors={{
-                            form: form.error,
-                            firstName: inputErrors.firstName,
-                            lastName: inputErrors.lastName,
-                            email: inputErrors.email,
-                            password: inputErrors.password,
-                            confirmPassword: inputErrors.confirmPassword,
-                            terms: inputErrors.terms
-                        }}
-                        loading={loading}
-                        email={query.get('email') || null}
-                    />
+                    <p className="capitalize text-lg">sign in</p>
 
                 </div>
 
+                <SignUpForm
+                    lang={lang}
+                    handleForm={handleForm}
+                    errors={{
+                        form: form.error,
+                        firstName: inputErrors.firstName,
+                        lastName: inputErrors.lastName,
+                        email: inputErrors.email,
+                        password: inputErrors.password,
+                        confirmPassword: inputErrors.confirmPassword,
+                        terms: inputErrors.terms
+                    }}
+                    loading={loading}
+                    // email={query.get('email') || ""}
+                    email={initialEmail}
+                />
 
             </div>
+
+
+        </div>
 
     );
 };

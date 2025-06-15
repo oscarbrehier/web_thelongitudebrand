@@ -5,6 +5,7 @@ import { doc, setDoc, Timestamp } from "@firebase/firestore";
 import createCustomer from "../../actions/stripe/createCustomer";
 import createUser from "../firestore/createUser";
 import { captureException } from "@sentry/nextjs";
+import { handleNewsletterSubscription } from "../firestore/newsletter";
 
 const auth = getAuth(firebase_app);
 
@@ -33,11 +34,12 @@ export default async function signUp(form) {
         await createUser(userUid, {
             firstName,
             lastName,
-            newsletterSubscriber: newsletter,
             termsAndConditions: terms,
             dateOfBirth: "0000-00-00",
             stripeCustomerId: stripeCustomer.id,
         });
+
+        handleNewsletterSubscription(email, newsletter, { firstName, lastName });
 
         const idToken = await firebaseUser.user.getIdToken();
         

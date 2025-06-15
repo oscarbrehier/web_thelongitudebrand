@@ -50,7 +50,7 @@ export default async function RootLayout({
 	const headersList = await headers();
 	// const cookieStore = await cookies();
 
-	lang = headersList.has("x-language") ? headersList.get("x-languge") : fallbackLng;
+	lang = headersList.has("x-language") ? headersList.get("x-language") : fallbackLng;
 
 	const structuredData = JSON.stringify({
 		"@context": "https://schema.org",

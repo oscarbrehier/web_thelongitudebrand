@@ -47,7 +47,7 @@ export default function SignUpModal() {
                 email: formData.get("email"),
                 password: formData.get("password"),
                 confirmPassword: formData.get("confirmPassword"),
-                newsletter: formData.get("newsletter"),
+                newsletter: !!formData.get("newsletter"),
                 terms: formData.get("terms") !== null
             };
 

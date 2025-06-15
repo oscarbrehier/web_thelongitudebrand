@@ -18,7 +18,8 @@ export default async function Page(props) {
 
     if (error) return;
 
-    const { order, orderProcess, checkout } = data;
+    let { order, orderProcess, checkout } = data;
+    checkout = JSON.parse(JSON.stringify(checkout));
 
     return data && (
 

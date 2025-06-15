@@ -3,8 +3,6 @@ import { sanityFetch } from "./fetch";
 
 export async function getShopContent() {
 
-	console.log("🚀 getShopContent fetch running");
-
 	try {
 
 		const products = await sanityFetch({

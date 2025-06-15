@@ -11,7 +11,7 @@ export default async function createCustomer(name, email) {
             name, email
         });
 
-        return customer;
+        return JSON.parse(JSON.stringify(customer));
 
     } catch (err) {
 

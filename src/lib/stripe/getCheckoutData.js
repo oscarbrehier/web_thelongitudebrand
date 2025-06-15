@@ -14,7 +14,7 @@ export default async function getCheckoutData(checkoutId) {
 			}
 		}).then(res => res.json());
 
-		return res.result;
+		return JSON.parse(JSON.stringify(res.result));
 
 	} catch (err) {
 

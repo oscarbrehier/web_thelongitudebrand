@@ -19,8 +19,12 @@ export default async function Page(props) {
         return (<FetchFail lang={lang} />);
     }
 
-    firestoreUserData["email"] = authUser.email;
     delete firestoreUserData.updatedAt;
+
+    const userDataPlain = JSON.parse(JSON.stringify({
+        ...firestoreUserData,
+        email: authUser.email
+    }));
 
     return (
 
@@ -28,7 +32,7 @@ export default async function Page(props) {
             <div className="w-full 2md:grid grid-cols-4 gap-2 mt-16 pt-14">
                 <div className="col-start-2 col-span-2 h-auto">
                     <h1 className="capitalize mx-2 my-1 text-lg">{t("personal_information")}</h1>
-                    {firestoreUserData && <PersonalInformationForm content={firestoreUserData} lang={lang} />}
+                    {userDataPlain && <PersonalInformationForm content={userDataPlain} lang={lang} />}
                 </div>
             </div>
         </div>

@@ -2,7 +2,7 @@
 import { useModalContext } from "@/lib/context/ModalContext";
 import { useAuthContext } from "@/lib/context/AuthContext";
 import { useCartStore } from "@/lib/stores/useCartStore";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useTranslation } from "@/app/i18n/client";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -21,6 +21,7 @@ export default function NavigationBar({ lang }) {
     const { openModal } = useModalContext();
     const cartLength = useCartStore((state) => state.cart.length);
 
+    const router = useRouter();
     const { t } = useTranslation(lang, "navigation");
 
     const handleOpenModal = (modal) => {
@@ -29,6 +30,7 @@ export default function NavigationBar({ lang }) {
         openModal(modal);
 
     };
+
 
     const authLinks = isAuth ? (
 
