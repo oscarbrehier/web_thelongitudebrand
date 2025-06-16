@@ -138,6 +138,7 @@ export function PersonalInformationForm({ content, lang }) {
                 <div className="space-y-2">
 
                     <InputWithLabel
+                        name="firstName"
                         title={t("first_name")}
                         value={content.firstName}
                         type='text'
@@ -148,6 +149,7 @@ export function PersonalInformationForm({ content, lang }) {
 
 
                     <InputWithLabel
+                        name="lastName"
                         title={t("last_name")}
                         value={content.lastName}
                         type='text'
@@ -157,6 +159,7 @@ export function PersonalInformationForm({ content, lang }) {
                     />
 
                     <InputWithLabel
+                        name="email"
                         title='email'
                         value={content.email}
                         type='email'
@@ -165,6 +168,7 @@ export function PersonalInformationForm({ content, lang }) {
                     />
 
                     <InputWithLabel
+                        name="dateOfBirth"
                         title={t("date_of_birth")}
                         type='date'
                         optional={true}

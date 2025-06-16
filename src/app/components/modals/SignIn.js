@@ -3,7 +3,6 @@ import Input from "../ui/Input";
 import { useEffect, useState } from "react";
 import { useModalContext } from "@/lib/context/ModalContext";
 import signIn from "@/lib/authentication/signIn";
-import { signInSchema } from "@/lib/constants/zodSchema";
 import Button from "../ui/Button";
 import handleFirebaseError from "@/lib/firebase/handleFirebaseError";
 import ModalContainer from "./ModalContainer";
@@ -12,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { useCartStore } from "@/lib/stores/useCartStore";
 import posthog from "posthog-js";
 import { trackEvent } from "@/lib/analytics/analytics";
+import { signInSchema } from "@/lib/schema";
 
 const FORM_DEFAULT = {
     submit: false,
@@ -142,7 +142,10 @@ export default function SignInModal() {
 
                 <div className="text-sm mt-6 space-y-2">
 
-                    <Link href="/auth/reset-password">Forgot your password?</Link>
+                    <button onClick={() => {
+                        closeModal("sign_in");
+                        router.push("/auth/reset-password");
+                    }}>Forgot your password?</button>
                     <div className="flex">
                         <p className="text-neutral-500">Don't have an account? &nbsp;</p>
                         <p className="cursor-pointer capitalize underline" onClick={() => openModal('sign_up')}>sign up</p>

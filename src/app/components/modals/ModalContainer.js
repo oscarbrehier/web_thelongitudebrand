@@ -1,5 +1,6 @@
 import { useModalContext } from "@/lib/context/ModalContext";
 import clsx from "clsx";
+import { useRef } from "react";
 import { IoClose } from "react-icons/io5";
 import { tv } from "tailwind-variants";
 
@@ -47,6 +48,7 @@ export default function ModalContainer({
 }) {
 
     const { closeModal } = useModalContext();
+    const mouseDownOnModal = useRef(false);
 
     const handleCloseSignal = () => {
         if (!preventClose) closeModal();
@@ -56,7 +58,13 @@ export default function ModalContainer({
 
         <div
             className={container({ display: position === "center-center" ? "flex" : "grid" })}
-            onClick={handleCloseSignal}
+            onMouseDown={e => {
+                mouseDownOnModal.current = e.target === e.currentTarget;
+            }}
+            onClick={(e) => {
+                if (mouseDownOnModal.current && e.target === e.currentTarget) handleCloseSignal();
+                mouseDownOnModal.current = false;
+            }}
         >
 
             <div

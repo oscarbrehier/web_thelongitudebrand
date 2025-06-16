@@ -3,13 +3,13 @@ import { useModalContext } from "@/lib/context/ModalContext";
 import Input from "../ui/Input";
 import { useState, useEffect } from "react";
 import signUp from "@/lib/authentication/signUp";
-import { signUpSchema } from "@/lib/constants/zodSchema";
 import Button from "../ui/Button";
 import handleFirebaseError from "@/lib/firebase/handleFirebaseError";
 import ModalContainer from "./ModalContainer";
 import Link from "next/link";
 import Checkbox from "../ui/Checkbox";
 import { trackEvent } from "@/lib/analytics/analytics";
+import { signUpSchema } from "@/lib/schema";
 
 const FORM_DEFAULT = {
     submit: false,

@@ -5,11 +5,11 @@ import Input from "../ui/Input";
 import Button from "../ui/Button";
 import { doc, setDoc, Timestamp } from "@firebase/firestore";
 import { database } from "@/lib/firebase/client";
-import { newsletterSchema } from "@/lib/constants/zodSchema";
 import handleFirebaseError from "@/lib/firebase/handleFirebaseError";
 import ModalContainer from "./ModalContainer";
 import Checkbox from "../ui/Checkbox";
 import { trackEvent } from "@/lib/analytics/analytics";
+import { newsletterSchema } from "@/lib/schema";
 
 const FORM_DEFAULT = {
     error: "",

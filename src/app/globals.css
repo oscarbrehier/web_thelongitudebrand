@@ -4,144 +4,172 @@
 
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+	--foreground-rgb: 0, 0, 0;
+	--background-start-rgb: 214, 219, 220;
+	--background-end-rgb: 255, 255, 255;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 255, 255, 255;
-    --background-end-rgb: 255, 255, 255;
-  }
+	:root {
+		--foreground-rgb: 255, 255, 255;
+		--background-start-rgb: 255, 255, 255;
+		--background-end-rgb: 255, 255, 255;
+	}
 }
 
 * {
-  color: black;
-  box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
+	color: black;
+	box-sizing: border-box;
+	font-family: "Poppins", sans-serif;
 
 }
 
 body {
-  /* color: rgb(var(--foreground-rgb));
+	/* color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
       transparent,
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb)); */
-  background-color: #f4f3ef;
+	background-color: #f4f3ef;
 
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+	.text-balance {
+		text-wrap: balance;
+	}
 }
 
 .text-stroke {
-  -webkit-text-stroke: 3px black;
+	-webkit-text-stroke: 3px black;
 }
 
 input:autofill {
-  -webkit-box-shadow: 0 0 0 30px white inset !important;
+	-webkit-box-shadow: 0 0 0 30px white inset !important;
 }
 
 .neon {
-  color: #37ff47;
+	color: #37ff47;
 }
 
 .bg-neon {
-  color: #37ff47;
+	color: #37ff47;
 }
 
 .svg-blur {
-  filter: drop-shadow(0px 0px 8px #37ff47);
+	filter: drop-shadow(0px 0px 8px #37ff47);
 }
 
 .svg-blur-white {
-  filter: drop-shadow(0px 0px 8px #fff);
+	filter: drop-shadow(0px 0px 8px #fff);
 }
 
 .svg-blur-black {
-  filter: drop-shadow(0px 0px 8px #000);
+	filter: drop-shadow(0px 0px 8px #000);
 }
 
 .mouse {
-  width: 30px;
-  height: 60px;
-  border: 2px solid rgba(51, 51, 51, 0.60);
-  border-radius: 60px;
-  position: relative;
+	width: 30px;
+	height: 60px;
+	border: 2px solid rgba(51, 51, 51, 0.60);
+	border-radius: 60px;
+	position: relative;
 
-  &::before {
-    content: '';
-    width: 12px;
-    height: 12px;
-    position: absolute;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(51, 51, 51, 0.60);
-    border-radius: 50%;
-    opacity: 1;
-    animation: wheel 2s infinite;
-    -webkit-animation: wheel 2s infinite;
-  }
+	&::before {
+		content: '';
+		width: 12px;
+		height: 12px;
+		position: absolute;
+		top: 10px;
+		left: 50%;
+		transform: translateX(-50%);
+		background-color: rgba(51, 51, 51, 0.60);
+		border-radius: 50%;
+		opacity: 1;
+		animation: wheel 2s infinite;
+		-webkit-animation: wheel 2s infinite;
+	}
 }
 
 @keyframes wheel {
-  to {
-    opacity: 0;
-    top: 40px;
-  }
+	to {
+		opacity: 0;
+		top: 40px;
+	}
 }
 
 @-webkit-keyframes wheel {
-  to {
-    opacity: 0;
-    top: 40px;
-  }
+	to {
+		opacity: 0;
+		top: 40px;
+	}
 }
 
 .fade-out {
-  animation: fade-out 2s forwards;
+	animation: fade-out 2s forwards;
 }
 
 @keyframes fade-out {
-  to {
-    opacity: 0;
-  }
+	to {
+		opacity: 0;
+	}
 }
 
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-  -webkit-transition-delay: 9999s;
-  transition-delay: 9999s;
+	-webkit-transition-delay: 9999s;
+	transition-delay: 9999s;
 }
 
 /* width */
 ::-webkit-scrollbar {
-  width: 4px;
+	width: 4px;
 }
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: transparent;
+	background: transparent;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 50px;
+	background: #888;
+	border-radius: 50px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+	background: #555;
+}
+
+.brand-word {
+	animation: flicker 1.5s infinite;
+}
+
+.brand-word:nth-child(1) {
+	animation-delay: 0s;
+}
+
+.brand-word:nth-child(2) {
+	animation-delay: 0.5s;
+}
+
+.brand-word:nth-child(3) {
+	animation-delay: 1s;
+}
+
+@keyframes flicker {
+
+	0%,
+	100% {
+		opacity: 1;
+	}
+
+	50% {
+		opacity: 0.4;
+	}
 }

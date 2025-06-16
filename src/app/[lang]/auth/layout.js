@@ -7,7 +7,9 @@ export default async function Layout({
     return (
 
         <Suspense>
-            {children}
+            <div className="min-h-screen w-full">
+                {children}
+            </div>
         </Suspense>
 
     );

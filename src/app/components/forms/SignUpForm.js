@@ -22,6 +22,7 @@ export default function SignUpForm({
                 <div className="grid grid-cols-2 gap-2">
 
                     <InputWithLabel
+                        name="firstName"
                         title="first name"
                         required={true}
                         error={errors?.firstName}
@@ -29,6 +30,7 @@ export default function SignUpForm({
                     />
 
                     <InputWithLabel
+                        name="lastName"
                         title="last name"
                         required={true}
                         error={errors?.lastName}
@@ -38,6 +40,7 @@ export default function SignUpForm({
                 </div>
 
                 <InputWithLabel
+                    name="email"
                     title="email"
                     type="email"
                     required={true}
@@ -47,6 +50,7 @@ export default function SignUpForm({
                 />
 
                 <InputWithLabel
+                    name="password"
                     title="password"
                     type="password"
                     required={true}
@@ -55,6 +59,7 @@ export default function SignUpForm({
                 />
 
                 <InputWithLabel
+                    name="confirmPassword"
                     title="confirm password"
                     type="password"
                     required={true}

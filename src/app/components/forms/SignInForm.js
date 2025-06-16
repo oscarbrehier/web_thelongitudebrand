@@ -4,7 +4,7 @@ import Button from "../ui/Button"
 import Link from "next/link"
 
 export default function SignInForm({
-    lang = null,
+    lang,
     handleForm = null,
     errors = null,
     status = null,
@@ -19,18 +19,22 @@ export default function SignInForm({
             <div className="space-y-2">
 
                 <InputWithLabel
+                    name="email"
                     title="email"
                     type="email"
                     required={true}
                     value={email}
                     error={errors?.email}
+                    lang={lang}
                 />
 
                 <InputWithLabel
+                    name="password"
                     title="password"
                     type="password"
                     required={true}
                     error={errors?.password}
+                    lang={lang}
                 />
 
                 {

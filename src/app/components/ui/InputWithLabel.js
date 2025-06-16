@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 
 export default function InputWithLabel({
     title,
+    name,
     type = "text",
     value,
     onChange,
@@ -113,7 +114,7 @@ export default function InputWithLabel({
                 <input
                     className={`w-full h-full outline-none bg-transparent md:text-sm text-base px-4 pt-4 pb-1 ${disabled ? "text-neutral-600" : ""} `}
                     type={type === "password" && visible ? "text" : type}
-                    name={camelize(title)}
+                    name={name}
                     value={inputValue} // Bind the controlled input to inputValue
                     onChange={handleChange}
                     disabled={disabled}

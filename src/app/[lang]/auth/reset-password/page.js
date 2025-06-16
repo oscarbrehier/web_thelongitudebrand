@@ -1,203 +1,36 @@
-"use client"
-import { useSearchParams } from "next/navigation";
-import Button from "@/app/components/ui/Button";
-import InputWithLabel from "@/app/components/ui/InputWithLabel";
-import { useEffect, useState } from "react";
-import { sendPasswordResetEmail } from "firebase/auth";
-import { auth } from "@/lib/firebase/client";
-import { resetPasswordSchema } from "@/lib/constants/zodSchema";
+import { ResetForm } from "./ResetForm";
 
-export default function Page({ params: { lang } }) {
+export default async function Page({ params, searchParams }) {
 
-    const params = useSearchParams();
+    const { lang } = await params;
+    const { error, email } = await searchParams;
 
-    const [status, setStatus] = useState("idle");
-    const [email, setEmail] = useState(null);
-    const [error, setError] = useState({
-        message: null,
-        type: null,
-        field: null
-    });
+    let globalError = null;
 
-    useEffect(() => {
+    switch (error) {
+        case "reset-link/invalid-expired":
+            globalError = "Oops! Your password reset link has expired or is invalid.";
+            break;
 
-        const error = params.get("error");
-
-        if (error) setError(prev => ({
-            ...prev,
-            type: "page"
-        }));
-
-    }, []);
-
-    const handleForm = async (formData) => {
-
-        setStatus("loading");
-
-        try {
-
-            const email = formData.get("email");
-            resetPasswordSchema.parse({ email });
-
-            await sendPasswordResetEmail(auth, email);
-
-            setEmail(email);
-            setStatus("success");
-
-        } catch (error) {
-
-            if (error.errors) {
-                setError(prev => ({ ...prev, field: error.errors[0].message }));
-            };
-
-            setStatus("error");
-
-        };
-
+        default:
+            globalError = null;
+            break;
     };
 
     return (
 
-            <div className="h-screen w-full mt-16 pt-16 2md:grid grid-cols-4 gap-2">
+        <div className="h-screen w-full mt-16 pt-16 2md:grid grid-cols-4 gap-2">
+            <div className="col-start-2 col-span-2 h-auto">
 
-                <div className="col-start-2 col-span-2 h-auto">
-
-                    {status == "success" ? (
-
-                        <SuccessMessage email={email} />
-
-                    ) : (
-
-                        <>
-
-                            <div className="mx-2 mb-4">
-
-                                <p className="capitalize text-lg">reset your password</p>
-
-                                {
-
-                                    error.type == "page" ? (
-
-                                        <div className="mt-1">
-                                            <p className="text-sm text-error-red">
-                                                Oops! Your password reset link has expired or is invalid.
-                                            </p>
-
-                                            <p className="text-sm text-neutral-600">
-                                                It looks like the link you clicked is no longer active. Don't worry, you can request a new password reset link by entering your email below.
-                                            </p>
-                                        </div>
-
-                                    ) : (
-
-                                        <p className="text-sm text-neutral-600">
-                                            Enter the email address associated to your account to receive a password reset link.
-                                        </p>
-
-                                    )
-
-                                }
-
-                            </div>
-
-                            <form action={handleForm}>
-
-                                <div className="space-y-2">
-
-                                    <InputWithLabel
-                                        title="email"
-                                        type="email"
-                                        error={error.field}
-                                        required={true}
-                                        value={params.get("email") || null}
-                                    />
-
-                                    {/* {error !== "" && (
-<p className="text-sm text-error-red">{error}</p>
-)} */}
-
-                                </div>
-
-                                <div className="mt-4 space-y-2">
-
-                                    <Button
-                                        size="w-full h-14"
-                                        type="submit"
-                                        loading={status == "loading"}
-                                    >
-                                        send reset link
-                                    </Button>
-
-                                </div>
-
-                            </form>
-
-                        </>
-
-                    )}
-
-                </div>
+                <ResetForm 
+                    lang={lang}
+                    globalError={globalError}
+                    initialEmail={email}
+                />
 
             </div>
+        </div>
 
-    );
-
-};
-
-function SuccessMessage({ email }) {
-
-    const [error, setError] = useState(null);
-
-    const handleResendEmail = async () => {
-
-        setError(false);
-        sendPasswordResetEmail(auth, email).catch(err => setError(true));
-
-    };
-
-    return (
-
-        <>
-
-            <div className="mx-2 mb-4">
-
-                <p className="capitalize text-lg">check your email</p>
-
-                <p className="text-sm text-neutral-600">
-                    A password reset link has been sent to your email address. Please check your inbox.
-                </p>
-
-            </div>
-
-            <div className="space-y-2">
-
-                <Button
-                    size="w-full h-14"
-                >
-                    sign in
-                </Button>
-
-
-                <div>
-
-                    <p className="text-sm">
-                        Didn't receive the email? {" "}
-                        <span
-                            onClick={handleResendEmail}
-                            className="underline cursor-pointer"
-                        >
-                            Resend
-                        </span>
-                    </p>
-                    
-                    {error && <p className="text-sm text-error-red">An error occured. Please try again or come back later.</p>}
-
-                </div>
-
-            </div>
-
-        </>
-
-    );
+    )
 
 };

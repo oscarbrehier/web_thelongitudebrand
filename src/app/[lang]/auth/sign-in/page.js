@@ -2,14 +2,15 @@
 import handleFirebaseError from "@/lib/firebase/handleFirebaseError";
 import { useRouter, useSearchParams } from "next/navigation";
 import SignInForm from "@/app/components/forms/SignInForm";
-import { signInSchema } from "@/lib/constants/zodSchema";
 import { useCartStore } from "@/lib/stores/useCartStore";
 import signIn from "@/lib/authentication/signIn";
 import { useState, use } from "react";
 import posthog from "posthog-js";
 import { trackEvent } from "@/lib/analytics/analytics";
+import { signInSchema } from "@/lib/schema";
 
 export default function Page(props) {
+    
     const params = use(props.params);
 
     const setCartSync = useCartStore((state) => state.setSynced);

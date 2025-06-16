@@ -1,21 +1,20 @@
-"use client"
-import { redirect, useRouter, useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import LoadingPanel from "@/app/components/LoadingPanel";
+import { redirect } from "next/navigation";
 
-export default function Page({ }) {
+export default async function Page({ searchParams }) {
 
-    const router = useRouter();
-
-    const params = useSearchParams();
-    const mode = params.get("mode");
+    const { mode, oobCode } = await searchParams;
 
     if (mode == "resetPassword") {
-
-        const code = params.get('oobCode');
-        router.push(`/auth/action/reset-password?code=${code}`);
-
+        redirect(`/auth/action/reset-password?code=${oobCode}`);
+    } else {
+        redirect("/shop");
     }
 
-    return null;
+    return (
+        <div className="h-screen w-full flex">
+            <LoadingPanel />
+        </div>
+    );
 
 };

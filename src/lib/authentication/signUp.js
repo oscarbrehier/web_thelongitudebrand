@@ -22,6 +22,10 @@ export default async function signUp(form) {
 
     try {
         
+        if (!terms) {
+            throw new Error("User sign-up failed: terms and conditions not accepted.");
+        };
+
         const firebaseUser = await createUserWithEmailAndPassword(auth, email, password);
         const stripeCustomer = await createCustomer(`${firstName} ${lastName}`, email);
 

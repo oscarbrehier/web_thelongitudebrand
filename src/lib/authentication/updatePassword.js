@@ -5,13 +5,16 @@ import { doc, getDoc, Timestamp, updateDoc } from '@firebase/firestore';
 import { captureException } from '@sentry/nextjs';
 const auth = getAuth(firebase_app);
 
+/**
+ * Update the password of a user
+ * @param {string} currentPassword
+ * @param {string} newPassword
+ */
 export default async function updatePassword(currentPassword, password) {
 
     const user = auth.currentUser;
 
     try {
-
-        await reauthenticateUser(currentPassword);
 
         const ref = doc(database, "users", user.uid);
         const res = await getDoc(ref);
@@ -20,20 +23,21 @@ export default async function updatePassword(currentPassword, password) {
 
             const lastChanged = res.data().lastPasswordUpdate;
             const now = Timestamp.now();
-            const timeSinceLastChange = now.seconds - lastChanged.seconds;
 
-            if (lastChanged && timeSinceLastChange <= 3600) {
+            if (lastChanged) {
 
-                throw "auth/too-many-requests";
+                const timeSinceLastChange = now.seconds - lastChanged.seconds;
+                if (timeSinceLastChange <= 3600) {
+                    throw "auth/too-many-requests";
+                }
 
-            } else {
+            }
 
-                await updateUserPassword(user, password);
-                await updateDoc(ref, {
-                    lastPasswordUpdate: Timestamp.now(),
-                });
-
-            };
+            await reauthenticateUser(currentPassword);
+            await updateUserPassword(user, password);
+            await updateDoc(ref, {
+                lastPasswordUpdate: Timestamp.now(),
+            });
 
         };
 

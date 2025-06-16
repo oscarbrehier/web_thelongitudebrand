@@ -1,26 +1,12 @@
 'use client';
 import updatePassword from "@/lib/authentication/updatePassword";
 import InputWithLabel from "@/app/components/ui/InputWithLabel";
-import getPasswordStrength from "@/lib/utils/getPasswordStrength";
 import Button from "@/app/components/ui/Button";
 import { useRouter } from "next/navigation";
-import { useState, use } from "react";
-import { z, ZodError } from "zod";
+import { useState, use, useEffect } from "react";
+import { ZodError } from "zod";
 import { useTranslation } from "@/app/i18n/client";
-
-const formSchema = z.object({
-    currentPassword: z.string().min(1, { message: "field_required" }),
-    newPassword: z.string()
-        .min(6, { message: "password_too_short" })
-        .refine(async (val) => await getPasswordStrength(val), {
-            message: "password_too_weak"
-        }),
-    confirmNewPassword: z.string()
-        .min(1, { message: "password_confirm" })
-}).refine((data) => data.newPassword === data.confirmNewPassword, {
-    message: "passwords_do_not_match",
-    path: ["confirmNewPassword"]
-});
+import { updatePasswordSchema } from "@/lib/schema";
 
 export default function Page(props) {
 
@@ -37,15 +23,13 @@ export default function Page(props) {
         newPassword: "",
         confirmNewPassword: "",
     });
-
     const [errors, setErrors] = useState({
         currentPassword: "",
         newPassword: "",
         confirmNewPassword: "",
     });
-
     const [formError, setFormError] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [status, setStatus] = useState("idle");
 
     const handleInputChange = (e) => {
 
@@ -55,21 +39,27 @@ export default function Page(props) {
         setFormError("");
     };
 
-    const isFormIncomplete = !values.currentPassword || !values.newPassword || !values.confirmNewPassword;
+    useEffect(() => {
+        const allFilled = Object.values(values).every(Boolean);
+        setStatus(allFilled ? "ready" : "idle");
+    }, [values]);
 
     const handleSubmitForm = async () => {
 
-        setLoading(true);
+        setStatus("submitting");
         setErrors({ currentPassword: "", newPassword: "", confirmNewPassword: "" });
         setFormError("");
 
         try {
 
-            await formSchema.parseAsync(values);
-            await updatePassword(data.currentPassword, data.newPassword);
+            await updatePasswordSchema.parseAsync(values);
+            await updatePassword(values.currentPassword, values.newPassword);
             router.push("/customer/personal-information");
+            setStatus("success");
 
         } catch (error) {
+
+            setStatus("error");
 
             if (error instanceof ZodError) {
 
@@ -95,18 +85,14 @@ export default function Page(props) {
                 case "auth/too-many-requests":
                     {
                         setFormError("too_many_requests");
-                        break ;
+                        break;
                     }
                 default:
                     setFormError("unexpected_error");
                     break;
             }
 
-        } finally {
-
-            setLoading(false);
-
-        };
+        }
 
     };
 
@@ -123,6 +109,7 @@ export default function Page(props) {
                     <div className="space-y-2">
 
                         <InputWithLabel
+                            name="currentPassword"
                             title={t("current_password")}
                             value={values.currentPassword}
                             type='password'
@@ -133,6 +120,7 @@ export default function Page(props) {
                         />
 
                         <InputWithLabel
+                            name="newPassword"
                             title={t("new_password")}
                             value={values.newPassword}
                             type='password'
@@ -143,6 +131,7 @@ export default function Page(props) {
                         />
 
                         <InputWithLabel
+                            name="confirmNewPassword"
                             title={t("confirm_new_password")}
                             value={values.confirmNewPassword}
                             type='password'
@@ -164,8 +153,8 @@ export default function Page(props) {
                         <Button
                             size='w-full h-14'
                             type="submit"
-                            loading={loading}
-                            disabled={isFormIncomplete}
+                            loading={status === "submitting"}
+                            disabled={status !== "ready"}
                         >
                             {t("save", { ns: "common" })}
                         </Button>

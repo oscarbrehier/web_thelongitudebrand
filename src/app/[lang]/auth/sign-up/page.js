@@ -2,10 +2,10 @@
 import handleFirebaseError from "@/lib/firebase/handleFirebaseError";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, use, useEffect } from "react";
-import { signUpSchema } from "@/lib/constants/zodSchema";
 import signUp from "@/lib/authentication/signUp";
 import SignUpForm from "@/app/components/forms/SignUpForm";
 import { trackEvent } from "@/lib/analytics/analytics";
+import { signUpSchema } from "@/lib/schema";
 
 export default function Page(props) {
 
