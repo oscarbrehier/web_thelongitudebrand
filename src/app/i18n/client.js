@@ -22,7 +22,10 @@ i18next
         detection: {
             order: ['path', 'htmlTag', 'cookie', 'navigator'],
         },
-        preload: runsOnServerSide ? languages : []
+        preload: runsOnServerSide ? languages : [],
+        interpolation: {
+            escapeValue: false
+        }
     });
 
 export function useTranslation(lng, ns, options) {

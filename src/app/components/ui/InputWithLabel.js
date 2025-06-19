@@ -1,6 +1,5 @@
 "use client"
 import { useTranslation } from "@/app/i18n/client";
-import camelize from "@/lib/utils/camelize";
 import getPasswordStrength from "@/lib/utils/getPasswordStrength";
 import { useState, useEffect } from "react";
 
@@ -20,7 +19,7 @@ export default function InputWithLabel({
     ...props
 }) {
 
-    const { t } = useTranslation(lang, ["auth", "common"]);
+    const { t } = useTranslation(lang, ["validation", "common"]);
 
     const [inputValue, setInputValue] = useState(value || "");
     const titleValue = title.toLowerCase().replace(/\s+/g, "_");
@@ -65,7 +64,7 @@ export default function InputWithLabel({
             
         };
 
-        if (required && inputValue == "") err = `${title.charAt(0).toUpperCase() + title.slice(1)} is required`;
+        if (required && inputValue == "") err = "field_required";
 
         if (props.password && props.password !== inputValue) {
             err = "passwords_do_not_match";
@@ -87,7 +86,7 @@ export default function InputWithLabel({
     };
 
     const labelClasses = `
-        capitalize absolute text-sm left-4 transform transition-all duration-200 ease-in-out pointer-events-none select-none
+        capitalize-first absolute text-sm left-4 transform transition-all duration-200 ease-in-out pointer-events-none select-none
         ${inputValue || type === "date" ? "top-1 text-xs translate-y-1" : "top-1/2 -translate-y-1/2"}
         group-focus-within:top-1 group-focus-within:text-xs group-focus-within:translate-y-1
         ${disabled ? "text-neutral-500" : ""}

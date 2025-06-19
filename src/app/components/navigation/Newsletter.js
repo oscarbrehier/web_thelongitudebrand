@@ -14,9 +14,9 @@ export default function Newsletter({ lang }) {
 
         <div className="flex flex-col space-y-2 sm:col-span-2">
 
-            <h2 className="capitalize font-times-roman text-4xl italic">{t("newsletter")}</h2>
+            <h2 className="capitalize font-times-roman text-4xl italic">{t("title")}</h2>
 
-            <div className="w-full text-xs">{t("subscribe_prompt")}</div>
+            <div className="w-full text-xs">{t("cta.full")}</div>
 
             <div className="w-full h-10 bg-cream-300 flex">
 
@@ -24,7 +24,6 @@ export default function Newsletter({ lang }) {
 
                     <input
                         className="w-full h-full outline-none bg-transparent md:text-sm text-base placeholder:text-neutral-900 placeholder:capitalize px-2"
-                        type="email"
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                         placeholder="email"
@@ -39,7 +38,7 @@ export default function Newsletter({ lang }) {
                         setValue(inputValue);
                     }}
                         className={`${inputValue != '' ? 'block' : 'hidden'}`}>
-                        {t("subscribe")}
+                        {t("cta.short")}
                     </button>
 
                 </div>

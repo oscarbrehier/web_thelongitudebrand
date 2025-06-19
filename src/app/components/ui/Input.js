@@ -1,9 +1,11 @@
 'use client';
+import { useTranslation } from "@/app/i18n/client";
 import camelize from "@/lib/utils/camelize";
 import { forwardRef, useEffect, useState } from "react";
 
 const Input = forwardRef(({
     title,
+    lang,
     type = "text",
     required = false,
     onChange,
@@ -14,6 +16,8 @@ const Input = forwardRef(({
     ...props
 }, ref) => {
 
+    const { t } = useTranslation(lang, ["common"]);
+
     const [value, setValue] = useState(inputValue || "");
     const [errorMessage, setErrorMessage] = useState(null);
     const [visible, setVisible] = useState(false);
@@ -23,10 +27,6 @@ const Input = forwardRef(({
     const handleChange = (e) => {
 
         const newValue = e.target.value;
-
-        if (errorMessage) {
-            // validateField(newValue);
-        }
 
         setValue(newValue);
         if (onChange) onChange(newValue);
@@ -56,36 +56,7 @@ const Input = forwardRef(({
 
         };
 
-        // if (validate) {
-
-        //     validateField(value);
-
-        // };
-
     }, [reset, validate]);
-
-    const validateField = (fieldValue = value) => {
-
-        let error = '';
-
-        if (!fieldValue && required) {
-            error = `${title.charAt(0).toUpperCase() + title.slice(1)} is required`;
-        }
-
-        if (title === 'email' && fieldValue) {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-            if (!emailRegex.test(fieldValue)) {
-                error = 'Please enter a valid email address';
-            }
-        }
-
-        if (props.password && props.password !== fieldValue) {
-            error = "Your passwords don't match.";
-        }
-
-        setErrorMessage(error);
-    };
 
     return (
         <div className={`w-full ${errorMessage ? 'h-auto' : 'h-10'} bg-cream-300 flex flex-col justify-center`}>
@@ -108,10 +79,15 @@ const Input = forwardRef(({
 
                 {type === "password" && (
                     <div onClick={() => setVisible(!visible)} className="h-10 p-2 flex items-center justify-center children:cursor-pointer text-xs underline hover:no-underline select-none">
-                        <p>{visible ? "hide" : "show"}</p>
+                        <p>
+                            {visible
+                                ? t("hide")
+                                : t("show")
+                            }
+                        </p>
                     </div>
                 )}
-                
+
             </div>
 
             {errorMessage && (

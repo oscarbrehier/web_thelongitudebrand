@@ -48,7 +48,7 @@ export default async function Page(props) {
                 data.length > 0 ? (
 
                     <div className="flex-1 w-full mt-16 flex flex-col">
-                        <h1 className="capitalize mx-2 my-1 text-lg">{t("wishlist", { ns: "navigation" })}</h1>
+                        <h1 className="capitalize-first mx-2 my-1 text-lg">{t("wishlist", { ns: "navigation" })}</h1>
 
                         <div className="h-auto w-full grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-2">
 

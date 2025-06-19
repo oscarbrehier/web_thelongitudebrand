@@ -21,7 +21,7 @@ export function SuccessDisplay({
 
 			<div className="mx-2 mb-4">
 
-				<p className="capitalize text-lg">check your email</p>
+				<p className="capitalize-first text-lg">check your email</p>
 
 				<p className="text-sm text-neutral-600">
 					A password reset link has been sent to your email address. Please check your inbox.

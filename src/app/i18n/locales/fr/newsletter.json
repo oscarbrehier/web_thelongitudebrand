@@ -1,5 +1,12 @@
 {
-    "newsletter": "newsletter",
-    "subscribe_prompt": "inscrivez-vous pour recevoir toutes les nouveautés sur les collections, événements et soldes Longitude",
-    "subscribe": "s'abonner"
+  "title": "newsletter",
+  "description": "Inscrivez-vous pour recevoir les actualités des collections Longitude, de Longitude Paper, des événements et des offres exclusives.",
+  "cta": {
+    "short": "s'abonner",
+    "full": "Inscrivez-vous pour recevoir toutes les nouveautés sur les collections, événements et soldes Longitude",
+    "title": "abonnez-vous à notre newsletter"
+  },
+  "messages": {
+    "success": "Merci de vous être abonné à notre newsletter !"
+  }
 }

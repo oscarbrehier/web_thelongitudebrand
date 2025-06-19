@@ -54,7 +54,7 @@ export function ResetForm({
 		<>
 			<div className="mx-2 mb-4">
 
-				<p className="capitalize text-lg">reset your password</p>
+				<p className="capitalize-first text-lg">reset your password</p>
 
 				{
 
@@ -89,7 +89,6 @@ export function ResetForm({
 					<InputWithLabel
 						name="email"
 						title="email"
-						type="email"
 						error={fieldError}
 						required={true}
 						value={initialEmail || null}

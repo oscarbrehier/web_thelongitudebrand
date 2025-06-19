@@ -8,16 +8,17 @@ import { useState, use } from "react";
 import posthog from "posthog-js";
 import { trackEvent } from "@/lib/analytics/analytics";
 import { signInSchema } from "@/lib/schema";
+import { useTranslation } from "@/app/i18n/client";
+import { tBulk } from "@/app/i18n/utils";
 
 export default function Page(props) {
-    
+
     const params = use(props.params);
+    const { lang } = params;
+
+    const { t } = useTranslation(lang, ["error"]);
 
     const setCartSync = useCartStore((state) => state.setSynced);
-
-    const {
-        lang
-    } = params;
 
     const query = useSearchParams();
     const router = useRouter();
@@ -58,6 +59,8 @@ export default function Page(props) {
 
         } catch (error) {
 
+            setStatus("error");
+
             if (error.errors) {
 
                 const errors = error.errors.reduce((acc, curr) => {
@@ -79,10 +82,8 @@ export default function Page(props) {
                 setForm(prev => ({ ...prev, error: formatError }));
 
             } else {
-                setForm(prev => ({ ...prev, error: "An error occured. Please try again or come back later." }));
+                setForm(prev => ({ ...prev, error: ["unexpected_error", "try_refresh_or_later"] }));
             };
-
-            setStatus("error");
 
         };
 
@@ -96,7 +97,7 @@ export default function Page(props) {
 
                 <div className="mx-2 mb-4">
 
-                    <p className="capitalize text-lg">sign in</p>
+                    <p className="capitalize-first text-lg">sign in</p>
 
                 </div>
 
@@ -106,7 +107,7 @@ export default function Page(props) {
                     errors={{
                         email: inputErrors.email,
                         password: inputErrors.password,
-                        form: form.error
+                        form: tBulk(t, form.error)
                     }}
                     status={status}
                     email={query.get("email") || null}

@@ -15,7 +15,7 @@ export function OrdersTable({ orders, trans }) {
 
 			<section className="mt-16 space-y-4">
 
-				<h1 className="capitalize mx-2 my-1 text-lg">{trans("orders_title")}</h1>
+				<h1 className="capitalize-first mx-2 my-1 text-lg">{trans("orders_title")}</h1>
 
 				<div className="flex flex-col space-y-2">
 

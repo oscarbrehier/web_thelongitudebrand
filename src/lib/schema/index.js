@@ -1,62 +1,61 @@
 import { z } from "zod";
 import getPasswordStrength from "../utils/getPasswordStrength";
 
-const requiredError = (fieldName) => `${fieldName} is required`;
-
 export const signUpSchema = z.object({
 	firstName: z
 		.string()
-		.min(1, { message: requiredError("First name") }),
+		.min(1, { message: "field_required" }),
 	lastName: z
 		.string()
-		.min(1, { message: requiredError("Last name") }),
+		.min(1, { message: "field_required" }),
 	email: z
 		.string()
-		.min(1, { message: requiredError("Email") })
-		.email("Please enter a valid email address"),
+		.min(1, { message: "field_required" })
+		.email("invalid_email"),
 	password: z
 		.string()
+		.min(1, { message: "field_required" })
 		.refine(async (val) => await getPasswordStrength(val), {
-			message: "Password is too weak. Choose a password with at least 6 characters, including a mix of letters, numbers, and symbols"
+			message: "password_too_weak"
 		}),
 	confirmPassword: z
 		.string()
-		.min(1, { message: requiredError("Confirm password") }),
+		.min(1, { message: "field_required" }),
 	terms: z
 		.boolean()
 		.refine((val) => val === true, {
-			message: "You must accept the terms and conditions"
+			message: "terms_required"
 		})
 }).refine((data) => data.password == data.confirmPassword, {
-	message: "Passwords don't match",
+	message: "passwords_do_not_match",
 	path: ["confirmPassword"]
 });
 
 export const signInSchema = z.object({
 	email: z
 		.string()
-		.min(1, { message: requiredError("Email") })
-		.email("Please enter a valid email address"),
+		.min(1, { message: "field_required" })
+		.email("invalid_email"),
 	password: z
 		.string()
-		.min(1, { message: requiredError("Password") })
+		.min(1, { message: "field_required" })
 });
 
 export const newsletterSchema = z.object({
 	firstName: z
 		.string()
-		.min(1, { message: requiredError("First name") }),
+		.min(1, { message: "field_required" }),
 	lastName: z
 		.string()
-		.min(1, { message: requiredError("Last name") }),
+		.min(1, { message: "field_required" }),
 	email: z
 		.string()
-		.min(1, { message: requiredError("Email") })
-		.email("Please enter a valid email address"),
+		.min(1, { message: "field_required" })
+		.email("invalid_email"),
 	terms: z
 		.boolean()
 		.refine((val) => val === true, {
-			message: "You must accept the terms and conditions"
+			message: "terms_required"
 		}),
 });
 
@@ -79,6 +78,6 @@ export const updatePasswordSchema = z.object({
 
 export const resetPasswordSchema = z.object({
 	email: z.string()
-		.min(1, { message: "Email is required" })
-		.email("Please enter a valid email address")
+		.min(1, { message: "field_required" })
+		.email("invalid_email")
 });

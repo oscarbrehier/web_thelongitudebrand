@@ -6,5 +6,6 @@
 	"save": "enregistrer",
 	"shop_now": "accéder a la boutique",
 	"continue_shopping": "poursuivre vos achats",
-	"suggestions": "suggestions"
+	"suggestions": "suggestions",
+	"consent_notice": "En sélectionnant « <Span>{{cta}}</Span> », vous confirmez avoir lu et accepté les <Link>Conditions Générales</Link> de thelongitudebrand."
 }

@@ -12,6 +12,9 @@ import { useCartStore } from "@/lib/stores/useCartStore";
 import posthog from "posthog-js";
 import { trackEvent } from "@/lib/analytics/analytics";
 import { signInSchema } from "@/lib/schema";
+import { useTranslation } from "@/app/i18n/client";
+import { tBulk } from "@/app/i18n/utils";
+import { Trans } from "react-i18next";
 
 const FORM_DEFAULT = {
     submit: false,
@@ -20,8 +23,11 @@ const FORM_DEFAULT = {
     password: "",
 };
 
-export default function SignInModal() {
+export default function SignInModal({
+    lang
+}) {
 
+    const { t } = useTranslation(lang, ["auth", "error", "validation"]);
     const router = useRouter();
     const { activeModal, openModal, closeModal } = useModalContext();
 
@@ -48,7 +54,7 @@ export default function SignInModal() {
 
             signInSchema.parse(data);
             const { result, user } = await signIn(data.email, data.password, setCartSync);
-            
+
             if (result) {
                 posthog.identify(user.uid, {
                     email: user.email
@@ -75,11 +81,11 @@ export default function SignInModal() {
 
             } else if (error.code) {
 
-                const formatError = handleFirebaseError(error.code);
+                const formatError = handleFirebaseError(error.code, t);
                 setForm(prev => ({ ...prev, error: formatError }));
 
             } else {
-                setForm(prev => ({ ...prev, error: "An error occured. Please try again or come back later." }));
+                setForm(prev => ({ ...prev, error: tBulk(t, ["unexpected_error", "try_refresh_or_later"], { ns: "error" }) }));
             };
 
         } finally {
@@ -99,7 +105,7 @@ export default function SignInModal() {
 
     return (
 
-        <ModalContainer title="sign in">
+        <ModalContainer title={t("sign_in.cta")}>
 
             <form onSubmit={handleFormSubmit} className="space-y-4">
 
@@ -108,13 +114,15 @@ export default function SignInModal() {
                     <Input
                         title='email'
                         type='email'
-                        error={form.email}
+                        error={t(form.email, { ns: "validation" })}
+                        lang={lang}
                     />
 
                     <Input
                         title='password'
                         type='password'
-                        error={form.password}
+                        error={t(form.password, { ns: "validation" })}
+                        lang={lang}
                     />
 
                 </div>
@@ -126,7 +134,7 @@ export default function SignInModal() {
                         type="submit"
                         loading={loading}
                     >
-                        login
+                        {t("sign_in.cta")}
                     </Button>
 
                     <>
@@ -140,16 +148,22 @@ export default function SignInModal() {
 
                 </div>
 
-                <div className="text-sm mt-6 space-y-2">
+                <div className="text-sm mt-6 space-y-1">
 
-                    <button onClick={() => {
-                        closeModal("sign_in");
-                        router.push("/auth/reset-password");
-                    }}>Forgot your password?</button>
-                    <div className="flex">
-                        <p className="text-neutral-500">Don't have an account? &nbsp;</p>
-                        <p className="cursor-pointer capitalize underline" onClick={() => openModal('sign_up')}>sign up</p>
-                    </div>
+                    <button
+                        className="capitalize-first"
+                        onClick={() => {
+                            closeModal("sign_in");
+                            router.push("/auth/reset-password");
+                        }}
+                    >
+                        {t("forgot_password_prompt")}
+                    </button>
+                    <p className="text-neutral-500 capitalize-first">
+                        <Trans i18nKey="sign_in.no_account_prompt" t={t} components={{
+                            Span: <span className="cursor-pointer capitalize-first underline" onClick={() => openModal('sign_up')}>&nbsp;{t("sign_up.cta")}</span>
+                        }} />
+                    </p>
 
                 </div>
 

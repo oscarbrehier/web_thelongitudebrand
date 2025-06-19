@@ -10,7 +10,9 @@ export function PageContainer({ children, lang }) {
 
         <div className="h-auto w-full relative">
 
-            <ClientModals>
+            <ClientModals
+                lang={lang}
+            >
 
                 <div className="z-30 min-h-screen w-full top-0 flex flex-col justify-between relative">
 

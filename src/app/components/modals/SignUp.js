@@ -10,6 +10,8 @@ import Link from "next/link";
 import Checkbox from "../ui/Checkbox";
 import { trackEvent } from "@/lib/analytics/analytics";
 import { signUpSchema } from "@/lib/schema";
+import { useTranslation } from "@/app/i18n/client";
+import { Trans } from "react-i18next";
 
 const FORM_DEFAULT = {
     submit: false,
@@ -24,7 +26,11 @@ const FORM_DEFAULT = {
     termsError: "",
 }
 
-export default function SignUpModal() {
+export default function SignUpModal({
+    lang
+}) {
+
+    const { t } = useTranslation(lang, ["auth", "error", "validation", "common", "newsletter"]);
 
     const { activeModal, openModal, closeModal } = useModalContext();
 
@@ -42,11 +48,11 @@ export default function SignUpModal() {
             const formData = new FormData(event.target);
 
             const data = {
-                firstName: formData.get("firstName"),
-                lastName: formData.get("lastName"),
-                email: formData.get("email"),
-                password: formData.get("password"),
-                confirmPassword: formData.get("confirmPassword"),
+                firstName: formData.get("firstName") ?? "",
+                lastName: formData.get("lastName") ?? "",
+                email: formData.get("email") ?? "",
+                password: formData.get("password") ?? "",
+                confirmPassword: formData.get("confirmPassword") ?? "",
                 newsletter: !!formData.get("newsletter"),
                 terms: formData.get("terms") !== null
             };
@@ -91,7 +97,7 @@ export default function SignUpModal() {
 
             } else {
 
-                setForm(prev => ({ ...prev, error: "An error occured. Please try again or come back later." }));
+                setForm(prev => ({ ...prev, error: tBulk(t, ["unexpected_error", "try_refresh_or_later"], { ns: "error" }) }));
 
             };
 
@@ -121,15 +127,17 @@ export default function SignUpModal() {
                     <div className="grid grid-cols-2 gap-2">
 
                         <Input
-                            title='first name'
+                            title={t("first_name")}
                             type='text'
-                            error={form.firstName}
+                            error={t(form.firstName, { ns: "validation" })}
+                            lang={lang}
                         />
 
                         <Input
-                            title='last name'
+                            title={t("last_name")}
                             type='text'
-                            error={form.lastName}
+                            error={t(form.lastName, { ns: "validation" })}
+                            lang={lang}
                         />
 
                     </div>
@@ -137,19 +145,22 @@ export default function SignUpModal() {
                     <Input
                         title='email'
                         type='email'
-                        error={form.email}
+                        error={t(form.email, { ns: "validation" })}
+                        lang={lang}
                     />
 
                     <Input
-                        title='password'
+                        title={t("password")}
                         type='password'
-                        error={form.password}
+                        error={t(form.password, { ns: "validation" })}
+                        lang={lang}
                     />
 
                     <Input
-                        title='confirm password'
+                        title={t("confirm_password")}
                         type='password'
-                        error={form.confirmPassword}
+                        error={t(form.confirmPassword, { ns: "validation" })}
+                        lang={lang}
                     />
 
                 </div>
@@ -166,7 +177,7 @@ export default function SignUpModal() {
                             onChange={() => setForm(prev => ({ ...prev, newsletter: !prev.newsletter }))}
                         />
 
-                        <p>Subscribe to our newsletter</p>
+                        <p className="capitalize-first">{t("cta.title", { ns: "newsletter" })}</p>
 
                     </div>
 
@@ -181,8 +192,16 @@ export default function SignUpModal() {
                         />
 
                         <p className={form.termsError && "text-error-red"}>
-                            By selecting "Sign Up", you are confirming that you have read and agree to thelongitudebrand's &nbsp;
-                            <Link className="underline" href="/legal/terms-conditions">Terms & Conditions</Link>
+                            <Trans
+                                i18nKey="consent_notice"
+                                ns="common"
+                                t={t}
+                                values={{ cta: t("sign_up.cta") }}
+                                components={{
+                                    Span: <span className="capitalize" />,
+                                    Link: <Link className="underline" href="/legal/terms-conditions" />
+                                }}
+                            />
                         </p>
 
                     </div>
@@ -196,7 +215,7 @@ export default function SignUpModal() {
                         size="w-full h-10"
                         loading={loading}
                     >
-                        sign up
+                        {t("sign_up.cta")}
                     </Button>
 
                     <>
@@ -211,10 +230,15 @@ export default function SignUpModal() {
 
                 <div className="text-sm mt-6 space-y-2">
 
-                    <div className="flex">
-                        <p className="text-neutral-500">Already have an account? &nbsp;</p>
-                        <p className="cursor-pointer capitalize underline" onClick={() => openModal('sign_in')}>sign in</p>
-                    </div>
+                    <p className="text-neutral-500 capitalize-first">
+                        <Trans
+                            i18nKey="sign_up.has_account_prompt"
+                            t={t}
+                            components={{
+                                Span: <span className="cursor-pointer capitalize-first underline" onClick={() => openModal('sign_in')}>{t("sign_in.cta")}</span>
+                            }}
+                        />
+                    </p>
 
                 </div>
 

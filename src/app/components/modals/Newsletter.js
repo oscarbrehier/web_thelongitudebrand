@@ -1,15 +1,18 @@
 "use client"
 import { useModalContext } from "@/lib/context/ModalContext";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Input from "../ui/Input";
 import Button from "../ui/Button";
-import { doc, setDoc, Timestamp } from "@firebase/firestore";
-import { database } from "@/lib/firebase/client";
 import handleFirebaseError from "@/lib/firebase/handleFirebaseError";
 import ModalContainer from "./ModalContainer";
 import Checkbox from "../ui/Checkbox";
 import { trackEvent } from "@/lib/analytics/analytics";
 import { newsletterSchema } from "@/lib/schema";
+import { handleNewsletterSubscription } from "@/lib/firestore/newsletter";
+import { useTranslation } from "@/app/i18n/client";
+import { Trans } from "react-i18next";
+import Link from "next/link";
+import { tBulk } from "@/app/i18n/utils";
 
 const FORM_DEFAULT = {
     error: "",
@@ -21,7 +24,11 @@ const FORM_DEFAULT = {
     success: false
 };
 
-export default function NewsletterModal() {
+export default function NewsletterModal({
+    lang
+}) {
+
+    const { t } = useTranslation(lang, ["newsletter", "common"]);
 
     const [progress, setProgress] = useState(0);
     const [loading, setLoading] = useState(false);
@@ -88,14 +95,7 @@ export default function NewsletterModal() {
             };
 
             newsletterSchema.parse(data);
-
-            const docRef = doc(database, "newsletter", data.email);
-            await setDoc(docRef, {
-                email: data.email,
-                firstName: data.firstName,
-                lastName: data.lastName,
-                dateSubscribed: Timestamp.now()
-            });
+            handleNewsletterSubscription(data.email, true, data);
 
             setForm(prev => ({ ...prev, success: true }));
 
@@ -132,7 +132,7 @@ export default function NewsletterModal() {
 
                 setForm(prev => ({
                     ...prev,
-                    error: err ? "" : "An error occured. Please try again or come back later",
+                    error: err ? "" : ["unexpected_error", "try_refresh_or_later"],
                 }));
 
             };
@@ -148,7 +148,7 @@ export default function NewsletterModal() {
     useEffect(() => {
 
         if (activeModal === "newsletter") {
-            
+
             setForm(FORM_DEFAULT);
             setProgress(0);
 
@@ -158,11 +158,11 @@ export default function NewsletterModal() {
 
     return (
 
-        <ModalContainer title="newsletter">
+        <ModalContainer title={t("title")}>
 
             <form onSubmit={handleFormSubmit} className={`space-y-4 ${form.success && 'hidden'}`}>
 
-                <p className="text-sm">Sign up to receive news about Longitude collections, Longitude Paper, events and sales.</p>
+                <p className="text-sm">{t("description")}</p>
 
                 <div className="mt-8 space-y-2">
 
@@ -172,12 +172,14 @@ export default function NewsletterModal() {
                             title="first name"
                             // reset={resetInputs}
                             error={form.firstName}
+                            lang={lang}
                         />
 
                         <Input
                             title="last name"
                             // reset={resetInputs}
                             error={form.lastName}
+                            lang={lang}
                         />
 
                     </div>
@@ -187,6 +189,7 @@ export default function NewsletterModal() {
                         // reset={resetInputs}
                         value={value && value}
                         error={form.email}
+                        lang={lang}
                     />
 
 
@@ -204,7 +207,15 @@ export default function NewsletterModal() {
                     />
 
                     <p className={form.termsError && "text-error-red"}>
-                        By selecting "Subscribe", you are confirming that you have read and agree to thelongitudebrand's <span>Terms & Conditions</span>
+                        <Trans
+                            i18nKey="consent_notice"
+                            t={t}
+                            ns="common"
+                            values={{ cta: t("cta.short") }}
+                            components={{
+                                Span: <span className="capitalize" />,
+                                Link: <Link className="underline" href="/legal/terms-conditions" />
+                            }} />
                     </p>
 
                 </div>
@@ -216,13 +227,15 @@ export default function NewsletterModal() {
                         size="w-full h-10"
                         loading={loading}
                     >
-                        subscribe
+                        {t("cta.short")}
                     </Button>
 
                     <>
                         {
                             form.error && (
-                                <p className="text-sm text-error-red w-full">{form.error}</p>
+                                <p className="text-sm text-error-red w-full">
+                                    {tBulk(t, form.error)}
+                                </p>
                             )
                         }
                     </>
@@ -233,9 +246,7 @@ export default function NewsletterModal() {
 
             <section className={`${!form.success && 'hidden'} mt-4 space-y-4`}>
 
-                <p>
-                    Thank you for subscribing to our newsletter!
-                </p>
+                <p>{t("messages.success")}</p>
 
                 <div className="relative w-full">
                     <div className="w-full h-1 bg-neutral-200 absolute"></div>

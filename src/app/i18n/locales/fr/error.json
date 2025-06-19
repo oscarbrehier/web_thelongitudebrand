@@ -6,5 +6,10 @@
   "too_many_requests": "Trop de tentatives. Veuillez réessayer plus tard.",
   "unexpected_error": "Une erreur inattendue est survenue.",
   "loading_error": "erreur de chargement",
-	"products_fetch_failure_desc": "Oups ! Une erreur est survenue lors du chargement de nos produits. Nous travaillons dessus—veuillez actualiser la page ou réessayer plus tard."
+  "products_fetch_failure_desc": "Oups ! Une erreur est survenue lors du chargement de nos produits. Nous travaillons dessus—veuillez actualiser la page ou réessayer plus tard.",
+  "firebase": {
+    "auth_common_sign_in": "Aucun compte ne correspond aux identifiants fournis. Veuillez réessayer.",
+    "auth_user_disabled": "Compte désactivé. Veuillez contacter notre équipe client pour obtenir de l’aide.",
+    "auth_email_already_in_use": "Cet email est déjà utilisé. Connectez-vous ou utilisez une autre adresse."
+  }
 }

@@ -181,11 +181,9 @@ export function PersonalInformationForm({ content, lang }) {
 
                 <div className="space-y-4">
 
-                    {/* <p className="capitalize mx-2 my-1 text-lg">preferences</p> */}
-
                     <div className="space-y-1">
 
-                        <h2 className="capitalize">{t("communication_preferences")}</h2>
+                        <h2 className="capitalize-first">{t("communication_preferences")}</h2>
 
                         <div className="flex space-x-2 h-auto items-center">
 

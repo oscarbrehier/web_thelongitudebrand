@@ -7,6 +7,7 @@ import { useState, use, useEffect } from "react";
 import { ZodError } from "zod";
 import { useTranslation } from "@/app/i18n/client";
 import { updatePasswordSchema } from "@/lib/schema";
+import { tBulk } from "@/app/i18n/utils";
 
 export default function Page(props) {
 
@@ -88,7 +89,7 @@ export default function Page(props) {
                         break;
                     }
                 default:
-                    setFormError("unexpected_error");
+                    setFormError(["unexpected_error", "try_refresh_or_later"]);
                     break;
             }
 
@@ -104,7 +105,7 @@ export default function Page(props) {
 
                 <form action={handleSubmitForm}>
 
-                    <h1 className="capitalize mx-2 my-1 text-lg">{t("change_password")}</h1>
+                    <h1 className="capitalize-first mx-2 my-1 text-lg">{t("change_password")}</h1>
 
                     <div className="space-y-2">
 
@@ -142,7 +143,7 @@ export default function Page(props) {
                         />
 
                         {formError !== "" && (
-                            <p className="text-sm text-error-red">{t(formError, { ns: "error" })}</p>
+                            <p className="text-sm text-error-red">{tBulk(t, formError, { ns: "error" })}</p>
                         )}
 
                     </div>

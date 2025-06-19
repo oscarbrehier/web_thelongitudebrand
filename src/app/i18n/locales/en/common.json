@@ -6,5 +6,6 @@
 	"save": "save",
 	"shop_now": "shop now",
 	"continue_shopping": "continue shopping",
-	"suggestions": "suggestions"
+	"suggestions": "suggestions",
+	"consent_notice": "By selecting \"<Span>{{cta}}</Span>\", you are confirming that you have read and agree to thelongitudebrand's <Link>Terms & Conditions</Link>"
 }

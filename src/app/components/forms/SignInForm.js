@@ -21,7 +21,6 @@ export default function SignInForm({
                 <InputWithLabel
                     name="email"
                     title="email"
-                    type="email"
                     required={true}
                     value={email}
                     error={errors?.email}

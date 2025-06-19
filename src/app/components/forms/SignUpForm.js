@@ -3,6 +3,7 @@ import Button from "../ui/Button";
 import InputWithLabel from "../ui/InputWithLabel";
 import Link from "next/link";
 import Checkbox from "../ui/Checkbox";
+import { useTranslation } from "@/app/i18n/client";
 
 export default function SignUpForm({
     lang = null,
@@ -42,7 +43,6 @@ export default function SignUpForm({
                 <InputWithLabel
                     name="email"
                     title="email"
-                    type="email"
                     required={true}
                     value={email}
                     error={errors?.email}

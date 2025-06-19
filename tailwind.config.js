@@ -61,6 +61,13 @@ module.exports = {
 	plugins: [
 		function ({ addVariant }) {
 			addVariant('children', '& > *');
+		},
+		function ({ addUtilities }) {
+			addUtilities({
+				'.capitalize-first::first-letter': {
+					'text-transform': 'uppercase',
+				},
+			})
 		}
 	],
 };

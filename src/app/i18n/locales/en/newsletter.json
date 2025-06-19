@@ -1,5 +1,12 @@
 {
-    "newsletter": "newsletter",
-    "subscribe_prompt": "don’t miss out on the latest news, private sales and exclusive offers. subscribe to our newsletter",
-    "subscribe": "subscribe"
+  "title": "newsletter",
+  "description": "Sign up to receive news about Longitude collections, Longitude Paper, events and sales.",
+  "cta": {
+    "short": "subscribe",
+    "full": "Don’t miss out on the latest news, private sales and exclusive offers. Subscribe to our newsletter.",
+    "title": "subscribe to our newsletter"
+  },
+  "messages": {
+    "success": "Thank you for subscribing to our newsletter!"
+  }
 }

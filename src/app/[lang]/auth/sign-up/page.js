@@ -110,7 +110,7 @@ export default function Page(props) {
 
                 <div className="mx-2 mb-4">
 
-                    <p className="capitalize text-lg">sign in</p>
+                    <p className="capitalize-first text-lg">sign in</p>
 
                 </div>
 

@@ -120,7 +120,7 @@ export default function Page(props) {
 
                 <div className="col-start-2 col-span-2 h-auto">
 
-                    <p className="capitalize mx-2 my-1">reset your password</p>
+                    <p className="capitalize-first mx-2 my-1">reset your password</p>
 
                     {error ? (
 
