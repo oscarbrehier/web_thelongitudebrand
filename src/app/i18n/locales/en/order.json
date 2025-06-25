@@ -5,5 +5,12 @@
 	"order_id": "order no.",
 	"order_date": "placed on",
 	"total_amount": "total",
-	"status": "status"
+	"status": "status",
+	"confirmation": {
+		"success_title": "order successfully placed",
+		"success_description_line_1": "Your order will be processed within 24 hours during work days.",
+		"success_description_line_2": "We will notify you by email once your order has been shipped.",
+		"view_order_cta": "view order details",
+		"continue_exploring_cta": "continue exploring"
+	}
 }

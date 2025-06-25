@@ -1,9 +1,16 @@
 {
-	"orders_title": "vos commandes",
-	"no_orders": "aucune commande",
-	"no_orders_description": "Elles apparaîtront ici une fois effectuées.\nDécouvrez nos dernières collections dans la boutique.",
-	"order_id": "commande n°",
-	"order_date": "passée le",
-	"total_amount": "total",
-	"status": "statut"
+  "orders_title": "vos commandes",
+  "no_orders": "aucune commande",
+  "no_orders_description": "Elles apparaîtront ici une fois effectuées.\nDécouvrez nos dernières collections dans la boutique.",
+  "order_id": "commande n°",
+  "order_date": "passée le",
+  "total_amount": "total",
+  "status": "statut",
+  "confirmation": {
+    "success_title": "commande confirmée",
+    "success_description_line_1": "Votre commande sera traitée sous 24 heures (jours ouvrés).",
+    "success_description_line_2": "Vous recevrez un email dès son expédition.",
+    "view_order_cta": "voir les détails de la commande",
+    "continue_exploring_cta": "continuer l’exploration"
+  }
 }
