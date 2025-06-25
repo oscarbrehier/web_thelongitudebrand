@@ -7,11 +7,13 @@ import resourcesToBackend from 'i18next-resources-to-backend';
 // import LocizeBackend from 'i18next-locize-backend'
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { getOptions, languages, cookieName } from './settings';
+import ICU from 'i18next-icu';
 
 const runsOnServerSide = typeof window === 'undefined';
 
 // on client side the normal singleton is ok
 i18next
+    .use(ICU)
     .use(initReactI18next)
     .use(LanguageDetector)
     .use(resourcesToBackend((language, namespace) => import(`./locales/${language}/${namespace}.json`)))
@@ -20,7 +22,11 @@ i18next
         ...getOptions(),
         lng: undefined, // let detect the language on client side
         detection: {
-            order: ['path', 'htmlTag', 'cookie', 'navigator'],
+            order: ['path', 'htmlTag', 'cookie', 'localStorage', 'navigator'],
+            caches: ["localStorage", "cookie"],
+            cookieName,
+            lookupCookie: cookieName,
+            lookupLocalStorage: 'i18nextLng'
         },
         preload: runsOnServerSide ? languages : [],
         interpolation: {
@@ -58,13 +64,13 @@ export function useTranslation(lng, ns, options) {
 
         useEffect(() => {
 
-            
+            if (!lng) return;
             if (cookies.i18next === lng) return;
             setCookie(cookieName, lng, { path: '/' });
 
-        }, [lng, cookies.i18next]);
+        }, [lng, cookies.i18next, cookieName]);
 
     };
-    
+
     return ret;
 };

@@ -9,7 +9,7 @@ export default async function Page({ params, searchParams }) {
 
     switch (error) {
         case "reset-link/invalid-expired":
-            globalError = "Oops! Your password reset link has expired or is invalid.";
+            globalError = "reset_password.error_expired_link_title";
             break;
 
         default:

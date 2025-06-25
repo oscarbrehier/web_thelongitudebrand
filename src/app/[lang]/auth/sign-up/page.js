@@ -6,11 +6,25 @@ import signUp from "@/lib/authentication/signUp";
 import SignUpForm from "@/app/components/forms/SignUpForm";
 import { trackEvent } from "@/lib/analytics/analytics";
 import { signUpSchema } from "@/lib/schema";
+import { useTranslation } from "@/app/i18n/client";
+import { tBulk } from "@/app/i18n/utils";
+
+const FORM_DEFAULT = {
+    error: null,
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    terms: false,
+};
 
 export default function Page(props) {
 
     const params = use(props.params);
     const { lang } = params;
+
+    const { t } = useTranslation(lang, ["auth", "error", "validation"]);
 
     const query = useSearchParams();
     const [initialEmail, setInitialEmail] = useState("");
@@ -21,39 +35,31 @@ export default function Page(props) {
     const router = useRouter();
 
     const [loading, setLoading] = useState(false);
-    const [form, setForm] = useState({
-        error: null,
-    });
-
-    const [inputErrors, setInputErrors] = useState({
-        firstName: null,
-        lastName: null,
-        email: null,
-        password: null,
-        confirmPassword: null,
-        terms: null,
-    });
+    const [form, setForm] = useState(FORM_DEFAULT);
 
     const handleForm = async (event) => {
 
         event.preventDefault();
         setLoading(true);
+        setForm(prev => ({ ...prev, error: null }));
 
         try {
 
             const formData = new FormData(event.target);
             const data = {
-                firstName: formData.get("firstName"),
-                lastName: formData.get("lastName"),
-                email: formData.get("email"),
-                password: formData.get("password"),
-                confirmPassword: formData.get("confirmPassword"),
+                firstName: formData.get("firstName") ?? "",
+                lastName: formData.get("lastName") ?? "",
+                email: formData.get("email") ?? "",
+                password: formData.get("password") ?? "",
+                confirmPassword: formData.get("confirmPassword") ?? "",
                 newsletter: !!formData.get("newsletter"),
                 terms: formData.get("terms") !== null
             };
 
             await signUpSchema.parseAsync(data);
             await signUp(data);
+
+            setForm(FORM_DEFAULT);
 
             trackEvent("sign_up", {
                 method: "email",
@@ -75,25 +81,23 @@ export default function Page(props) {
 
                 }, {});
 
-                setInputErrors(prev => ({
+                setForm(prev => ({
                     ...prev,
-                    firstName: errors.firstName,
-                    lastName: errors.lastName,
-                    email: errors.email,
-                    password: errors.password,
-                    confirmPassword: errors.confirmPassword,
+                    firstName: errors.firstName || "",
+                    lastName: errors.lastName || "",
+                    email: errors.email || "",
+                    password: errors.password || "",
+                    confirmPassword: errors.confirmPassword || "",
                     terms: !!errors.terms ? true : false,
                 }));
 
             } else if (error.code) {
 
-                const formatError = handleFirebaseError(error.code);
-                setForm(prev => ({ ...prev, error: formatError }));
+                const formatError = handleFirebaseError(error.code, t);
+                setForm({ ...FORM_DEFAULT, error: formatError });
 
             } else {
-
-                setForm(prev => ({ ...prev, error: "An error occured. Please try again or come back later." }));
-
+                setForm({ ...FORM_DEFAULT, error: tBulk(t, ["unexpected_error", "try_refresh_or_later"], { ns: "error" }) });
             };
 
         } finally {
@@ -110,22 +114,14 @@ export default function Page(props) {
 
                 <div className="mx-2 mb-4">
 
-                    <p className="capitalize-first text-lg">sign in</p>
+                    <p className="capitalize-first text-lg">{t("sign_up.cta")}</p>
 
                 </div>
 
                 <SignUpForm
                     lang={lang}
                     handleForm={handleForm}
-                    errors={{
-                        form: form.error,
-                        firstName: inputErrors.firstName,
-                        lastName: inputErrors.lastName,
-                        email: inputErrors.email,
-                        password: inputErrors.password,
-                        confirmPassword: inputErrors.confirmPassword,
-                        terms: inputErrors.terms
-                    }}
+                    errors={form}
                     loading={loading}
                     // email={query.get('email') || ""}
                     email={initialEmail}

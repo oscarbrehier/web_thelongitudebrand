@@ -10,13 +10,15 @@ import dynamic from "next/dynamic";
 import { useTranslation } from "@/app/i18n/client";
 import { captureException } from "@sentry/nextjs";
 import { trackEvent } from "@/lib/analytics/analytics";
+import { tBulk } from "@/app/i18n/utils";
+import { Trans } from "react-i18next";
 
 const CartItemSmall = dynamic(() => import("@/app/components/cart/CartItemSmall"));
 
 export function Cart({ lang }) {
 
 	const router = useRouter();
-	const { t } = useTranslation(lang, "shop");
+	const { t } = useTranslation(lang, ["shop", "error"]);
 
 	const { user } = useAuthContext();
 	const { openModal } = useModalContext();
@@ -34,7 +36,7 @@ export function Cart({ lang }) {
 
 		try {
 
-			const url = await checkout(user, cart, total, "/cart");
+			const url = await checkout(user, cart, total, "/cart", lang);
 			if (url) {
 
 				trackEvent("start_checkout", {
@@ -52,7 +54,7 @@ export function Cart({ lang }) {
 		} catch (err) {
 
 			captureException(err);
-			setError("An error occured. Please try again or come back later");
+			setError(["unexpected_error", "try_refresh_or_later"]);
 
 		} finally {
 
@@ -81,7 +83,7 @@ export function Cart({ lang }) {
 	if (!cart || cart.length === 0) {
 		return null;
 	}
-	
+
 	return (
 
 		<div className="h-auto w-full lg:grid grid-cols-4 gap-4 pt-24 pb-10">
@@ -90,16 +92,22 @@ export function Cart({ lang }) {
 
 				<div>
 
-					<h1 className="text-lg capitalize mx-2">cart ({cart?.length} items)</h1>
+					<h1 className="text-lg capitalize-first mx-2">
+						{t('cart.title_with_count', { count: cart?.length })}
+					</h1>
 
 					{
 						user == null && (
 
 							<p className="mt-1 text-sm">
-								For your cart to be saved, either&nbsp;
-								<span onClick={() => openModal("sign_in")} className="underline cursor-pointer">sign in</span>
-								&nbsp;or&nbsp;
-								<span onClick={() => openModal("sign_up")} className="underline cursor-pointer">create an account</span>
+								<Trans 
+									t={t}
+									i18nKey="cart.guest_notice"
+									components={{
+										SignIn: <span onClick={() => openModal("sign_in")} className="underline cursor-pointer">sign in</span>,
+										SignUp: <span onClick={() => openModal("sign_up")} className="underline cursor-pointer">create an account</span>
+									}}
+								/>
 							</p>
 
 						)
@@ -133,15 +141,15 @@ export function Cart({ lang }) {
 
 			<div className="h-auto bg-cream-100 sticky col-start-2 col-span-2 left-0 bottom-0 py-4 space-y-4">
 
-				<div className="text-sm capitalize space-y-1">
+				<div className="text-sm space-y-1">
 
 					<div className="w-full flex justify-between">
-						<p className="text-xs">shipping cost</p>
-						<p className="text-xs">calculated at checkout</p>
+						<p className="text-xs capitalize-first">{t("cart.shipping_cost_label")}</p>
+						<p className="text-xs capitalize-first">{t("cart.shipping_cost_value")}</p>
 					</div>
 
 					<div className="w-full flex justify-between">
-						<p className="text-sm">subtotal</p>
+						<p className="text-sm capitalize-first">{t("cart.subtotal")}</p>
 						<p className="text-sm bg-neon-green">{total} €</p>
 					</div>
 
@@ -155,10 +163,14 @@ export function Cart({ lang }) {
 						loading={loading}
 						text="uppercase"
 					>
-						{t('cta_checkout')}
+						{t('checkout.cta')}
 					</Button>
 
-					{error && <p className="text-error-red text-sm">{error}</p>}
+					{error && (
+						<p className="text-error-red text-sm">
+							{tBulk(t, error, { ns: "error" })}
+						</p>
+					)}
 
 				</div>
 
@@ -166,7 +178,7 @@ export function Cart({ lang }) {
 			</div>
 
 			<div className="col-start-2 col-span-2">
-				<Menu />
+				<Menu trans={t} />
 			</div>
 
 		</div>
@@ -175,7 +187,7 @@ export function Cart({ lang }) {
 
 };
 
-function Menu({ style }) {
+function Menu({ style, trans }) {
 
 	const [activeMenu, setActiveMenu] = useState(null);
 
@@ -188,7 +200,7 @@ function Menu({ style }) {
 		<div className={`children:text-sm space-y-1 ${style}`}>
 
 			<button onClick={() => handleMenuToggle(1)} className="w-full flex justify-between">
-				<p>shipping methods</p>
+				<p>{trans("cart.info.shipping_methods")}</p>
 				<p className="text-base pt-1">{activeMenu === 1 ? '-' : '+'}</p>
 			</button>
 
@@ -197,7 +209,7 @@ function Menu({ style }) {
 			</div>
 
 			<button onClick={() => handleMenuToggle(2)} className="w-full flex justify-between">
-				<p>returns</p>
+				<p>{trans("cart.info.returns")}</p>
 				<p className="text-base pt-1">{activeMenu === 2 ? '-' : '+'}</p>
 			</button>
 
@@ -206,7 +218,7 @@ function Menu({ style }) {
 			</div>
 
 			<button onClick={() => handleMenuToggle(3)} className="w-full flex justify-between">
-				<p>secure payment</p>
+				<p>{trans("cart.info.secure_payment")}</p>
 				<p className="text-base pt-1">{activeMenu === 3 ? '-' : '+'}</p>
 			</button>
 

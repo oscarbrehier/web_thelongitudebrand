@@ -12,6 +12,7 @@ import { trackEvent } from "@/lib/analytics/analytics";
 import { signUpSchema } from "@/lib/schema";
 import { useTranslation } from "@/app/i18n/client";
 import { Trans } from "react-i18next";
+import { tBulk } from "@/app/i18n/utils";
 
 const FORM_DEFAULT = {
     submit: false,
@@ -57,6 +58,8 @@ export default function SignUpModal({
                 terms: formData.get("terms") !== null
             };
 
+            console.log(data);
+
             await signUpSchema.parseAsync(data);
             await signUp(data);
 
@@ -68,9 +71,9 @@ export default function SignUpModal({
 
             closeModal();
             window.location.reload();
-
+            
         } catch (error) {
-
+            
             if (error.errors) {
 
                 const errors = error.errors.reduce((acc, curr) => {
@@ -92,12 +95,12 @@ export default function SignUpModal({
 
             } else if (error.code) {
 
-                const formatError = handleFirebaseError(error.code);
-                setForm(prev => ({ ...prev, error: formatError }));
+                const formatError = handleFirebaseError(error.code, t);
+                setForm({ ...FORM_DEFAULT, error: formatError });
 
             } else {
 
-                setForm(prev => ({ ...prev, error: tBulk(t, ["unexpected_error", "try_refresh_or_later"], { ns: "error" }) }));
+                setForm({ ...FORM_DEFAULT, error: tBulk(t, ["unexpected_error", "try_refresh_or_later"], { ns: "error" }) });
 
             };
 
@@ -127,6 +130,7 @@ export default function SignUpModal({
                     <div className="grid grid-cols-2 gap-2">
 
                         <Input
+                            name="firstName"
                             title={t("first_name")}
                             type='text'
                             error={t(form.firstName, { ns: "validation" })}
@@ -134,6 +138,7 @@ export default function SignUpModal({
                         />
 
                         <Input
+                            name="lastName"
                             title={t("last_name")}
                             type='text'
                             error={t(form.lastName, { ns: "validation" })}
@@ -143,6 +148,7 @@ export default function SignUpModal({
                     </div>
 
                     <Input
+                        name="email"
                         title='email'
                         type='email'
                         error={t(form.email, { ns: "validation" })}
@@ -150,6 +156,7 @@ export default function SignUpModal({
                     />
 
                     <Input
+                        name="password"
                         title={t("password")}
                         type='password'
                         error={t(form.password, { ns: "validation" })}
@@ -157,6 +164,7 @@ export default function SignUpModal({
                     />
 
                     <Input
+                        name="confirmPassword"
                         title={t("confirm_password")}
                         type='password'
                         error={t(form.confirmPassword, { ns: "validation" })}
@@ -191,7 +199,7 @@ export default function SignUpModal({
                             onChange={() => setForm(prev => ({ ...prev, terms: !prev.terms }))}
                         />
 
-                        <p className={form.termsError && "text-error-red"}>
+                        <p className={`${form.termsError && "text-error-red"}`}>
                             <Trans
                                 i18nKey="consent_notice"
                                 ns="common"
@@ -235,7 +243,7 @@ export default function SignUpModal({
                             i18nKey="sign_up.has_account_prompt"
                             t={t}
                             components={{
-                                Span: <span className="cursor-pointer capitalize-first underline" onClick={() => openModal('sign_in')}>{t("sign_in.cta")}</span>
+                                Span: <span className="cursor-pointer capitalize underline" onClick={() => openModal('sign_in')}>{t("sign_in.cta")}</span>
                             }}
                         />
                     </p>

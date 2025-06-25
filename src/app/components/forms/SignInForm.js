@@ -2,6 +2,8 @@
 import InputWithLabel from "../ui/InputWithLabel"
 import Button from "../ui/Button"
 import Link from "next/link"
+import { Trans } from "react-i18next";
+import { useTranslation } from "@/app/i18n/client";
 
 export default function SignInForm({
     lang,
@@ -9,8 +11,9 @@ export default function SignInForm({
     errors = null,
     status = null,
     email = null,
-    handleActions = null
 }) {
+
+    const { t } = useTranslation(lang, ["auth", "error", "validation"]);
 
     return (
 
@@ -23,7 +26,7 @@ export default function SignInForm({
                     title="email"
                     required={true}
                     value={email}
-                    error={errors?.email}
+                    error={t(errors?.email, { ns: "validation" })}
                     lang={lang}
                 />
 
@@ -32,9 +35,21 @@ export default function SignInForm({
                     title="password"
                     type="password"
                     required={true}
-                    error={errors?.password}
+                    error={t(errors?.password, { ns: "validation" })}
                     lang={lang}
                 />
+
+            </div>
+
+            <div className="mt-6 space-y-2">
+
+                <Button
+                    size="w-full h-14"
+                    type="submit"
+                    loading={status == "loading"}
+                >
+                    {t("sign_in.cta")}
+                </Button>
 
                 {
                     errors?.form && <p className="text-error-red text-sm">{errors?.form}</p>
@@ -42,36 +57,25 @@ export default function SignInForm({
 
             </div>
 
-            <div className="mt-4 space-y-2">
+            <div className="w-full flex flex-col text-sm space-y-2 mt-4">
 
-                <Button
-                    size="w-full h-14"
-                    type="submit"
-                    loading={status == "loading"}
+                <Link
+                    className="text-sm capitalize-first"
+                    href="/auth/reset-password"
                 >
-                    sign in
-                </Button>
+                    {t("forgot_password_prompt")}
+                </Link>
 
-                <div className="w-full flex flex-col text-sm space-y-2">
+                <div className="flex">
 
-                    <Link
-                        className="text-sm"
-                        href="/auth/reset-password"
-                    >
-                        Forgot your password?
-                    </Link>
-
-                    <div className="flex">
-
-                        <p className="text-neutral-500">Don't have an account? &nbsp;</p>
-
-                        {
-                            handleActions
-                            ? <button onClick={(e) => handleActions(e, "sign_up")} className="cursor-pointer capitalize underline">sign up</button>
-                            : <Link href="/auth/sign-up" className="cursor-pointer capitalize underline">sign up</Link>
-                        }
-                        
-                    </div>
+                    <p className="text-neutral-500 capitalize-first">
+                        <Trans
+                            i18nKey="sign_in.no_account_prompt"
+                            t={t}
+                            components={{
+                                Span: <Link href="/auth/sign-up" className="cursor-pointer underline text-black" />
+                            }} />
+                    </p>
 
                 </div>
 

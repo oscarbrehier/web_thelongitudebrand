@@ -5,7 +5,7 @@ import createOrder from "./firestore/createOrder";
 import generateOrderId from "./utils/generateOrderId";
 import { v4 as uuid } from "uuid";
 
-export default async function checkout(user = null, items, total, cancelURL) {
+export default async function checkout(user = null, items, total, cancelURL, lang) {
 
     if (!Array.isArray(items) || items.length === 0 || typeof total !== "number") {
         throw new Error("Invalid parameters provided to checkout");
@@ -22,7 +22,8 @@ export default async function checkout(user = null, items, total, cancelURL) {
             customerId,
             orderId,
             userId: user?.uid || null,
-            cancelURL
+            cancelURL,
+            lang
         });
 
         if (checkoutSession?.errors) throw new Error("Checkout creation failed. Please try again later.");

@@ -8,7 +8,7 @@ export default async function createCheckoutSession(data) {
 	// 	throw new Error("Invalid parameters provided to createCheckoutSession");
 	// };
 
-	const { stripeCart, customerId, orderId, userId, cancelURL } = data;
+	const { stripeCart, customerId, orderId, userId, cancelURL, lang } = data;
 
 	const isDev = process.env.NODE_ENV === "development";
 	const origin = isDev ? "http://localhost:3000" : "https://www.longitudebrand.com";
@@ -28,7 +28,8 @@ export default async function createCheckoutSession(data) {
 			metadata: {
 				orderId,
 				userId,
-			}
+			},
+			locale: lang
 		};
 
 		if (customerId) sessionData.customer = customerId;

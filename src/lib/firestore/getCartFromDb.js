@@ -9,7 +9,14 @@ export default async function getCartFromDb(userId) {
     try {
 
         const snapshot = await getDoc(ref);
-        return snapshot.exists ? snapshot.data() : null;
+        if (snapshot.exists()) {
+            
+            const data = snapshot.data();
+            return data ?? { items: [] };
+
+        } else {
+            return { items: [] };
+        }
 
     } catch (err) {
 

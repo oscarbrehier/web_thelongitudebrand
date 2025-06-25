@@ -11,6 +11,7 @@ export async function generateStaticParams() {
 };
 
 export default async function Layout(props) {
+
     const params = await props.params;
 
     const {

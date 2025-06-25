@@ -9,10 +9,12 @@ import checkout from "@/lib/checkout";
 import { usePathname, useRouter } from "next/navigation";
 import { captureException } from "@sentry/nextjs";
 
-export default function AddedToCart() {
+export default function AddedToCart({
+    lang
+}) {
 
     const router = useRouter();
-	const pathname = usePathname();
+    const pathname = usePathname();
     const { closeModal } = useModalContext();
     const { isAuth, user } = useAuthContext();
     const { cart, cartLength, cartTotal } = useCartStore(state => ({
@@ -23,10 +25,10 @@ export default function AddedToCart() {
     const cartLastItem = cartLength > 0 ? cart[cartLength - 1] : null;
 
     const redirectToCheckout = async () => {
-        
+
         try {
 
-            const url = await checkout(user, cart, cartTotal, pathname);
+            const url = await checkout(user, cart, cartTotal, pathname, lang);
             if (!url) throw new Error("checkout creation failure");
             router.push(url);
             closeModal();
@@ -60,7 +62,11 @@ export default function AddedToCart() {
 
                     <>
                         <div className="w-full space-y-2">
-                            <CartItemSmall content={cartLastItem} single />
+                            <CartItemSmall
+                                lang={lang}
+                                content={cartLastItem}
+                                single
+                            />
                         </div>
 
                         <div className="h-auto flex flex-col space-y-4">

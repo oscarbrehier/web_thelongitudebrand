@@ -10,8 +10,26 @@
   "label_in_stock": "in stock",
   "label_out_of_stock": "out of stock",
   "item_out_of_stock": "item is out of stock",
-  "cta_checkout": "proceed to checkout",
   "size": "size",
+  "quantity": "quantity",
+  "remove": "remove",
   "select_size": "please select a size first",
-  "color": "color"
+  "color": "color",
+  "checkout": {
+    "cta": "proceed to checkout"
+  },
+  "cart": {
+    "title": "{{count}} item",
+    "title_plural": "{{count}} items",
+    "title_with_count": "{count, plural, one {cart ({count} item)} other {cart ({count} items)}}",
+    "guest_notice": "For your cart to be saved, either <SignIn>sign in</SignIn> or <SignUp>create an account</SignUp>",
+    "shipping_cost_label": "shipping cost",
+    "shipping_cost_value": "calculated at checkout",
+    "subtotal": "subtotal",
+    "info": {
+      "shipping_methods": "shipping methods",
+      "returns": "returns",
+      "secure_payment": "secure payment"
+    }
+  }
 }

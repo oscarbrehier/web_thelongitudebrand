@@ -1,0 +1,24 @@
+{
+  "cookie_consent": {
+    "modal": {
+      "title": "cookie preferences",
+      "description": "We use cookies to improve your browsing experience and analyze site traffic. You can accept all cookies, reject non-essential ones, or customize your preferences.",
+      "preferences_button": "cookie preferences",
+      "accept_essential_button": "accept essential cookies",
+      "accept_all_button": "accept all",
+      "confirm_selection_button": "confirm selection",
+      "settings_title": "settings",
+      "always_active": "always active"
+    },
+    "categories": {
+      "essential": {
+        "title": "essential cookies",
+        "description": "Required for the website to function properly (e.g., cart, login). These cannot be disabled."
+      },
+      "analytics": {
+        "title": "analytics cookies",
+        "description": "Helps us understand website usage to improve performance."
+      }
+    }
+  }
+}

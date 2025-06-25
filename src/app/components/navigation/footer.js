@@ -3,10 +3,12 @@ import { useEffect, useState } from "react";
 import Newsletter from "./Newsletter";
 import { useTranslation } from "@/app/i18n/client";
 import LanguageSelector from "../LanguageSelector";
+import { useModalContext } from "@/lib/context/ModalContext";
 
 export default function Footer({ lang }) {
 
     const [activeMenu, setActiveMenu] = useState(null);
+    const { openModal } = useModalContext();
 
     const { t } = useTranslation(lang, "navigation");
 
@@ -51,7 +53,7 @@ export default function Footer({ lang }) {
                     <a href="/legal/terms-conditions"><h2>terms & condition</h2></a>
                     <a href="/legal/customer-service"><h2>customer service</h2></a>
                     <a href="/legal/privacy-policy"><h2>privacy policy</h2></a>
-                    <a href="/legal/cookie-policy"><h2>cookie policy</h2></a>
+                    <button onClick={() => openModal("cookie_consent")}><h2>cookie settings</h2></button>
 
                 </div>
 

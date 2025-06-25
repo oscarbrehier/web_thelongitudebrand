@@ -82,10 +82,10 @@ export default function SignInModal({
             } else if (error.code) {
 
                 const formatError = handleFirebaseError(error.code, t);
-                setForm(prev => ({ ...prev, error: formatError }));
+                setForm({ ...FORM_DEFAULT, error: formatError });
 
             } else {
-                setForm(prev => ({ ...prev, error: tBulk(t, ["unexpected_error", "try_refresh_or_later"], { ns: "error" }) }));
+                setForm({ ...FORM_DEFAULT, error: tBulk(t, ["unexpected_error", "try_refresh_or_later"], { ns: "error" }) });
             };
 
         } finally {
@@ -105,13 +105,16 @@ export default function SignInModal({
 
     return (
 
-        <ModalContainer title={t("sign_in.cta")}>
+        <ModalContainer
+            title={t("sign_in.cta")}
+        >
 
             <form onSubmit={handleFormSubmit} className="space-y-4">
 
                 <div className="space-y-2 mt-8">
 
                     <Input
+                        name="email"
                         title='email'
                         type='email'
                         error={t(form.email, { ns: "validation" })}
@@ -119,6 +122,7 @@ export default function SignInModal({
                     />
 
                     <Input
+                        name="password"
                         title='password'
                         type='password'
                         error={t(form.password, { ns: "validation" })}
@@ -159,10 +163,14 @@ export default function SignInModal({
                     >
                         {t("forgot_password_prompt")}
                     </button>
+
                     <p className="text-neutral-500 capitalize-first">
-                        <Trans i18nKey="sign_in.no_account_prompt" t={t} components={{
-                            Span: <span className="cursor-pointer capitalize-first underline" onClick={() => openModal('sign_up')}>&nbsp;{t("sign_up.cta")}</span>
-                        }} />
+                        <Trans
+                            i18nKey="sign_in.no_account_prompt"
+                            t={t}
+                            components={{
+                                Span: <span className="cursor-pointer capitalize underline" onClick={() => openModal('sign_up')}>&nbsp;{t("sign_up.cta")}</span>
+                            }} />
                     </p>
 
                 </div>

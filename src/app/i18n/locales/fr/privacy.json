@@ -1,0 +1,24 @@
+{
+  "cookie_consent": {
+    "modal": {
+      "title": "préférences de cookies",
+      "description": "Nous utilisons des cookies pour améliorer votre navigation et analyser le trafic du site. Vous pouvez accepter tous les cookies, refuser ceux non essentiels ou personnaliser vos préférences.",
+      "preferences_button": "préférences de cookies",
+      "accept_essential_button": "accepter les cookies essentiels",
+      "accept_all_button": "tout accepter",
+      "confirm_selection_button": "confirmer la sélection",
+      "settings_title": "Paramètres",
+      "always_active": "Toujours activé"
+    },
+    "categories": {
+      "essential": {
+        "title": "cookies essentiels",
+        "description": "Nécessaires au bon fonctionnement du site (ex. panier, connexion). Ces cookies ne peuvent pas être désactivés."
+      },
+      "analytics": {
+        "title": "cookies d’analyse",
+        "description": "Nous aident à comprendre l’utilisation du site afin d’en améliorer les performances."
+      }
+    }
+  }
+}

@@ -5,6 +5,7 @@ import { forwardRef, useEffect, useState } from "react";
 
 const Input = forwardRef(({
     title,
+    name,
     lang,
     type = "text",
     required = false,
@@ -66,7 +67,7 @@ const Input = forwardRef(({
                 <input
                     className={`w-full h-10 outline-none md:text-sm text-base px-4 bg-transparent placeholder:capitalize placeholder-black ${errorMessage && 'border-l-2 border-error-red'}`}
                     type={type === "password" && visible ? "text" : type}
-                    name={camelize(title)}
+                    name={name}
                     id={titleValue}
                     onChange={handleChange}
                     value={value}

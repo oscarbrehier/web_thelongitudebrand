@@ -8,6 +8,8 @@ import { z } from "zod";
 import resetPassword from "@/lib/authentication/resetPassword";
 import { confirmPasswordReset, verifyPasswordResetCode } from "firebase/auth";
 import { auth } from "@/lib/firebase/client";
+import { useTranslation } from "@/app/i18n/client";
+import { tBulk } from "@/app/i18n/utils";
 
 const formSchema = z.object({
     password: z.string()
@@ -25,6 +27,8 @@ export default function Page(props) {
 
     const params = use(props.params)
     const { lang } = params;
+    const { t } = useTranslation(lang, ["auth", "error"]);
+
     const code = useSearchParams().get("code");
 
     const router = useRouter();
@@ -75,7 +79,7 @@ export default function Page(props) {
 
             };
 
-            setForm(prev => ({ ...prev, error: "An error occured. Please try again or come back later." }));
+            setForm(prev => ({ ...prev, error: tBulk(t, ["unexpected_error", "try_refresh_or_later"], { ns: "error" }) }));
 
         } finally {
 
@@ -102,7 +106,7 @@ export default function Page(props) {
 
                 };
 
-                setError("An error occured. Please try again or come back later.")
+                setError(tBulk(t, ["unexpected_error", "try_refresh_or_later"], { ns: "error" }));
 
             };
 
@@ -120,7 +124,7 @@ export default function Page(props) {
 
                 <div className="col-start-2 col-span-2 h-auto">
 
-                    <p className="capitalize-first mx-2 my-1">reset your password</p>
+                    <p className="capitalize-first mx-2 my-1">{t("reset_password.title")}</p>
 
                     {error ? (
 
@@ -137,7 +141,7 @@ export default function Page(props) {
                                 <InputWithLabel
                                     lang={lang}
                                     name="password"
-                                    title='password'
+                                    title={t("password")}
                                     type='password'
                                     required={true}
                                     error={form.password}
@@ -146,7 +150,7 @@ export default function Page(props) {
                                 <InputWithLabel
                                     lang={lang}
                                     name="confirmPassword"
-                                    title='confirm password'
+                                    title={t("confirm_password")}
                                     type='password'
                                     required={true}
                                     error={form.confirmPassword}
@@ -166,7 +170,7 @@ export default function Page(props) {
                                     type="submit"
                                     loading={loading}
                                 >
-                                    reset password
+                                    {t("reset_password.cta")}
                                 </Button>
 
                             </div>

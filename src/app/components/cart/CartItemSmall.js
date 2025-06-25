@@ -8,6 +8,7 @@ import LoadingSpinner from "@/app/components/ui/loadingSpinner";
 import delay from "@/lib/utils/delay";
 import Link from "next/link";
 import { trackEvent } from "@/lib/analytics/analytics";
+import { useTranslation } from "@/app/i18n/client";
 
 export default function CartItemSmall({
     lang,
@@ -20,6 +21,8 @@ export default function CartItemSmall({
         image: "cream-100"
     }
 }) {
+
+    const { t } = useTranslation(lang, ["shop"]);
 
     if (!content) return null;
 
@@ -154,11 +157,16 @@ export default function CartItemSmall({
 
                             <div>
 
-                                <p>Size: {size}</p>
+                                <p className="capitalize-first">
+                                    <span>{t("size")}:</span>&nbsp;
+                                    <span className="uppercase">
+                                    {size}
+                                    </span>
+                                </p>
 
                                 <div className="flex 2md:items-start items-center text-sm space-x-2">
 
-                                    <p>Quantity:</p>
+                                    <p className="capitalize-first">{t("quantity")}:</p>
 
                                     {
                                         allowModifications && (
@@ -184,7 +192,7 @@ export default function CartItemSmall({
 
                             {allowModifications ? (
                                 <div>
-                                    <button onClick={handleRemoveItem} className="text-[10px] underline capitalize">remove</button>
+                                    <button onClick={handleRemoveItem} className="text-[10px] underline capitalize">{t("remove")}</button>
                                 </div>
                             ) : (
                                 <div></div>

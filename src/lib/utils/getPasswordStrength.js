@@ -9,7 +9,6 @@ export default async function getPasswordStrength(password) {
     });
 
     const data = await response.json();
-    console.log(data);
     return data.score >= 3;
 
 };

@@ -10,22 +10,22 @@ import { captureException } from '@sentry/nextjs';
 acceptLanguage.languages(languages);
 
 export async function middleware(request) {
-    
+
     if (request.nextUrl.pathname.startsWith('/ingest/')) {
-        
+
         const url = request.nextUrl.clone()
         const hostname = url.pathname.startsWith('/ingest/static/')
-        ? 'eu-assets.i.posthog.com'
-        : 'eu.i.posthog.com'
-        
+            ? 'eu-assets.i.posthog.com'
+            : 'eu.i.posthog.com'
+
         const requestHeaders = new Headers(request.headers)
         requestHeaders.set('host', hostname)
-        
+
         url.protocol = 'https'
         url.hostname = hostname
         url.port = 443
         url.pathname = url.pathname.replace(/^\/ingest/, '')
-        
+
         return NextResponse.rewrite(url, {
             headers: requestHeaders,
         })
@@ -39,7 +39,9 @@ export async function middleware(request) {
     const headersList = request.headers;
 
     const languageRegex = new RegExp(`^/(${languages.join('|')})`);
+
     const fullPathname = request.nextUrl.pathname;
+    const pathSegments = fullPathname.split('/').filter(Boolean);
     const pathname = request.nextUrl.pathname.replace(languageRegex, "");
 
     response.headers.set('x-pathname', pathname || "home");
@@ -68,10 +70,18 @@ export async function middleware(request) {
 
     };
 
-    // Redirect if the language prefix is missing
-    if (!languages.some(loc => fullPathname.startsWith(`/${loc}`)) && !fullPathname.startsWith("/_next")) {
-        return NextResponse.redirect(new URL(`/${lng}${pathname}${request.nextUrl.search}`, request.url));
-    };
+    const firstSegment = pathSegments[0];
+    const restPath = '/' + pathSegments.slice(1).join('/');
+
+    if (languages.includes(firstSegment)) {
+        response.headers.set('x-pathname', restPath || "home");
+    } else {
+
+        if (!languages.some(loc => fullPathname.startsWith(`/${loc}`)) && !fullPathname.startsWith("/_next")) {
+            return NextResponse.redirect(new URL(`/${lng}${pathname}${request.nextUrl.search}`, request.url));
+        };
+
+    }
 
     if (headersList.has("referer")) {
 

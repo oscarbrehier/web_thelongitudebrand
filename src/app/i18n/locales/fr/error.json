@@ -11,5 +11,14 @@
     "auth_common_sign_in": "Aucun compte ne correspond aux identifiants fournis. Veuillez réessayer.",
     "auth_user_disabled": "Compte désactivé. Veuillez contacter notre équipe client pour obtenir de l’aide.",
     "auth_email_already_in_use": "Cet email est déjà utilisé. Connectez-vous ou utilisez une autre adresse."
+  },
+  "not_found": {
+    "title": "404 - Page non trouvée",
+    "code": "404",
+    "message": "La page que vous recherchez n'existe pas ou a peut-être été supprimée.",
+    "actions": {
+      "go_home": "Retour à l'accueil",
+      "go_shop": "Voir la boutique"
+    }
   }
 }

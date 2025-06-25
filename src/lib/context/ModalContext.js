@@ -1,28 +1,31 @@
 "use client"
-import { createContext, useContext, useEffect, useState } from "react";
-import { Cookies } from "react-cookie";
+import { createContext, useCallback, useContext, useState } from "react";
 
 export const ModalContext = createContext();
 export const useModalContext = () => useContext(ModalContext);
 
 export default function ModalProvider({ children }) {
 
-    const cookies = new Cookies();
     const [activeModal, setActiveModal] = useState(null);
+    const [modalProps, setModalProps] = useState(null);
     const [value, setValue] = useState(null);
 
-    const openModal = (modalName) => setActiveModal(modalName);
+    const openModal = useCallback((modalName, props) => {
+        setActiveModal(modalName);
+        setModalProps(props);
+    }, []);
 
-    const closeModal = (modalName) => {
+    const closeModal = useCallback((modalName) => {
         if (modalName && activeModal !== modalName)
             return;
         setActiveModal(null);
         setValue(null);
-    };
+        setModalProps(null);
+    }, []);
 
     return (
 
-        <ModalContext.Provider value={{ activeModal, openModal, closeModal, value, setValue }}>
+        <ModalContext.Provider value={{ activeModal, openModal, closeModal, value, setValue, modalProps }}>
             {children}
         </ModalContext.Provider>
 

@@ -28,7 +28,7 @@ export default function NewsletterModal({
     lang
 }) {
 
-    const { t } = useTranslation(lang, ["newsletter", "common"]);
+    const { t } = useTranslation(lang, ["newsletter", "common", "auth"]);
 
     const [progress, setProgress] = useState(0);
     const [loading, setLoading] = useState(false);
@@ -169,14 +169,16 @@ export default function NewsletterModal({
                     <div className="w-full grid grid-cols-2 gap-2">
 
                         <Input
-                            title="first name"
+                            name="firstName"
+                            title={t("first_name", { ns: "auth" })}
                             // reset={resetInputs}
                             error={form.firstName}
                             lang={lang}
                         />
 
                         <Input
-                            title="last name"
+                            name="lastName"
+                            title={t("last_name", { ns: "auth" })}
                             // reset={resetInputs}
                             error={form.lastName}
                             lang={lang}
@@ -185,6 +187,7 @@ export default function NewsletterModal({
                     </div>
 
                     <Input
+                        name="email"
                         title="email"
                         // reset={resetInputs}
                         value={value && value}

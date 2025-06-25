@@ -6,12 +6,15 @@ import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "@/lib/firebase/client";
 import { resetPasswordSchema } from "@/lib/schema";
 import { SuccessDisplay } from "./SuccessDisplay";
+import { useTranslation } from "@/app/i18n/client";
 
 export function ResetForm({
 	lang,
 	globalError,
 	initialEmail
 }) {
+
+	const { t } = useTranslation(lang, ["auth", "error", "validation"]);
 
 	const [status, setStatus] = useState("idle");
 	const [email, setEmail] = useState(initialEmail);
@@ -33,8 +36,15 @@ export function ResetForm({
 
 		} catch (error) {
 
+			const errors = error.errors.reduce((acc, curr) => {
+
+				acc[curr.path[0]] = curr.message;
+				return acc;
+
+			}, {});
+
 			if (error.errors) {
-				setFieldError(prev => ({ ...prev, field: error.errors[0].message }));
+				setFieldError(errors?.email || "");
 			};
 
 			setStatus("error");
@@ -45,7 +55,10 @@ export function ResetForm({
 
 	if (status == "success") {
 		return (
-			<SuccessDisplay email={email} />
+			<SuccessDisplay
+				email={email}
+				lang={lang}
+			/>
 		);
 	};
 
@@ -54,7 +67,7 @@ export function ResetForm({
 		<>
 			<div className="mx-2 mb-4">
 
-				<p className="capitalize-first text-lg">reset your password</p>
+				<p className="capitalize-first text-lg">{t("reset_password.cta")}</p>
 
 				{
 
@@ -62,18 +75,18 @@ export function ResetForm({
 
 						<div className="mt-1">
 							<p className="text-sm text-error-red">
-								{globalError}
+								{t(globalError)}
 							</p>
 
 							<p className="text-sm text-neutral-600">
-								It looks like the link you clicked is no longer active. Don't worry, you can request a new password reset link by entering your email below.
+								{t("reset_password.error_expired_link_description")}
 							</p>
 						</div>
 
 					) : (
 
 						<p className="text-sm text-neutral-600">
-							Enter the email address associated to your account to receive a password reset link.
+							{t("reset_password.email_instruction")}
 						</p>
 
 					)
@@ -89,7 +102,7 @@ export function ResetForm({
 					<InputWithLabel
 						name="email"
 						title="email"
-						error={fieldError}
+						error={t(fieldError, { ns: "validation" })}
 						required={true}
 						value={initialEmail || null}
 						lang={lang}
@@ -104,7 +117,7 @@ export function ResetForm({
 						type="submit"
 						loading={status == "loading"}
 					>
-						send reset link
+						{t("reset_password.send_link_cta")}
 					</Button>
 
 				</div>

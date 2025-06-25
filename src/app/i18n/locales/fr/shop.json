@@ -1,17 +1,35 @@
 {
-    "shop": "boutique",
-    "view_all": "afficher tout",
-    "t_shirt": "t-shirts",
-    "tank_top": "débardeurs",
-    "add_to_cart": "ajouter au panier",
-    "add_to_wishlist": "ajouter aux favoris",
-    "remove_from_wishlist": "retirer des favoris",
-    "label_preorder": "précommander",
-    "label_in_stock": "en stock",
-    "label_out_of_stock": "en rupture de stock",
-    "item_out_of_stock": "article en rupture de stock",
-    "cta_checkout": "finaliser la commande",
-    "size": "taille",
-    "select_size": "veuillez d'abord choisir la taille",
-    "color": "couleur"
+  "shop": "boutique",
+  "view_all": "afficher tout",
+  "t_shirt": "t-shirts",
+  "tank_top": "débardeurs",
+  "add_to_cart": "ajouter au panier",
+  "add_to_wishlist": "ajouter aux favoris",
+  "remove_from_wishlist": "retirer des favoris",
+  "label_preorder": "précommander",
+  "label_in_stock": "en stock",
+  "label_out_of_stock": "en rupture de stock",
+  "item_out_of_stock": "article en rupture de stock",
+  "size": "taille",
+  "quantity": "quantité",
+  "remove": "supprimer",
+  "select_size": "veuillez d'abord choisir la taille",
+  "color": "couleur",
+  "checkout": {
+    "cta": "finaliser la commande"
+  },
+  "cart": {
+    "title": "{{count}} article",
+    "title_plural": "{{count}} articles",
+    "title_with_count": "{count, plural, one {panier ({count} article)} other {panier ({count} articles)}}",
+    "guest_notice": "Pour sauvegarder votre panier, veuillez <SignIn>vous connecter</SignIn> ou <SignUp>créer un compte</SignUp>",
+    "shipping_cost_label": "frais de livraison",
+    "shipping_cost_value": "calculés à l'étape de paiement",
+    "subtotal": "total",
+    "info": {
+      "shipping_methods": "méthodes de livraison",
+      "returns": "retours",
+      "secure_payment": "paiement sécurisé"
+    }
+  }
 }

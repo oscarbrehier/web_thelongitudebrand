@@ -11,30 +11,31 @@ import { signInSchema } from "@/lib/schema";
 import { useTranslation } from "@/app/i18n/client";
 import { tBulk } from "@/app/i18n/utils";
 
+const FORM_DEFAULT = {
+    error: null,
+    email: null,
+    password: null
+};
+
 export default function Page(props) {
 
     const params = use(props.params);
     const { lang } = params;
 
-    const { t } = useTranslation(lang, ["error"]);
+    const { t } = useTranslation(lang, ["auth", "error", "validation"]);
 
     const setCartSync = useCartStore((state) => state.setSynced);
 
     const query = useSearchParams();
     const router = useRouter();
     const [status, setStatus] = useState("idle");
-    const [form, setForm] = useState({
-        error: null,
-    });
-    const [inputErrors, setInputErrors] = useState({
-        email: null,
-        password: null
-    });
+    const [form, setForm] = useState(FORM_DEFAULT);
 
     const handleForm = async (event) => {
 
         event.preventDefault();
         setStatus("loading");
+        setForm(prev => ({ ...prev, error: null }));
 
         try {
 
@@ -70,7 +71,7 @@ export default function Page(props) {
 
                 }, {});
 
-                setInputErrors(prev => ({
+                setForm(prev => ({
                     ...prev,
                     email: errors.email || null,
                     password: errors.password || null,
@@ -78,11 +79,11 @@ export default function Page(props) {
 
             } else if (error.code) {
 
-                const formatError = handleFirebaseError(error.code);
-                setForm(prev => ({ ...prev, error: formatError }));
+                const formatError = handleFirebaseError(error.code, t);
+                setForm({ ...FORM_DEFAULT, error: formatError });
 
             } else {
-                setForm(prev => ({ ...prev, error: ["unexpected_error", "try_refresh_or_later"] }));
+                setForm({ ...FORM_DEFAULT, error: ["unexpected_error", "try_refresh_or_later"] });
             };
 
         };
@@ -97,7 +98,7 @@ export default function Page(props) {
 
                 <div className="mx-2 mb-4">
 
-                    <p className="capitalize-first text-lg">sign in</p>
+                    <p className="capitalize-first text-lg">{t("sign_in.cta")}</p>
 
                 </div>
 
@@ -105,9 +106,9 @@ export default function Page(props) {
                     lang={lang}
                     handleForm={handleForm}
                     errors={{
-                        email: inputErrors.email,
-                        password: inputErrors.password,
-                        form: tBulk(t, form.error)
+                        email: form.email,
+                        password: form.password,
+                        form: tBulk(t, form.error, { ns: "error" })
                     }}
                     status={status}
                     email={query.get("email") || null}

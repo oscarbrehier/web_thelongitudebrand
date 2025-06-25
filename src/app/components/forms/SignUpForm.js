@@ -4,6 +4,7 @@ import InputWithLabel from "../ui/InputWithLabel";
 import Link from "next/link";
 import Checkbox from "../ui/Checkbox";
 import { useTranslation } from "@/app/i18n/client";
+import { Trans } from "react-i18next";
 
 export default function SignUpForm({
     lang = null,
@@ -13,6 +14,8 @@ export default function SignUpForm({
     loading = null,
     email = null,
 }) {
+
+    const { t } = useTranslation(lang, ["auth", "error", "validation", "common", "newsletter"]);
 
     return (
 
@@ -24,17 +27,17 @@ export default function SignUpForm({
 
                     <InputWithLabel
                         name="firstName"
-                        title="first name"
+                        title={t("first_name")}
                         required={true}
-                        error={errors?.firstName}
+                        error={t(errors?.firstName, { ns: "validation" })}
                         lang={lang}
                     />
 
                     <InputWithLabel
                         name="lastName"
-                        title="last name"
+                        title={t("last_name")}
                         required={true}
-                        error={errors?.lastName}
+                        error={t(errors?.lastName, { ns: "validation" })}
                         lang={lang}
                     />
 
@@ -45,31 +48,27 @@ export default function SignUpForm({
                     title="email"
                     required={true}
                     value={email}
-                    error={errors?.email}
+                    error={t(errors?.email, { ns: "validation" })}
                     lang={lang}
                 />
 
                 <InputWithLabel
                     name="password"
-                    title="password"
+                    title={t("password")}
                     type="password"
                     required={true}
-                    error={errors?.password}
+                    error={t(errors?.password, { ns: "validation" })}
                     lang={lang}
                 />
 
                 <InputWithLabel
                     name="confirmPassword"
-                    title="confirm password"
+                    title={t("confirm_password")}
                     type="password"
                     required={true}
-                    error={errors?.confirmPassword}
+                    error={t(errors?.confirmPassword, { ns: "validation" })}
                     lang={lang}
                 />
-
-                {
-                    errors?.form && <p className="text-error-red text-sm">{errors.form}</p>
-                }
 
             </div>
 
@@ -83,7 +82,7 @@ export default function SignUpForm({
                         size="4"
                     />
 
-                    <p>Subscribe to our newsletter</p>
+                    <p className="capitalize-first">{t("cta.title", { ns: "newsletter" })}</p>
 
                 </div>
 
@@ -96,39 +95,52 @@ export default function SignUpForm({
                         size="4"
                     />
 
-                    <p className={errors?.terms && "text-error-red"}>
-                        By selecting "Sign Up", you are confirming that you have read and agree to thelongitudebrand's &nbsp;
-                        <Link className="underline" href="/legal/terms-conditions">Terms & Conditions</Link>
+                    <p className={`${errors.terms && "text-error-red"}`}>
+                        <Trans
+                            i18nKey="consent_notice"
+                            ns="common"
+                            t={t}
+                            values={{ cta: t("sign_up.cta") }}
+                            components={{
+                                Span: <span className="capitalize" />,
+                                Link: <Link className="underline" href="/legal/terms-conditions" />
+                            }}
+                        />
                     </p>
+
 
                 </div>
 
 
             </div>
 
-            <div className="mt-4 space-y-2">
+            <div className="mt-6 space-y-2">
 
                 <Button
                     size="w-full h-14"
                     type="submit"
                     loading={loading}
                 >
-                    sign up
+                    {t("sign_up.cta")}
                 </Button>
 
-                <div className="text-sm flex">
+                {
+                    errors?.error && <p className="text-error-red text-sm">{errors.error}</p>
+                }
 
-                    <p  className="text-neutral-500">
-                        Already have an account? &nbsp;
-                    </p>
+            </div>
 
-                    {
-                        handleActions 
-                        ? <button onClick={(e) => handleActions(e, "sign_in")} href="/auth/sign-in" className="underline capitalize">sign in</button>
-                        : <Link href="/auth/sign-in" className="underline capitalize">sign in</Link>
-                    }
+            <div className="mt-4 text-sm flex">
 
-                </div>
+                <p className="text-neutral-500 capitalize-first">
+                    <Trans
+                        i18nKey="sign_up.has_account_prompt"
+                        t={t}
+                        components={{
+                            Span: <Link href="/auth/sign-in" className="cursor-pointer underline text-black" />
+                        }}
+                    />
+                </p>
 
             </div>
 

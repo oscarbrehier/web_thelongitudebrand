@@ -8,7 +8,7 @@ export const storageKeys = {
     CART: "cart",
     SESSION: "__session",
     AUTH_TOKEN: "__auth_token",
-    LANGUAGE: "i18next"
+    LANGUAGE: "i18nextLng"
 };
 
 export const guestRoutes = [

@@ -1,4 +1,5 @@
 import { storageKeys } from "@/lib/constants/settings.config";
+import acceptLanguage from "accept-language";
 
 export const fallbackLng = 'en';
 export const languages = [fallbackLng, 'fr'];
@@ -8,6 +9,8 @@ export const languageMap = {
     en: "english",
     fr: "français"
 };
+
+acceptLanguage.languages(languages);
 
 export function getOptions(lng = fallbackLng, ns = defaultNS) {
 

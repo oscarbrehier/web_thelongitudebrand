@@ -11,5 +11,14 @@
     "auth_common_sign_in": "No account matches the provided credentials. Please try again.",
     "auth_user_disabled": "Account disabled. Please contact our client team for further assistance.",
     "auth_email_already_in_use": "This email is already in use. Please log in or use a different address."
+  },
+  "not_found": {
+    "title": "404 - Page not found",
+    "code": "404",
+    "message": "The page you’re looking for doesn’t exist or may have been removed.",
+    "actions": {
+      "go_home": "Go to homepage",
+      "go_shop": "Browse the shop"
+    }
   }
 }

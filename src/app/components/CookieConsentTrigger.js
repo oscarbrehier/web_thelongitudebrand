@@ -13,7 +13,7 @@ export default function CookieConsentTrigger({ children }) {
 
 		const hasConsent = Cookies.get("cookie_consent");
 		if (!hasConsent) {
-			openModal("cookie_consent");
+			openModal("cookie_consent", { preventClose: true });
 		};
 
 }, [pathname, openModal]);

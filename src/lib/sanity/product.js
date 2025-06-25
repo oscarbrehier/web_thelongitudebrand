@@ -24,7 +24,7 @@ async function getProduct(query, tags = []) {
         tags
     });
 
-    if (product.length == 0 || !product) return (null);
+    if (product?.length == 0 || !product) return (null);
 
     const imageUrl = urlFor(product.images[0].asset._ref).url();
     product.cover = imageUrl;
