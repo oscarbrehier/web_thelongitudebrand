@@ -4,6 +4,12 @@ import { headers } from "next/headers";
 import { PageContainer } from "../components/container/PageContainer";
 import { languages } from "../i18n/settings";
 
+const lockdownRoutes = [
+    "home",
+    "/",
+    "/password",
+];
+
 export async function generateStaticParams() {
 
 	return languages.map((lang) => ({ lang }));
@@ -23,7 +29,7 @@ export default async function Layout(props) {
     } = props;
 
     const pathname = (await headers()).get("x-pathname");
-    if (pathname == "home") return children;
+    if (lockdownRoutes.includes(pathname)) return children;
 
     return (
 

@@ -1,13 +1,28 @@
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import acceptLanguage from 'accept-language';
 import { fallbackLng, languages, cookieName } from './app/i18n/settings';
 import verifyFirebaseSessionJwt from './lib/authentication/verifyFirebaseJwt';
 import { authRoutes, guestRoutes } from './lib/constants/settings.config';
 import { storageKeys } from './lib/constants/settings.config';
 import { captureException } from '@sentry/nextjs';
+import { jwtVerify } from 'jose';
 
 acceptLanguage.languages(languages);
+
+function isStaticRequest(pathname) {
+
+    return ['/sitemap.xml', '/robots.txt', '/monitoring'].includes(pathname)
+        || pathname.includes("icon")
+        || pathname.includes("chrome");
+
+};
+
+function getLanguage(cookieStore, headers) {
+    const cookieLng = cookieStore.get(cookieName)?.value;
+    const headerLng = headers.get("Accept-Language");
+    return acceptLanguage.get(cookieLng || headerLng) || fallbackLng;
+};
 
 export async function middleware(request) {
 
@@ -31,7 +46,6 @@ export async function middleware(request) {
         })
     }
 
-    let lng;
     let isAuth = false;
 
     const cookieStore = await cookies();
@@ -48,27 +62,15 @@ export async function middleware(request) {
 
     const session = cookieStore.get(storageKeys.SESSION)?.value;
 
-    if (fullPathname === "/sitemap.xml" || fullPathname === "/robots.txt" || fullPathname.includes("icon") || fullPathname.includes("chrome") || fullPathname === "/monitoring") {
-        return response;
-    };
-
+    // Handle static paths
+    if (isStaticRequest(fullPathname)) return response;
     if (pathname.startsWith("/locked")) return NextResponse.redirect(new URL('/shop', request.url));
 
-    if (cookieStore.has(cookieName)) {
-        lng = acceptLanguage.get(cookieStore.get(cookieName).value);
-    } else {
-        lng = acceptLanguage.get(headersList.get("Accept-Language"));
-    };
-
-    if (!lng) lng = fallbackLng;
-
+    // Determine and persist language
+    const lng = getLanguage(cookieStore, headersList);
     response.headers.set("x-language", lng);
 
-    if (!cookieStore.get(cookieName)?.value) {
-
-        response.cookies.set(cookieName, lng);
-
-    };
+    if (!cookieStore.get(cookieName)?.value) response.cookies.set(cookieName, lng);
 
     const firstSegment = pathSegments[0];
     const restPath = '/' + pathSegments.slice(1).join('/');
@@ -83,6 +85,32 @@ export async function middleware(request) {
 
     }
 
+
+    // Site lock handling
+    if (process.env.SITE_LOCKED) {
+
+        const siteAuthToken = cookieStore.get(storageKeys.SITE_AUTH)?.value;
+
+        try {
+
+            const secret = new TextEncoder().encode(process.env.SITE_SECRET);
+            const { payload } = await jwtVerify(siteAuthToken, secret);
+            if (payload?.access === "granted" && pathname.startsWith("/password")) {
+                return NextResponse.redirect(new URL("/shop", request.url));
+            }
+
+        } catch (err) {
+            console.log(pathname)
+
+            if (!(pathname === "/" || pathname.startsWith("/password"))) {
+                return NextResponse.redirect(new URL("/password", request.url));
+            }
+
+        }
+
+    };
+
+    // Referer locale sync
     if (headersList.has("referer")) {
 
         const refererUrl = new URL(headersList.get("referer"));
@@ -94,10 +122,12 @@ export async function middleware(request) {
 
     };
 
-    if (pathname.startsWith("/shop") || pathname.startsWith("/password")) {
+    // Skip auth checks for public pages
+    if (pathname.startsWith("/") || pathname.startsWith("/password")) {
         return response;
     };
 
+    // Auth verification
     if (session) {
 
         try {
@@ -128,5 +158,5 @@ export async function middleware(request) {
 }
 
 export const config = {
-    matcher: '/((?!api|_next/static|_next/image|.*\\.png$|favicon.ico|images|password|fonts).*)',
+    matcher: '/((?!api|_next/static|_next/image|.*\\.png$|favicon.ico|images|fonts).*)',
 };

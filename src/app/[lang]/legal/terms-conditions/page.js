@@ -1,42 +1,16 @@
-import { client } from "@/lib/sanity/client";
-
-function parseMarkdown(markdownText) {
-
-    const sections = [];
-    const lines = markdownText.split('\n');
-    let currentSection = null;
-
-    lines.forEach(line => {
-
-        if (line.startsWith('**') && line.endsWith('**')) {
-
-            if (currentSection) sections.push(currentSection);
-
-            currentSection = { title: line.replace(/\*\*/g, ''), content: '' };
-
-        } else if (currentSection) {
-
-            currentSection.content += line + ' ';
-
-        };
-
-    });
-
-    if (currentSection) sections.push(currentSection);
-
-    return sections;
-};
+import { sanityFetch } from "@/lib/sanity/fetch";
+import * as md from "@/lib/parseMarkdown";
 
 export default async function Page(props) {
-    const params = await props.params;
 
-    const {
-        lang
-    } = params;
+    const query = `*[_type == "legal" && title == "terms-conditions"]`;
+    const res = await sanityFetch({
+        query,
+        tags: ["legal"]
+    });
+    // const content = parseMarkdown(res[0].content);
+    const content = md.parseMarkdown(res[0].content);
 
-    const QUERY = `*[_type == "legal" && title == "terms-conditions"]`;
-    const res = await client.fetch(QUERY, { cache: "no-store" });
-    const content = parseMarkdown(res[0].content);
 
     return (
 
@@ -46,29 +20,46 @@ export default async function Page(props) {
 
                 <h1 className="capitalize mx-2 my-1 text-lg">terms and conditions</h1>
 
-                <div className="space-y-2 text-sm mt-4">
+                <div className="my-10">
 
-                    <p>
-                        Welcome to Longitude! These terms and conditions outline the rules and regulations for using Longitude’s website, located at longitudebrand.com.
-                    </p>
-
-                    <p>
-                        By accessing this website, we assume you accept these terms and conditions. Do not continue to use Longitude if you do not agree to all the terms and conditions stated on this page.
-                    </p>
-
-                </div>
-
-                <div className="my-10 space-y-10">
-
-                    {content.map((section) => (
-
-                        <div className="space-y-1 text-sm">
-                            <h2 className="capitalize font-medium">{section.title}</h2>
-                            <p>{section.content}</p>
-                        </div>
-
-                    ))}
-
+                    {content.map((element, index) => {
+                        if (element.type === 'heading') {
+                            return (
+                                <h2
+                                    key={index}
+                                    className="font-semibold text-base mt-8 mb-3 first:mt-4"
+                                >
+                                    {element.content}
+                                </h2>
+                            );
+                        } else if (element.type === 'paragraph') {
+                            return (
+                                <p
+                                    key={index}
+                                    className="text-sm leading-relaxed mb-4 text-gray-700"
+                                >
+                                    {md.renderBoldText(element.content)}
+                                </p>
+                            );
+                        } else if (element.type === 'list') {
+                            return (
+                                <ul
+                                    key={index}
+                                    className="text-sm leading-relaxed mb-4 text-gray-700 space-y-2 ml-4"
+                                >
+                                    {element.items.map((item, itemIndex) => (
+                                        <li
+                                            key={itemIndex}
+                                            className="list-disc"
+                                        >
+                                            {md.renderBoldText(item)}
+                                        </li>
+                                    ))}
+                                </ul>
+                            );
+                        }
+                        return null;
+                    })}
 
                 </div>
 

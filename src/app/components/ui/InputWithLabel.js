@@ -33,7 +33,7 @@ export default function InputWithLabel({
 
     useEffect(() => {
         
-        setErrorMessage(error || null);
+        setErrorMessage(error && typeof error === "string" ? error : null);
 
     }, [error]);
 
@@ -96,7 +96,7 @@ export default function InputWithLabel({
 
         <div className="h-auto w-full flex flex-col">
 
-            <div className={`w-full h-14 bg-cream-300 relative group flex items-center ${errorMessage && 'border-l-2 border-error-red'}`}>
+            <div className={`w-full h-14 bg-cream-300 relative group flex items-center ${errorMessage ? 'border-l-2 border-error-red' : ""}`}>
 
                 <label
                     htmlFor={titleValue}
