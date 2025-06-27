@@ -3,12 +3,7 @@
 import { headers } from "next/headers";
 import { PageContainer } from "../components/container/PageContainer";
 import { languages } from "../i18n/settings";
-
-const lockdownRoutes = [
-    "home",
-    "/",
-    "/password",
-];
+import { lockdownRoutes } from "@/lib/constants/settings.config";
 
 export async function generateStaticParams() {
 

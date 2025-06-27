@@ -48,11 +48,11 @@ export default function Page() {
 
 	return (
 
-		<div className="h-screen w-full flex items-center justify-center">
+		<div className="h-screen w-full flex items-center justify-center px-4">
 
-			<form onSubmit={handleSubmit} className="w-1/3 flex flex-col space-y-2">
+			<form onSubmit={handleSubmit} className="xl:w-1/3 lg:w-1/2 w-full h-auto flex flex-col space-y-2">
 
-				<div className="w-full flex space-x-4">
+				<div className="w-full flex space-x-2">
 					<InputWithLabel
 						name="password"
 						title="password"

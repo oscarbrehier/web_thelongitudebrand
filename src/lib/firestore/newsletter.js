@@ -19,8 +19,8 @@ export async function handleNewsletterSubscription(email, subscribe, data = {}) 
 
 			await newsletterDocRef.set({
 				email,
-				firstName: data.firstName,
-				lastName: data.lastName,
+				firstName: data.firstName ?? "",
+				lastName: data.lastName ?? "",
 				subscribedAt: admin.firestore.Timestamp.now(),
 			});
 

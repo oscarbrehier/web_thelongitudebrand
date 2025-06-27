@@ -19,6 +19,13 @@ export const guestRoutes = [
     "/auth/sign-up",
 ];
 
+export const lockdownRoutes = [
+    "home",
+    "/",
+    "/password",
+    "/showroom",
+];
+
 export const origin = isDev
     ? "http://localhost:3000"
     : "https://www.longitudebrand.com";

@@ -100,9 +100,8 @@ export async function middleware(request) {
             }
 
         } catch (err) {
-            console.log(pathname)
 
-            if (!(pathname === "/" || pathname.startsWith("/password"))) {
+            if (!(pathname === "/" || pathname === "/showroom" || pathname.startsWith("/password"))) {
                 return NextResponse.redirect(new URL("/password", request.url));
             }
 
@@ -123,7 +122,7 @@ export async function middleware(request) {
     };
 
     // Skip auth checks for public pages
-    if (pathname.startsWith("/") || pathname.startsWith("/password")) {
+    if (pathname.startsWith("/") || pathname.startsWith("/password") || pathname.startsWith("/showroom")) {
         return response;
     };
 
