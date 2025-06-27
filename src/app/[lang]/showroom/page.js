@@ -85,8 +85,8 @@ export default async function Page(props) {
 							className="h-screen w-full relative"
 						>
 
-							<div className="h-screen w-full absolute p-4 flex justify-end md:items-start items-end">
-								<h2 className="font-times-roman italic capitalize text-2xl bg-neon-green">{product.title}</h2>
+							<div className="h-screen w-full absolute p-4 flex justify-end md:items-start items-center">
+								<h2 className="font-times-roman italic capitalize text-2xl bg-neon-green md:rotate-0 rotate-90">{product.title}</h2>
 							</div>
 
 							<div className="h-screen w-full flex items-center">
